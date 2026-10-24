@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en" rtrvr-gl-click="1" rtrvr-gl-input="1" rtrvr-gl-keydown="1" rtrvr-mw-ready="1"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "surface-container-low": "#191b22",
+          "outline-variant": "#3b494b",
+          "primary-container": "#00f0ff",
+          "background": "#111319",
+          "primary": "#dbfcff",
+          "on-primary-fixed": "#002022",
+          "on-secondary-fixed-variant": "#6900b3",
+          "on-error": "#690005",
+          "surface-variant": "#33353b",
+          "outline": "#849495",
+          "on-tertiary-container": "#8523dd",
+          "surface-tint": "#00dbe9",
+          "error": "#ffb4ab",
+          "on-secondary-container": "#d6a9ff",
+          "on-tertiary-fixed": "#2c0051",
+          "on-secondary-fixed": "#2c0051",
+          "tertiary": "#fdf3ff",
+          "inverse-surface": "#e2e2ea",
+          "tertiary-container": "#e9d0ff",
+          "inverse-on-surface": "#2e3037",
+          "on-secondary": "#490080",
+          "surface-container-highest": "#33353b",
+          "tertiary-fixed": "#efdbff",
+          "on-background": "#e2e2ea",
+          "on-primary": "#00363a",
+          "secondary": "#ddb7ff",
+          "surface-container-lowest": "#0c0e14",
+          "on-surface-variant": "#b9cacb",
+          "on-primary-fixed-variant": "#004f54",
+          "primary-fixed-dim": "#00dbe9",
+          "tertiary-fixed-dim": "#dcb8ff",
+          "surface-container": "#1d1f26",
+          "on-tertiary": "#480081",
+          "surface-container-high": "#282a30",
+          "on-tertiary-fixed-variant": "#6700b5",
+          "secondary-fixed": "#f0dbff",
+          "inverse-primary": "#006970",
+          "on-surface": "#e2e2ea",
+          "on-error-container": "#ffdad6",
+          "surface": "#111319",
+          "on-primary-container": "#006970",
+          "secondary-container": "#6f00be",
+          "error-container": "#93000a",
+          "primary-fixed": "#7df4ff",
+          "surface-dim": "#111319",
+          "surface-bright": "#373940",
+          "secondary-fixed-dim": "#ddb7ff"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "space-sm": "0.5rem",
+          "space-xl": "1.5rem",
+          "space-xs": "0.25rem",
+          "margin": "1rem",
+          "gutter": "0.75rem",
+          "gutter-compact": "0.5rem",
+          "space-md": "0.75rem",
+          "space-lg": "1rem"
+        },
+        "fontFamily": {
+          "label-lg": [
+            "Inter"
+          ],
+          "headline-md": [
+            "Geist"
+          ],
+          "label-sm": [
+            "JetBrains Mono"
+          ],
+          "headline-lg": [
+            "Geist"
+          ],
+          "body-md": [
+            "Inter"
+          ],
+          "mono-data": [
+            "JetBrains Mono"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "headline-xl": [
+            "Geist"
+          ],
+          "label-md": [
+            "Inter"
+          ],
+          "body-sm": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "label-lg": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.01em",
+              "fontWeight": "500"
+            }
+          ],
+          "headline-md": [
+            "18px",
+            {
+              "lineHeight": "24px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "500"
+            }
+          ],
+          "label-sm": [
+            "10px",
+            {
+              "lineHeight": "12px",
+              "letterSpacing": "0.03em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-md": [
+            "13px",
+            {
+              "lineHeight": "18px",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ],
+          "mono-data": [
+            "11px",
+            {
+              "lineHeight": "14px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "400"
+            }
+          ],
+          "body-lg": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-xl": [
+            "32px",
+            {
+              "lineHeight": "40px",
+              "letterSpacing": "-0.025em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-md": [
+            "11px",
+            {
+              "lineHeight": "14px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "500"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface-container-lowest font-body-md text-on-surface antialiased select-none"><header class="fixed top-0 left-0 right-0 h-10 z-50 bg-surface-container/90 backdrop-blur-xl shadow-[0_1px_12px_rgba(0,0,0,0.5)]"><div class="h-10 w-full px-space-md flex items-center justify-between"><div class="flex items-center gap-space-md"><img alt="ArtCraft Studio Brand Glyph" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1USg28q4eLTb-Uz0APHwRyVS8HIBHKQX5fCPP-FchfyC0g2H626N1pUYxvbmXP9m6j7Gv5IVuGAvi_W7ihgyObVfW4lrRwzXEu8lQIok-GyW07KDrxNS6TG4G70_vmpJA74jD-gVBjLf0n-UZHen2t29wk7fTseFHKB5j9JOU7t15_Y6MaWX9MNfLoTxDeMFrOGnnS2esuTq2KSFEBryxyayb8tPbi8ljZLBE0ZRBxEuZEt1B8rsHgBAQ"/><span class="font-headline-md text-headline-md font-semibold text-primary tracking-tight">ArtCraft</span><div class="h-4 w-px bg-surface-variant mx-space-xs"></div><nav class="flex items-center gap-space-xs bg-surface-container-lowest p-0.5 rounded-lg" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg"><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors" data-path="dashboard-launcher" href="#">Dashboard</a><a aria-current="page" class="px-space-sm py-0.5 transition-colors bg-primary-container text-on-primary-container font-semibold rounded-lg" data-path="photocraft" href="#">PhotoCraft</a><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors" data-path="vectorcraft" href="#">VectorCraft</a><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors" data-path="filmcraft" href="#">FilmCraft</a><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors" data-path="effectcraft" href="#">EffectCraft</a></nav></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-0.5 rounded"><span class="material-symbols-outlined text-sm text-secondary">draft</span><span class="font-mono-data text-mono-data text-on-surface">Cybernetic_Genesis_v4.art</span></div><div class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-sm text-primary-container">hub</span><span class="font-mono-data text-mono-data text-primary-container">Synced P2P</span></div><div class="h-4 w-px bg-surface-variant"></div><div class="flex items-center gap-1"><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded transition-colors" rtrvr-ls="0~1" rtrvr-ro="38" title="Undo (Ctrl+Z)" type="button"><span class="material-symbols-outlined text-base">undo</span></button><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded transition-colors" rtrvr-ls="0~1" rtrvr-ro="38" title="Redo (Ctrl+Y)" type="button"><span class="material-symbols-outlined text-base">redo</span></button></div><div class="flex items-center bg-surface-container-low px-space-xs py-0.5 rounded"><span class="font-mono-data text-mono-data text-on-surface font-medium">125%</span><span class="material-symbols-outlined text-xs text-on-surface-variant ml-0.5">arrow_drop_down</span></div></div><div class="flex items-center gap-space-sm"><button class="flex items-center gap-1 px-space-sm py-1 bg-secondary-container text-on-secondary-container font-label-md text-label-md rounded-lg hover:brightness-110 transition-all" type="button"><span class="material-symbols-outlined text-sm">share</span><span class="">Share</span></button><div class="h-4 w-px bg-surface-variant"></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-primary-container/40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRz83RHz3sM2uo96cpM8p5RP9zOTyCsPFdNAXJjRp-dcl__XET73JQKUYJdx2jox5cSAeWh1q7EfQowBQhS0JzcnvkvcVZz8alkwOgWhZt50QUQI_x2EFtMActNMXl-F4Hc351SwvTn2YzwtBrUTnP0KKcOYDVxOgtpUWOngP-fI4NnTX0pJ5faNxds0Tosr-kwPVecwKYR3UE9YfWflG2PBVmEjkAl40ncSoUYLYhgczgNUHw3uv5"/></div></div></header><aside class="fixed left-0 top-10 bottom-0 w-64 bg-surface-container-low/95 backdrop-blur-xl z-40 flex flex-col justify-between shadow-[2px_0_12px_rgba(0,0,0,0.3)]"><div class="flex flex-col flex-1 overflow-y-auto"><div class="flex items-center justify-between px-space-md py-space-sm bg-surface-container-lowest/50"><span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Workspace Modules</span><span class="material-symbols-outlined text-sm text-outline hover:text-on-surface cursor-pointer">dock_to_left</span></div><nav class="flex flex-col gap-space-xs p-space-sm" data-active-classes="bg-surface-container-high text-primary font-medium rounded-lg"><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="shared-clipboard" href="#"><span class="material-symbols-outlined text-base text-primary-container">content_paste_go</span><span class="font-label-md text-label-md">Shared Clipboard</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="layers-palette" href="#"><span class="material-symbols-outlined text-base text-secondary">layers</span><span class="font-label-md text-label-md">Layers &amp; Masks</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="asset-library" href="#"><span class="material-symbols-outlined text-base text-primary-fixed">auto_awesome_motion</span><span class="font-label-md text-label-md">Design Tokens</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="export-inspector" href="#"><span class="material-symbols-outlined text-base text-tertiary-fixed-dim">output</span><span class="font-label-md text-label-md">Export Telemetry</span></a></nav></div><div class="p-space-sm bg-surface-container-lowest/60 flex items-center justify-between text-on-surface-variant"><div class="flex items-center gap-space-xs"><span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span><span class="font-mono-data text-mono-data">GPU: Metal V2 Active</span></div><span class="material-symbols-outlined text-xs cursor-pointer hover:text-on-surface">settings</span></div></aside><div class="pl-64"><main class="relative pt-10 min-h-screen bg-surface-container-lowest w-full overflow-hidden"><div class="flex flex-col w-full h-[calc(100vh-2.5rem)] overflow-hidden select-none bg-surface-container-lowest text-on-surface">
+<!-- Module Sub-Header / Tool Ribbon -->
+<header class="h-10 w-full bg-surface-container-low/95 backdrop-blur-xl px-space-md flex items-center justify-between shrink-0 shadow-sm z-30">
+<div class="flex items-center gap-space-md">
+<!-- Tool Category Switcher -->
+<div class="flex items-center bg-surface-container-lowest p-0.5 rounded-lg">
+<button class="px-space-sm py-1 rounded-lg bg-surface-container-high text-primary flex items-center gap-1 font-label-md text-label-md" type="button">
+<span class="material-symbols-outlined text-sm text-primary-container">tune</span>
+<span>Develop</span>
+</button>
+<button class="px-space-sm py-1 rounded-lg text-on-surface-variant hover:text-on-surface flex items-center gap-1 font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-sm">auto_fix_high</span>
+<span>Neural Bake</span>
+</button>
+<button class="px-space-sm py-1 rounded-lg text-on-surface-variant hover:text-on-surface flex items-center gap-1 font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-sm">masks</span>
+<span>Masks (3)</span>
+</button>
+</div>
+<div class="h-4 w-px bg-surface-variant"></div>
+<!-- Quick Action Buttons -->
+<div class="flex items-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container-high text-primary-container flex items-center justify-center transition-colors" title="Filter Presets" type="button">
+<span class="material-symbols-outlined text-base">filter_vintage</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="Crop &amp; Perspective (C)" type="button">
+<span class="material-symbols-outlined text-base">crop</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="Tone Curves (M)" type="button">
+<span class="material-symbols-outlined text-base">show_chart</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="Exposure Bracket" type="button">
+<span class="material-symbols-outlined text-base">exposure</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-high text-secondary flex items-center justify-center transition-colors" title="Neural Super Resolution" type="button">
+<span class="material-symbols-outlined text-base">neurology</span>
+</button>
+</div>
+<div class="h-4 w-px bg-surface-variant"></div>
+<div class="flex items-center gap-2">
+<span class="font-mono-data text-mono-data text-outline">VIEW:</span>
+<button class="px-space-xs py-0.5 rounded bg-surface-container text-primary font-mono-data text-mono-data flex items-center gap-1" id="wipeToggleBtn" type="button">
+<span class="material-symbols-outlined text-xs">compare</span>
+<span>A/B Split Wipe</span>
+</button>
+<span class="font-mono-data text-mono-data text-outline">COLORSPACE:</span>
+<span class="font-mono-data text-mono-data px-1.5 py-0.5 rounded bg-surface-container-high text-secondary">ACEScg 32-bit Float</span>
+</div>
+</div>
+<!-- Right Quick Export & Status -->
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded bg-surface-container-lowest">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-mono-data text-mono-data text-primary-container font-medium">Bake: Rust-Resvg 12ms</span>
+</div>
+<button class="flex items-center gap-1.5 px-space-sm py-1 bg-primary-container text-on-primary-container font-label-md text-label-md font-semibold rounded hover:brightness-110 transition-all shadow-[0_0_12px_rgba(0,240,255,0.35)]" type="button">
+<span class="material-symbols-outlined text-sm">download</span>
+<span>Export 32-bit PNG</span>
+</button>
+</div>
+</header>
+<!-- Workspace Matrix: Left Palette | Canvas Work Area | Right Property Inspector -->
+<div class="flex flex-1 w-full overflow-hidden relative">
+<!-- FLOATING/DOCKED MODULE 1: Shared Clipboard & Mesh Bridge (Left) -->
+<div class="w-72 bg-surface-container-low/90 backdrop-blur-xl shrink-0 flex flex-col justify-between shadow-lg z-20">
+<div class="flex flex-col h-full overflow-y-auto">
+<!-- Panel Header -->
+<div class="flex items-center justify-between px-space-md py-space-sm bg-surface-container-lowest/70">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-primary-container">hub</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Vector-Raster Link</span>
+</div>
+<span class="px-1.5 py-0.5 rounded text-label-sm font-label-sm bg-primary-container/10 text-primary-container">Live P2P</span>
+</div>
+<!-- VectorCraft Live Clip Item Card -->
+<div class="p-space-sm flex flex-col gap-space-sm">
+<div class="bg-surface-container rounded-lg p-space-sm shadow-sm relative group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-secondary">token</span>
+<span class="font-label-md text-label-md text-on-surface font-medium">Geometric Mesh 04</span>
+</div>
+<span class="material-symbols-outlined text-xs text-outline cursor-pointer hover:text-on-surface">more_horiz</span>
+</div>
+<!-- Asset Preview Container -->
+<div class="relative w-full h-36 bg-surface-container-lowest rounded overflow-hidden flex items-center justify-center p-2 group-hover:scale-[1.01] transition-transform">
+<div class="absolute inset-0 opacity-20 bg-[radial-gradient(#00f0ff_1px,transparent_1px)] [background-size:12px_12px]"></div>
+<!-- Geometric Mesh Vector Representation -->
+<svg class="w-full h-full text-primary-container drop-shadow-[0_0_12px_rgba(0,240,255,0.4)]" fill="none" viewbox="0 0 160 120">
+<!-- 3D Polyhedron Lattice with Violet-Cyan nodes -->
+<polygon opacity="0.6" points="80,15 130,45 130,90 80,110 30,90 30,45" stroke="#00f0ff" stroke-width="1.2"></polygon>
+<line opacity="0.7" stroke="#ddb7ff" stroke-dasharray="2 2" stroke-width="1" x1="80" x2="80" y1="15" y2="110"></line>
+<line opacity="0.7" stroke="#ddb7ff" stroke-dasharray="2 2" stroke-width="1" x1="30" x2="130" y1="45" y2="90"></line>
+<line opacity="0.7" stroke="#ddb7ff" stroke-dasharray="2 2" stroke-width="1" x1="130" x2="30" y1="45" y2="90"></line>
+<polygon points="80,35 110,55 110,80 80,95 50,80 50,55" stroke="#00f0ff" stroke-width="1.5"></polygon>
+<line stroke="#00f0ff" stroke-width="1.2" x1="80" x2="80" y1="15" y2="35"></line>
+<line stroke="#00f0ff" stroke-width="1.2" x1="130" x2="110" y1="45" y2="55"></line>
+<line stroke="#00f0ff" stroke-width="1.2" x1="130" x2="110" y1="90" y2="80"></line>
+<line stroke="#00f0ff" stroke-width="1.2" x1="80" x2="80" y1="110" y2="95"></line>
+<line stroke="#00f0ff" stroke-width="1.2" x1="30" x2="50" y1="90" y2="80"></line>
+<line stroke="#00f0ff" stroke-width="1.2" x1="30" x2="50" y1="45" y2="55"></line>
+<!-- Glowing interactive nodes -->
+<circle cx="80" cy="15" fill="#dbfcff" r="2.5"></circle>
+<circle cx="130" cy="45" fill="#ddb7ff" r="2.5"></circle>
+<circle cx="130" cy="90" fill="#00f0ff" r="2.5"></circle>
+<circle cx="80" cy="110" fill="#dbfcff" r="2.5"></circle>
+<circle cx="30" cy="90" fill="#ddb7ff" r="2.5"></circle>
+<circle cx="30" cy="45" fill="#00f0ff" r="2.5"></circle>
+<circle cx="80" cy="65" fill="#00f0ff" r="3"></circle>
+</svg>
+<!-- Drag Pill Overlay -->
+<div class="absolute bottom-1.5 right-1.5 flex items-center gap-1 bg-surface-container-high/90 px-2 py-0.5 rounded text-primary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-xs">drag_indicator</span>
+<span>Drag to Bake</span>
+</div>
+</div>
+<!-- Asset Metadata Badge List -->
+<div class="flex items-center justify-between mt-2 pt-2 bg-surface-container-lowest/40 rounded p-1.5">
+<span class="font-mono-data text-mono-data text-outline">vectorcraft • image/svg+xml</span>
+<span class="font-mono-data text-mono-data text-secondary font-medium">1,428 Nodes</span>
+</div>
+<div class="mt-1 flex items-center justify-between text-on-surface-variant font-mono-data text-mono-data">
+<span>Precision: 64-bit Bezier</span>
+<span class="text-primary-container">Synced 2m ago</span>
+</div>
+</div>
+<!-- Stored Clipart Palette & Shaders -->
+<div class="flex items-center justify-between px-space-xs mt-2">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Vector Geometry Bank</span>
+<span class="font-mono-data text-mono-data text-primary-container cursor-pointer hover:underline">Import .SVG</span>
+</div>
+<div class="grid grid-cols-4 gap-1.5 p-1 bg-surface-container-lowest rounded-lg">
+<button class="h-12 rounded bg-surface-container hover:bg-surface-container-high flex flex-col items-center justify-center p-1 group transition-all" type="button">
+<svg class="w-6 h-6 text-on-surface-variant group-hover:text-primary transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9"></circle>
+<circle cx="12" cy="12" r="4"></circle>
+</svg>
+<span class="text-[9px] font-mono-data text-outline mt-0.5">Torus</span>
+</button>
+<button class="h-12 rounded bg-surface-container-high flex flex-col items-center justify-center p-1 text-primary shadow-[0_0_8px_rgba(0,240,255,0.2)]" type="button">
+<svg class="w-6 h-6 text-primary-container" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<polygon points="12,2 22,20 2,20"></polygon>
+</svg>
+<span class="text-[9px] font-mono-data text-primary-container mt-0.5">Delta</span>
+</button>
+<button class="h-12 rounded bg-surface-container hover:bg-surface-container-high flex flex-col items-center justify-center p-1 group transition-all" type="button">
+<svg class="w-6 h-6 text-on-surface-variant group-hover:text-secondary transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+</svg>
+<span class="text-[9px] font-mono-data text-outline mt-0.5">Strata</span>
+</button>
+<button class="h-12 rounded bg-surface-container hover:bg-surface-container-high flex flex-col items-center justify-center p-1 group transition-all" type="button">
+<svg class="w-6 h-6 text-on-surface-variant group-hover:text-primary transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+<rect height="18" rx="2" width="18" x="3" y="3"></rect>
+<path d="M3 9h18M9 21V9"></path>
+</svg>
+<span class="text-[9px] font-mono-data text-outline mt-0.5">Grid</span>
+</button>
+</div>
+<!-- Active Neural Layer Stack Mini-Tree -->
+<div class="mt-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between px-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Composition Pipeline</span>
+<span class="material-symbols-outlined text-xs text-outline">tune</span>
+</div>
+<!-- Layer 1: Neural Render -->
+<div class="flex items-center justify-between px-space-sm py-1.5 rounded bg-surface-container-high text-on-surface">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary-container">neurology</span>
+<span class="font-label-md text-label-md font-medium">Neural Shader Volumetrics</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="font-mono-data text-mono-data text-primary">HDR</span>
+<span class="material-symbols-outlined text-sm">visibility</span>
+</div>
+</div>
+<!-- Layer 2: Vector Mesh Drop Active -->
+<div class="flex items-center justify-between px-space-sm py-1.5 rounded bg-secondary-container/20 text-secondary">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-secondary">polyline</span>
+<span class="font-label-md text-label-md">Geometric Mesh 04 (Active)</span>
+</div>
+<span class="material-symbols-outlined text-sm">visibility</span>
+</div>
+<!-- Layer 3: Base RAW Photo -->
+<div class="flex items-center justify-between px-space-sm py-1.5 rounded hover:bg-surface-container text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">raw_on</span>
+<span class="font-label-md text-label-md">Background Plate (DNG)</span>
+</div>
+<span class="material-symbols-outlined text-sm">visibility</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Left Panel Bottom Quick Metric -->
+<div class="p-space-sm bg-surface-container-lowest/80 flex items-center justify-between text-on-surface-variant">
+<span class="font-mono-data text-mono-data text-outline">VRAM Buffer: 2.1 GB / 16 GB</span>
+<span class="font-mono-data text-mono-data text-primary-container">60 FPS</span>
+</div>
+</div>
+<!-- MAIN INTERACTIVE CANVAS AREA -->
+<div class="flex-1 flex flex-col relative overflow-hidden bg-surface-container-lowest">
+<!-- Precision Ruler/Guide Header Strip -->
+<div class="h-6 w-full bg-surface-container-low flex items-center justify-between px-space-md text-outline font-mono-data text-mono-data z-10">
+<div class="flex items-center gap-4">
+<span class="text-on-surface-variant font-medium">Cybernetic_Genesis_v4.png</span>
+<span class="text-primary-container">32-bit HDR</span>
+<span>4096 × 2160 px (DCI 4K)</span>
+<span class="text-secondary">ACEScg Linear</span>
+</div>
+<div class="flex items-center gap-3">
+<span>X: <span class="text-on-surface" id="curX">2048</span> Y: <span class="text-on-surface" id="curY">1080</span></span>
+<div class="h-3 w-px bg-surface-variant"></div>
+<span class="text-primary">Zoom: 125%</span>
+</div>
+</div>
+<!-- Viewport Canvas Stage -->
+<div class="flex-1 relative flex items-center justify-center p-8 overflow-hidden bg-[radial-gradient(#191b22_1px,transparent_1px)] [background-size:20px_20px] cursor-crosshair" id="artboardContainer">
+<!-- Outer Precision Artboard Card with Subtle Shadow & Glass Backing -->
+<div class="relative w-[840px] h-[520px] bg-surface-container-low rounded-lg overflow-hidden shadow-2xl flex items-center justify-center">
+<!-- Background Bioluminescent Art Plate (Neural Shader Render) -->
+<div class="absolute inset-0 w-full h-full bg-cover bg-center filter contrast-125 saturate-110" data-alt="Dark obsidian futuristic cybernetic laboratory with bioluminescent cyan and violet neural crystal filaments radiating soft HDR glow inside volumetric mist. Precision digital art with deep void black tones, razor-sharp hyper-detailed photorealistic reflections and microscopic optic refractions." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC5bqKpWN1ZZtWInJrf7QPaTHtCd5VNKWtTgJFLOccoyi0c6w3ZM493evJzoawzVr4QGkXRF9N6_YxCbgsJYhZuUTUsKaAdIspNiCwdykG33oRrrGcXABYtirIZj4yj3hSdvEwPGXLZnX9BdgAq1sr4nGuUJN4rTHJsK5wM3T6y9n352ieN_Rw-NK7ZLfhUgrEAelp0amFQwQZE_qJ_3Rc0lrS0l3aH8hxusCNm90p3PLQ6tsRuZvuB')">
+</div>
+<!-- Gradient Atmospheric Scrim for UI Readability -->
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/80 via-transparent to-surface-container-lowest/50"></div>
+<!-- Split-View Wipe System (Before Neural Denoising / After Shader Bake) -->
+<div class="absolute top-0 bottom-0 left-[55%] w-0.5 bg-primary-container shadow-[0_0_10px_#00f0ff] z-20 pointer-events-none" id="wipeDivider">
+<div class="absolute top-1/2 -translate-y-1/2 -left-3.5 w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center shadow-lg border-primary-container">
+<span class="material-symbols-outlined text-xs text-primary-container">swap_horiz</span>
+</div>
+<!-- Labels -->
+<div class="absolute top-4 -left-20 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 font-mono-data text-mono-data text-outline">
+              Raw Buffer
+            </div>
+<div class="absolute top-4 left-3 px-1.5 py-0.5 rounded bg-primary-container/20 font-mono-data text-mono-data text-primary-container">
+              Neural Baked
+            </div>
+</div>
+<!-- Neural Vector Drop & Interactive Projection Area -->
+<div class="relative z-10 w-96 h-96 rounded-xl flex flex-col items-center justify-center p-6 text-center animate-pulse" style="animation-duration: 4s;">
+<!-- Vector Mesh Injected Wireframe (3D Interactive Overlay) -->
+<svg class="w-64 h-64 text-primary-container drop-shadow-[0_0_24px_rgba(0,240,255,0.65)]" fill="none" viewbox="0 0 200 200">
+<!-- Complex Icosahedron Wireframe -->
+<polygon opacity="0.8" points="100,20 165,55 165,145 100,180 35,145 35,55" stroke="#00f0ff" stroke-width="1.5"></polygon>
+<polygon opacity="0.9" points="100,50 145,75 145,125 100,150 55,125 55,75" stroke="#ddb7ff" stroke-width="1.2"></polygon>
+<line stroke="#00f0ff" stroke-width="1.2" x1="100" x2="100" y1="20" y2="50"></line>
+<line stroke="#00f0ff" stroke-width="1.2" x1="165" x2="145" y1="55" y2="75"></line>
+<line stroke="#00f0ff" stroke-width="1.2" x1="165" x2="145" y1="145" y2="125"></line>
+<line stroke="#00f0ff" stroke-width="1.2" x1="100" x2="100" y1="180" y2="150"></line>
+<line stroke="#00f0ff" stroke-width="1.2" x1="35" x2="55" y1="145" y2="125"></line>
+<line stroke="#00f0ff" stroke-width="1.2" x1="35" x2="55" y1="55" y2="75"></line>
+<line stroke="#00f0ff" stroke-dasharray="3 3" stroke-width="1" x1="100" x2="100" y1="50" y2="150"></line>
+<line stroke="#ddb7ff" stroke-dasharray="3 3" stroke-width="1" x1="55" x2="145" y1="75" y2="125"></line>
+<line stroke="#ddb7ff" stroke-dasharray="3 3" stroke-width="1" x1="145" x2="55" y1="75" y2="125"></line>
+<!-- Active Vector Nodes with Pulsing Glow -->
+<circle class="cursor-pointer" cx="100" cy="20" fill="#00f0ff" r="3.5"></circle>
+<circle class="cursor-pointer" cx="165" cy="55" fill="#00f0ff" r="3.5"></circle>
+<circle class="cursor-pointer" cx="165" cy="145" fill="#00f0ff" r="3.5"></circle>
+<circle class="cursor-pointer" cx="100" cy="180" fill="#00f0ff" r="3.5"></circle>
+<circle class="cursor-pointer" cx="35" cy="145" fill="#00f0ff" r="3.5"></circle>
+<circle class="cursor-pointer" cx="35" cy="55" fill="#00f0ff" r="3.5"></circle>
+<circle cx="100" cy="100" fill="#ffffff" r="4.5" stroke="#ddb7ff" stroke-width="2"></circle>
+</svg>
+<!-- Live Drop HUD Info -->
+<div class="mt-4 px-space-sm py-1 rounded-full bg-surface-container-lowest/80 backdrop-blur-md flex items-center gap-2 shadow-lg">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="font-label-md text-label-md text-primary font-medium tracking-wide">Drop to Rasterize &amp; Bake Neural Shader</span>
+</div>
+<span class="font-mono-data text-mono-data text-on-surface-variant mt-1">Rust Wasm Module Initialized • Resvg 12ms</span>
+</div>
+<!-- Precision Crop Reticle & Crosshairs -->
+<div class="absolute inset-10 pointer-events-none opacity-40">
+<!-- Reticle Marks -->
+<div class="absolute -top-2 -left-2 w-4 h-4 bg-primary-container"></div>
+<div class="absolute -top-2 -right-2 w-4 h-4 bg-primary-container"></div>
+<div class="absolute -bottom-2 -left-2 w-4 h-4 bg-primary-container"></div>
+<div class="absolute -bottom-2 -right-2 w-4 h-4 bg-primary-container"></div>
+<!-- Grid Lines Thirds -->
+<div class="absolute left-1/3 top-0 bottom-0 w-px bg-primary-container/20"></div>
+<div class="absolute right-1/3 top-0 bottom-0 w-px bg-primary-container/20"></div>
+<div class="absolute top-1/3 left-0 right-0 h-px bg-primary-container/20"></div>
+<div class="absolute bottom-1/3 left-0 right-0 h-px bg-primary-container/20"></div>
+</div>
+<!-- Canvas Floating HUD Overlay (Histogram Mini-Viewer) -->
+<div class="absolute top-4 right-4 bg-surface-container-lowest/85 backdrop-blur-lg rounded-lg p-2.5 shadow-xl z-20 flex flex-col gap-1 w-44">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm text-outline uppercase">Live Telemetry</span>
+<span class="font-mono-data text-mono-data text-primary-container">Rec.2020</span>
+</div>
+<!-- Mini RGB Sparkline Graph -->
+<div class="h-10 w-full relative flex items-end gap-0.5 overflow-hidden rounded bg-surface-container-low/60 pt-1">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 100 40">
+<!-- Red Channel -->
+<path d="M0,40 Q15,35 25,28 T50,15 T75,25 T100,40" fill="none" opacity="0.6" stroke="#ffb4ab" stroke-width="1.2"></path>
+<!-- Green Channel -->
+<path d="M0,40 Q20,38 35,20 T60,10 T85,22 T100,40" fill="none" opacity="0.7" stroke="#00f0ff" stroke-width="1.2"></path>
+<!-- Blue Channel -->
+<path d="M0,40 Q25,30 40,12 T70,5 T90,30 T100,40" fill="none" opacity="0.9" stroke="#ddb7ff" stroke-width="1.5"></path>
+</svg>
+</div>
+<div class="flex items-center justify-between text-outline font-mono-data text-[9px]">
+<span>EV -4</span>
+<span>0 EV</span>
+<span>+4 EV</span>
+</div>
+</div>
+<!-- Bottom Left HUD Badge -->
+<div class="absolute bottom-4 left-4 bg-surface-container-lowest/85 backdrop-blur-lg px-2.5 py-1.5 rounded-lg shadow-lg flex items-center gap-3 font-mono-data text-mono-data text-on-surface-variant z-20">
+<span class="flex items-center gap-1 text-primary-container">
+<span class="material-symbols-outlined text-xs">shutter_speed</span>
+<span>1/250s</span>
+</span>
+<span class="flex items-center gap-1">
+<span>ƒ/1.8</span>
+</span>
+<span class="flex items-center gap-1 text-secondary">
+<span>ISO 100</span>
+</span>
+</div>
+</div>
+<!-- Floating Precision Toolbar (Figma / Linear Style) -->
+<div class="absolute bottom-5 bg-surface-container-high/90 backdrop-blur-2xl rounded-xl px-space-sm py-1.5 flex items-center gap-1 shadow-2xl z-30">
+<button class="p-1.5 rounded bg-primary-container/15 text-primary-container flex items-center justify-center transition-colors" title="Select Pointer (V)" type="button">
+<span class="material-symbols-outlined text-base">near_me</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="Pan Hand Tool (H)" type="button">
+<span class="material-symbols-outlined text-base">pan_tool</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="Neural Inpaint Brush (B)" type="button">
+<span class="material-symbols-outlined text-base">brush</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="Vector Node Edit (N)" type="button">
+<span class="material-symbols-outlined text-base">timeline</span>
+</button>
+<div class="h-4 w-px bg-surface-variant mx-1"></div>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="Gradient Radial Filter" type="button">
+<span class="material-symbols-outlined text-base">gradient</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="Color Eyedropper (I)" type="button">
+<span class="material-symbols-outlined text-base">colorize</span>
+</button>
+<div class="h-4 w-px bg-surface-variant mx-1"></div>
+<button class="px-space-sm py-1 rounded bg-secondary-container/30 text-secondary hover:bg-secondary-container/50 font-label-md text-label-md flex items-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-sm">flash_on</span>
+<span>Bake Layer</span>
+</button>
+</div>
+</div>
+</div>
+<!-- RIGHT INSPECTOR PANEL (Precision Photo & Neural Shader Controls) -->
+<div class="w-80 bg-surface-container-low/95 backdrop-blur-xl shrink-0 flex flex-col justify-between overflow-y-auto shadow-2xl z-20">
+<div class="flex flex-col p-space-md gap-space-md">
+<!-- Inspector Tab Bar -->
+<div class="flex items-center justify-between pb-1 bg-surface-container-lowest/40 rounded-lg p-0.5">
+<button class="flex-1 py-1 text-center font-label-md text-label-md rounded bg-surface-container text-primary font-medium" type="button">Develop</button>
+<button class="flex-1 py-1 text-center font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors" type="button">Neural Shader</button>
+<button class="flex-1 py-1 text-center font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors" type="button">Histogram</button>
+</div>
+<!-- 1. FULL SPECTRAL HISTOGRAM CARD -->
+<div class="flex flex-col gap-2 bg-surface-container rounded-lg p-space-sm shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Waveform &amp; Spectrum</span>
+<div class="flex items-center gap-1 text-[10px] font-mono-data text-outline">
+<span class="text-error">R</span>
+<span class="text-primary-container">G</span>
+<span class="text-secondary">B</span>
+</div>
+</div>
+<!-- Detailed Histogram SVG Graphic -->
+<div class="h-20 w-full bg-surface-container-lowest rounded overflow-hidden relative">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 200 80">
+<defs>
+<lineargradient id="histCyan" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#00f0ff" stop-opacity="0.5"></stop>
+<stop offset="100%" stop-color="#00f0ff" stop-opacity="0"></stop>
+</lineargradient>
+<lineargradient id="histViolet" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#ddb7ff" stop-opacity="0.4"></stop>
+<stop offset="100%" stop-color="#ddb7ff" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Filled multi-layer waves -->
+<path d="M0,80 Q20,70 45,50 T90,20 T140,40 T170,10 T200,80 Z" fill="url(#histCyan)"></path>
+<path d="M0,80 Q30,75 60,35 T110,15 T150,55 T180,25 T200,80 Z" fill="url(#histViolet)"></path>
+<!-- Outlines -->
+<path d="M0,80 Q20,70 45,50 T90,20 T140,40 T170,10 T200,80" fill="none" stroke="#00f0ff" stroke-width="1.2"></path>
+<path d="M0,80 Q30,75 60,35 T110,15 T150,55 T180,25 T200,80" fill="none" stroke="#ddb7ff" stroke-width="1.2"></path>
+</svg>
+<div class="absolute inset-x-0 bottom-1 flex justify-between px-2 text-[9px] font-mono-data text-outline/60">
+<span>Shadows</span>
+<span>Midtones</span>
+<span>Highlights</span>
+</div>
+</div>
+</div>
+<!-- 2. EXPOSURE & PHOTOMETRIC TONING -->
+<div class="flex flex-col gap-space-sm bg-surface-container rounded-lg p-space-sm shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Toning &amp; Exposure</span>
+<button class="font-mono-data text-mono-data text-primary-container hover:underline" type="button">Auto Tone</button>
+</div>
+<!-- Slider 1: Exposure (+0.45 EV) -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-md text-label-md text-on-surface">
+<span>Exposure</span>
+<span class="font-mono-data text-mono-data text-primary-container font-medium">+0.45 EV</span>
+</div>
+<div class="relative w-full h-1.5 bg-surface-container-lowest rounded overflow-hidden flex items-center">
+<div class="absolute left-0 top-0 bottom-0 bg-primary-container rounded" style="width: 58%;"></div>
+<div class="absolute w-3 h-3 rounded-full bg-primary-container shadow-md left-[58%] -translate-x-1/2 cursor-ew-resize"></div>
+</div>
+</div>
+<!-- Slider 2: Contrast (+18) -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-md text-label-md text-on-surface">
+<span>Contrast</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant font-medium">+18</span>
+</div>
+<div class="relative w-full h-1.5 bg-surface-container-lowest rounded overflow-hidden flex items-center">
+<div class="absolute left-0 top-0 bottom-0 bg-secondary rounded" style="width: 62%;"></div>
+<div class="absolute w-3 h-3 rounded-full bg-secondary shadow-md left-[62%] -translate-x-1/2 cursor-ew-resize"></div>
+</div>
+</div>
+<!-- 2x2 Micro Scrubbable Inputs (Highlights, Shadows, Whites, Blacks) -->
+<div class="grid grid-cols-2 gap-space-xs mt-1">
+<div class="h-6 bg-surface-container-lowest rounded px-2 flex items-center justify-between">
+<span class="font-mono-data text-mono-data text-outline">High</span>
+<span class="font-mono-data text-mono-data text-primary">-24</span>
+</div>
+<div class="h-6 bg-surface-container-lowest rounded px-2 flex items-center justify-between">
+<span class="font-mono-data text-mono-data text-outline">Shad</span>
+<span class="font-mono-data text-mono-data text-primary">+38</span>
+</div>
+<div class="h-6 bg-surface-container-lowest rounded px-2 flex items-center justify-between">
+<span class="font-mono-data text-mono-data text-outline">White</span>
+<span class="font-mono-data text-mono-data text-on-surface">+12</span>
+</div>
+<div class="h-6 bg-surface-container-lowest rounded px-2 flex items-center justify-between">
+<span class="font-mono-data text-mono-data text-outline">Black</span>
+<span class="font-mono-data text-mono-data text-on-surface">-15</span>
+</div>
+</div>
+</div>
+<!-- 3. PARAMETRIC TONE CURVE WITH INTERACTIVE NODES -->
+<div class="flex flex-col gap-space-sm bg-surface-container rounded-lg p-space-sm shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Parametric Curve</span>
+<div class="flex items-center gap-1">
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="font-mono-data text-mono-data text-outline">Point Curve</span>
+</div>
+</div>
+<!-- Tone Curve Interactive Graph -->
+<div class="relative w-full h-32 bg-surface-container-lowest rounded overflow-hidden flex items-center justify-center p-2">
+<!-- Background Coordinate Grid -->
+<div class="absolute inset-0 bg-[linear-gradient(to_right,#1d1f26_1px,transparent_1px),linear-gradient(to_bottom,#1d1f26_1px,transparent_1px)] [background-size:25%_25%]"></div>
+<svg class="w-full h-full overflow-visible z-10" viewbox="0 0 100 100">
+<!-- Linear Reference Diagonal -->
+<line stroke="#3b494b" stroke-dasharray="2 2" stroke-width="0.8" x1="0" x2="100" y1="100" y2="0"></line>
+<!-- S-Curve Precision Tone Curve (Electric Cyan) -->
+<path class="drop-shadow-[0_0_8px_rgba(0,240,255,0.7)]" d="M0,100 C20,95 30,70 50,50 C70,30 80,10 100,0" fill="none" stroke="#00f0ff" stroke-width="1.8"></path>
+<!-- Interactive Bezier Control Nodes -->
+<circle class="cursor-pointer hover:scale-125 transition-transform" cx="28" cy="72" fill="#111319" r="3" stroke="#00f0ff" stroke-width="1.5"></circle>
+<circle class="cursor-pointer hover:scale-125 transition-transform shadow-[0_0_6px_#00f0ff]" cx="50" cy="50" fill="#00f0ff" r="3.5"></circle>
+<circle class="cursor-pointer hover:scale-125 transition-transform" cx="76" cy="22" fill="#111319" r="3" stroke="#00f0ff" stroke-width="1.5"></circle>
+</svg>
+</div>
+<!-- Channels Selector Pills -->
+<div class="flex items-center justify-between text-on-surface-variant font-mono-data text-mono-data">
+<button class="px-2 py-0.5 rounded bg-surface-container-high text-primary font-medium" type="button">RGB</button>
+<button class="px-2 py-0.5 rounded hover:bg-surface-container text-error" type="button">Red</button>
+<button class="px-2 py-0.5 rounded hover:bg-surface-container text-primary-container" type="button">Green</button>
+<button class="px-2 py-0.5 rounded hover:bg-surface-container text-secondary" type="button">Blue</button>
+</div>
+</div>
+<!-- 4. NEURAL SHADER BAKING MATRIX -->
+<div class="flex flex-col gap-space-sm bg-surface-container rounded-lg p-space-sm shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Neural Shader Engine</span>
+<span class="material-symbols-outlined text-xs text-primary-container">neurology</span>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface">Pipeline Architecture</span>
+<span class="font-mono-data text-mono-data text-secondary">Rust-Resvg Native</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface">Denoise Tensor</span>
+<span class="font-mono-data text-mono-data text-primary-container">OptiX 7.4 (16-bit FP)</span>
+</div>
+<!-- Rasterization Scale Scrub -->
+<div class="flex items-center justify-between bg-surface-container-lowest px-2 py-1 rounded">
+<span class="font-mono-data text-mono-data text-outline">Scale Multiplier</span>
+<span class="font-mono-data text-mono-data text-primary font-medium">4.0× (SuperRes)</span>
+</div>
+<!-- Precision Bake Trigger Button -->
+<button class="mt-1 w-full py-2 bg-gradient-to-r from-primary-container/20 to-secondary-container/30 hover:brightness-125 text-primary rounded font-label-md text-label-md font-semibold flex items-center justify-center gap-2 transition-all shadow-sm" id="neuralBakeTrigger" type="button">
+<span class="material-symbols-outlined text-base text-primary-container">rocket_launch</span>
+<span>Re-Bake Neural Shader (12ms)</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right Footer Diagnostics -->
+<div class="p-space-sm bg-surface-container-lowest flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-1 font-mono-data text-mono-data">
+<span class="material-symbols-outlined text-xs text-primary-container">memory</span>
+<span>GPU Metal V2 Active</span>
+</div>
+<span class="font-mono-data text-mono-data text-outline">v4.8.2-pro</span>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    // Interactive Split View Wipe Divider Dragging
+    const artboard = document.getElementById('artboardContainer');
+    const wipeDivider = document.getElementById('wipeDivider');
+    const curX = document.getElementById('curX');
+    const curY = document.getElementById('curY');
+    const wipeBtn = document.getElementById('wipeToggleBtn');
+    let isWipeActive = true;
+
+    if (artboard && wipeDivider) {
+      artboard.addEventListener('mousemove', (e) => {
+        const rect = artboard.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const offsetY = e.clientY - rect.top;
+
+        if (curX) curX.textContent = Math.round(offsetX * 4.8);
+        if (curY) curY.textContent = Math.round(offsetY * 4.8);
+
+        if (isWipeActive) {
+          const artCard = artboard.querySelector('.w-\\[840px\\]');
+          if (artCard) {
+            const cardRect = artCard.getBoundingClientRect();
+            if (e.clientX >= cardRect.left && e.clientX <= cardRect.right) {
+              const pct = ((e.clientX - cardRect.left) / cardRect.width) * 100;
+              wipeDivider.style.left = `${Math.max(5, Math.min(95, pct))}%`;
+            }
+          }
+        }
+      });
+    }
+
+    if (wipeBtn && wipeDivider) {
+      wipeBtn.addEventListener('click', () => {
+        isWipeActive = !isWipeActive;
+        wipeDivider.style.display = isWipeActive ? 'block' : 'none';
+        wipeBtn.classList.toggle('bg-primary-container', isWipeActive);
+        wipeBtn.classList.toggle('text-on-primary-container', isWipeActive);
+      });
+    }
+
+    // Micro interaction for Bake Neural Shader Button
+    const bakeBtn = document.getElementById('neuralBakeTrigger');
+    if (bakeBtn) {
+      bakeBtn.addEventListener('click', () => {
+        bakeBtn.innerHTML = '<span class="material-symbols-outlined text-base animate-spin">refresh</span><span>Compiling Kernels (12ms)...</span>';
+        setTimeout(() => {
+          bakeBtn.innerHTML = '<span class="material-symbols-outlined text-base text-primary-container">check_circle</span><span>Shader Buffer Baked!</span>';
+          setTimeout(() => {
+            bakeBtn.innerHTML = '<span class="material-symbols-outlined text-base text-primary-container">rocket_launch</span><span>Re-Bake Neural Shader (12ms)</span>';
+          }, 1800);
+        }, 320);
+      });
+    }
+  })();
+</script></main></div>
+</body></html>

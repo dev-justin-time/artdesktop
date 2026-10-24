@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ArtCraft Studio - DesignCraft</title>
+<link rel="stylesheet" href="/vendor/fonts/font-de9b7b5eb580.css">
+<link rel="stylesheet" href="/vendor/fonts/font-4eed1cc85dbe.css">
+<link rel="stylesheet" href="/pages/_studio.css">
+<style>
+  .spread { display: flex; gap: 2px; box-shadow: 0 28px 80px rgba(0, 0, 0, .62); position: relative; }
+  .page {
+    width: 370px;
+    height: 540px;
+    background: #f7f4ed;
+    color: #1d2530;
+    padding: 38px 34px;
+    position: relative;
+    overflow: hidden;
+  }
+  .page.left { border-radius: 4px 0 0 4px; }
+  .page.right { border-radius: 0 4px 4px 0; }
+  .grid-lines {
+    position: absolute;
+    inset: 26px 24px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s;
+    background:
+      repeating-linear-gradient(90deg, rgba(236, 72, 153, .35) 0 1px, transparent 1px 58px),
+      repeating-linear-gradient(0deg, rgba(34, 211, 238, .28) 0 1px, transparent 1px 18px);
+    border-left: 1px solid rgba(236, 72, 153, .5);
+    border-right: 1px solid rgba(236, 72, 153, .5);
+  }
+  body.show-grid .grid-lines { opacity: 1; }
+  .page .folio { position: absolute; bottom: 16px; left: 34px; right: 34px; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 8px; color: #8b8b84; letter-spacing: .1em; text-transform: uppercase; }
+  .page .kicker { font-family: var(--mono); font-size: 8px; letter-spacing: .18em; text-transform: uppercase; color: #9a5b2c; }
+  .page h1 { font-size: 42px; line-height: .94; letter-spacing: -.04em; margin: 10px 0 12px; font-weight: 680; }
+  .page h2 { font-size: 19px; line-height: 1.05; letter-spacing: -.02em; margin: 0 0 9px; font-weight: 640; }
+  .page p { font-size: 9.5px; line-height: 1.62; color: #4b5563; margin: 0 0 9px; column-gap: 16px; }
+  .page .cols { column-count: 2; column-gap: 16px; }
+  .page .hero-img { height: 150px; margin: 12px 0 10px; border-radius: 2px; background: linear-gradient(115deg, #0e7490, #312e81 46%, #a21caf); position: relative; overflow: hidden; }
+  .page .hero-img::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, rgba(255,255,255,.2) 0 1px, transparent 1px 20px); opacity: .5; }
+  .page .hero-img::after { content: ""; position: absolute; width: 120px; height: 120px; border-radius: 50%; border: 1px solid rgba(255,255,255,.45); right: 18px; top: 14px; }
+  .page .eyebrow { font-size: 8px; letter-spacing: .16em; text-transform: uppercase; color: #9ca3af; }
+  .page .square-img { height: 92px; margin: 8px 0; background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 2px; }
+  .page .quote { font-size: 13px; line-height: 1.35; font-weight: 600; letter-spacing: -.01em; margin: 12px 0; padding-top: 10px; border-top: 1px solid #d6d3ca; }
+  .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .page-num { font-family: var(--mono); font-size: 9px; color: #9ca3af; margin-left: auto; }
+</style>
+</head>
+<body class="show-grid">
+<div class="shell">
+  <nav class="rail" aria-label="DesignCraft tools">
+    <div class="brand" title="ArtCraft Studio"></div>
+    <button class="active" title="Layout"><span class="material-symbols-outlined">grid_on</span></button>
+    <button title="Text frame"><span class="material-symbols-outlined">text_fields</span></button>
+    <button title="Image"><span class="material-symbols-outlined">image</span></button>
+    <button title="Link text"><span class="material-symbols-outlined">link</span></button>
+    <button title="Layers"><span class="material-symbols-outlined">layers</span></button>
+    <button title="Print"><span class="material-symbols-outlined">print</span></button>
+    <div class="spacer"></div>
+    <button title="Preview"><span class="material-symbols-outlined">visibility</span></button>
+    <div class="avatar">AR</div>
+  </nav>
+
+  <aside class="side">
+    <h3>Document</h3>
+    <div class="item active"><span class="material-symbols-outlined">menu_book</span> Editorial Spread <span class="count">1-2</span></div>
+    <h3>Pages</h3>
+    <div class="page-thumbs">
+      <div class="page-thumb active"><div class="mini"><i></i><i></i><i></i><i></i><i></i></div><div class="label"><b>Spread 1-2</b>Feature opener</div></div>
+      <div class="page-thumb"><div class="mini"><i></i><i></i><i></i><i></i></div><div class="label"><b>Spread 3-4</b>Process</div></div>
+      <div class="page-thumb"><div class="mini"><i></i><i></i><i></i></div><div class="label"><b>Spread 5-6</b>End notes</div></div>
+    </div>
+    <h3>Master pages</h3>
+    <div class="item"><span class="material-symbols-outlined">dashboard</span> A-Feature</div>
+    <div class="item"><span class="material-symbols-outlined">dashboard</span> B-Standard</div>
+    <div class="item"><span class="material-symbols-outlined">dashboard</span> C-Caption</div>
+    <h3>Linked text</h3>
+    <div class="meta">2 frames linked to <b style="color:var(--muted)">Story / Field Notes</b>.</div>
+  </aside>
+
+  <div class="main">
+    <div class="subbar">
+      <span class="material-symbols-outlined" style="color:var(--purple)">grid_on</span>
+      <span class="title">DesignCraft</span>
+      <span class="pill">Editorial Spread.indd</span>
+      <span class="pill purple">CMYK</span>
+      <div class="right">
+        <button class="btn" id="grid-btn"><span class="material-symbols-outlined" style="font-size:16px">grid_on</span> Grid</button>
+        <button class="btn">Preflight</button>
+        <button class="btn primary"><span class="material-symbols-outlined" style="font-size:16px">print</span> Print PDF</button>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="stage">
+        <div class="spread">
+          <section class="page left">
+            <div class="grid-lines"></div>
+            <div class="kicker">ArtCraft Journal / 04</div>
+            <h1>Systems<br>of form</h1>
+            <div class="hero-img"></div>
+            <div class="cols">
+              <p>The first sketches were instructions: constraints, a palette, and a rule for what happens when shapes disagree.</p>
+              <p>Designing this way changes the rhythm of the studio. You tune the system and watch it answer, then shape the surprises.</p>
+              <p>A signal is a promise that something will change. Motion work is mostly the craft of keeping that promise.</p>
+            </div>
+            <div class="folio"><span>ArtCraft Studio</span><span>04 / 2026</span></div>
+          </section>
+          <section class="page right">
+            <div class="grid-lines"></div>
+            <div class="cols-2">
+              <div>
+                <div class="eyebrow">Essay</div>
+                <h2>Tools as collaborators</h2>
+                <p>A single, tightly coupled studio lets every module speak about the same asset without translation.</p>
+                <div class="square-img"></div>
+                <p>Vector flows into raster, raster into layout. The system holds the thread.</p>
+              </div>
+              <div>
+                <div class="eyebrow">Process</div>
+                <div class="quote">"Design the constraint, not the artifact."</div>
+                <p>Every panel in this suite is a view onto the same shared state, which is why handoff feels less like export and more like continuation.</p>
+              </div>
+            </div>
+            <div class="folio"><span>Feature / Field Notes</span><span>05</span></div>
+          </section>
+        </div>
+      </div>
+
+      <aside class="inspector">
+        <div class="panel-label">Page setup</div>
+        <div class="field"><label>Format</label><select><option>A4 Landscape</option><option>US Letter</option><option>Custom</option></select></div>
+        <div class="row">
+          <div class="field"><label>Width <span>297</span></label><input type="range" min="100" max="420" value="297"></div>
+          <div class="field"><label>Height <span>210</span></label><input type="range" min="100" max="420" value="210"></div>
+        </div>
+        <div class="panel-label">Margins</div>
+        <div class="field"><label>Top <span>18 mm</span></label><input type="range" min="0" max="40" value="18"></div>
+        <div class="field"><label>Outside <span>16 mm</span></label><input type="range" min="0" max="40" value="16"></div>
+        <div class="field"><label>Bottom <span>20 mm</span></label><input type="range" min="0" max="40" value="20"></div>
+        <div class="panel-label">Grid</div>
+        <div class="field"><label>Columns <span>2</span></label><input type="range" min="1" max="6" value="2"></div>
+        <div class="field"><label>Gutter <span>6 mm</span></label><input type="range" min="2" max="20" value="6"></div>
+        <div class="toggle on" id="grid-toggle"><span>Show layout grid</span><span class="switch"></span></div>
+        <div class="toggle on" data-toggle><span>Baseline guides</span><span class="switch"></span></div>
+        <div class="toggle" data-toggle><span>Bleed marks</span><span class="switch"></span></div>
+      </aside>
+    </div>
+
+    <div class="statusbar">
+      <span>Spread 1-2</span>
+      <span>297 x 210 mm</span>
+      <span class="grow"></span>
+      <span class="ok">Links OK</span>
+      <span>82%</span>
+    </div>
+  </div>
+</div>
+<script>
+  const gridToggle = document.getElementById("grid-toggle");
+  document.getElementById("grid-btn").addEventListener("click", () => {
+    document.body.classList.toggle("show-grid");
+    gridToggle.classList.toggle("on", document.body.classList.contains("show-grid"));
+  });
+  gridToggle.addEventListener("click", () => {
+    document.body.classList.toggle("show-grid");
+    gridToggle.classList.toggle("on", document.body.classList.contains("show-grid"));
+  });
+  document.querySelectorAll("[data-toggle]").forEach((row) => row.addEventListener("click", () => row.classList.toggle("on")));
+  document.querySelectorAll(".page-thumb").forEach((thumb) => {
+    thumb.addEventListener("click", () => {
+      document.querySelectorAll(".page-thumb").forEach((t) => t.classList.remove("active"));
+      thumb.classList.add("active");
+    });
+  });
+</script>
+<script src="/pages/_studio.js" defer></script>
+</body>
+</html>

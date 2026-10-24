@@ -31,6 +31,9 @@ The following were fixed in this pass, in severity order. Every verification com
 | Placeholder images | Added 14 generated PNGs under `assets/` covering every image the README references; each is labelled "PLACEHOLDER - NOT A SCREENSHOT". | 14/14 refs resolve; images inspected |
 | Clipboard refresh | Clipboard writes now go through `SharedState::set_clipboard`, which stores the item, drops the lock and emits `clipboard-updated`. Both the `set_clipboard` command and VectorCraft's `export_svg` use it, so the sidebar refreshes. | `cargo build`/check/clippy/test/fmt pass; event path code-reviewed |
 | Test coverage | Added 4 rasterizer tests (PNG signature/dimensions, Base64 path, invalid Base64, invalid SVG) and 4 clipboard tests (empty default, store+notify, notification error propagation, frontend JSON shape). | `cargo test --workspace` → 8 passed, 0 failed |
+| Offline mockups | Localized all remote assets: Google Fonts CSS/woff2 mirrored to `ui/public/vendor/fonts`, ten Google-hosted images hashed into `ui/public/vendor/images`, and the Tailwind CDN build vendored as `ui/public/vendor/tailwind.js`. Every `<link>`/`<img>`/`<script>` now points at a local path. | Headless Chrome on all eight embedded pages: 0 external resources, 0 failed resources, 0 broken images; `document.fonts.status === "loaded"` and both Inter and Material Symbols available |
+| Completed mockups | Added full interactive mockup pages for WordCraft, DeckCraft, DesignCraft, EffectCraft and GridCraft under `assets/pages/`, sharing `_studio.css`. The shell now embeds eight pages; only PhotoCraft and VectorCraft keep their bespoke working canvases. | `npm run build` → exit 0; every tab in `COMPLETED_PAGES` resolves |
+| Embedded module nav | `assets/pages/_studio.js` injects a fixed 30 px module bar into every embedded page with `a[data-path]` links; `wireModuleNavigation` already maps those paths to `activateModule`, so clicks switch the studio's active tab or return to the dashboard. | Headless Chrome with a mocked Tauri IPC: clicking DeckCraft inside the WordCraft iframe switched the canvas to `pages/deckcraft/index.html`; clicking Dashboard restored the "Select a Module to Begin" state |
 
 `Cargo.lock` and the new `icons/` are included in the follow-up commit `aec3764 "update build"`; `ui/package-lock.json` is staged but still uncommitted. `node_modules/` and `dist/` are already ignored.
 
@@ -294,8 +297,10 @@ Version/format inconsistencies: `README.md` still says "10 tabs" in its final ch
 - After the clipboard fix: `cargo build --workspace`, `cargo check`, `cargo clippy -D warnings`, `cargo test` and `cargo fmt --check` all exit 0.
 - `cargo build --release --workspace` → exit 0 (10m28s), producing a stripped 11.7 MB `craft-studio-shell.exe`.
 - Documentation: all 14 `assets/*.png` references resolve to generated files; `LICENSE` is the 11,357-byte Apache-2.0 text; no `storytold` clone URL or production/zero-copy claims remain in the README.
+- Mockup localization: all eight embedded pages load with zero external resources, zero failed subresources and zero broken images; Inter and Material Symbols report as loaded.
+- Module navigation: with mocked Tauri IPC in headless Chrome, an in-page nav click changed the studio canvas to the requested module, and the Dashboard link returned to the empty selection state.
 
-**Not performed:** `tauri build` bundling/installers, a real interaction test of the desktop window (the clipboard fix is compile-verified and the event path reviewed, but not exercised in a running webview), and execution of the workflow on GitHub — the changes have not been committed or pushed.
+**Not performed:** `tauri build` bundling/installers, and execution of the workflow on GitHub — the changes have not been committed or pushed. The iframe UI and module switching were exercised in headless Chrome against the built `ui/dist`, not inside a running Tauri webview.
 
 ---
 

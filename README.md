@@ -2,9 +2,9 @@
 
 **A unified desktop shell for ten creative modules**
 
-ArtCraft Studio is a Rust + Tauri 2.0 monorepo that registers ten creative modules behind a shared `CraftModule` trait and hosts them in one desktop process. It is an early-stage proof of concept: the shell, module registry, shared clipboard and two asset pipelines are implemented; the other eight modules are UI placeholders.
+ArtCraft Studio is a Rust + Tauri 2.0 monorepo that registers ten creative modules behind a shared `CraftModule` trait and hosts them in one desktop process. It is an early-stage proof of concept: the shell, module registry, shared clipboard and two asset pipelines are implemented; eight modules embed completed interactive mockup pages, while PhotoCraft and VectorCraft expose the two working pipelines.
 
-> **Status:** proof of concept. PhotoCraft's SVG → PNG rasterizer and VectorCraft's SVG export to the shared clipboard work. FilmCraft, WordCraft, DeckCraft, DesignCraft, EffectCraft, LightCraft, GridCraft and PDFCraft currently render placeholder editors; their actions return success without modifying anything. See [audit.md](audit.md) for the current known issues.
+> **Status:** proof of concept. PhotoCraft's SVG → PNG rasterizer and VectorCraft's SVG export to the shared clipboard work. FilmCraft, WordCraft, DeckCraft, DesignCraft, EffectCraft, LightCraft, GridCraft and PDFCraft embed completed interactive mockup pages from `assets/pages` (their Rust actions are still stubs). See [audit.md](audit.md) for the current known issues.
 
 ## 🌟 The ten modules
 
@@ -12,24 +12,27 @@ ArtCraft Studio is a Rust + Tauri 2.0 monorepo that registers ten creative modul
 | :--- | :--- | :--- |
 | **PhotoCraft** | Raster editing | **Implemented:** `rasterize_svg` decodes a Base64 SVG and renders it to PNG with `usvg` + `tiny-skia` + `resvg` |
 | **VectorCraft** | Vector graphics | **Implemented:** `export_svg` writes an SVG into the shared clipboard |
-| **FilmCraft** | Video editing | Placeholder editor; `add_clip`, `split_clip`, `render_timeline` are stubs |
-| **WordCraft** | Word processing | Placeholder editor; `insert_text`, `apply_style`, `export_pdf` are stubs |
-| **DeckCraft** | Presentations | Placeholder editor; `add_slide`, `apply_theme`, `start_presentation` are stubs |
-| **DesignCraft** | Page layout | Placeholder editor; `create_grid`, `place_text_frame`, `export_print_ready` are stubs |
-| **EffectCraft** | Motion graphics | Placeholder editor; `add_compositor_node`, `set_keyframe`, `render_frame` are stubs |
-| **LightCraft** | RAW editing | Placeholder editor; `adjust_white_balance`, `apply_tone_curve`, `sync_edits` are stubs |
-| **GridCraft** | Spreadsheets | Placeholder grid; `add_row`, `apply_formula`, `export_csv` are stubs |
-| **PDFCraft** | PDF tools | Placeholder viewer; `merge_pdfs`, `split_pdf`, `add_watermark` are stubs |
+| **FilmCraft** | Video editing | **Completed mockup UI** embedded from `assets/pages/filmcraft`; `add_clip`, `split_clip`, `render_timeline` are stubs |
+| **WordCraft** | Word processing | **Completed mockup UI** embedded from `assets/pages/wordcraft`; `insert_text`, `apply_style`, `export_pdf` are stubs |
+| **DeckCraft** | Presentations | **Completed mockup UI** embedded from `assets/pages/deckcraft`; `add_slide`, `apply_theme`, `start_presentation` are stubs |
+| **DesignCraft** | Page layout | **Completed mockup UI** embedded from `assets/pages/designcraft`; `create_grid`, `place_text_frame`, `export_print_ready` are stubs |
+| **EffectCraft** | Motion graphics | **Completed mockup UI** embedded from `assets/pages/effectcraft`; `add_compositor_node`, `set_keyframe`, `render_frame` are stubs |
+| **LightCraft** | RAW editing | **Completed mockup UI** embedded from `assets/pages/lightcraft`; `adjust_white_balance`, `apply_tone_curve`, `sync_edits` are stubs |
+| **GridCraft** | Spreadsheets | **Completed mockup UI** embedded from `assets/pages/gridcraft`; `add_row`, `apply_formula`, `export_csv` are stubs |
+| **PDFCraft** | PDF tools | **Completed mockup UI** embedded from `assets/pages/pdfcraft`; `merge_pdfs`, `split_pdf`, `add_watermark` are stubs |
 
 ## ✅ What works today
 
 - **One process, ten modules.** Modules implement the `CraftModule` trait and are registered in a `ModuleRegistry`; the shell invokes their actions through Tauri commands.
 - **Capability-driven toolbar.** Each module declares its actions, and the frontend renders the toolbar from that list.
+- **Completed module mockups.** Eight modules embed their completed page from `ui/public/pages` inside the canvas, with duplicate shell chrome hidden so they fit the studio. Each page injects a compact module nav bar; clicking it switches the studio's active tab, including back to the dashboard.
 - **Shared clipboard state.** A `SharedState` clipboard holds a Base64 payload with its source module and MIME type, exposed through `get_clipboard` / `set_clipboard`.
 - **SVG → PNG pipeline.** Dropping onto the PhotoCraft canvas rasterizes the clipboard's SVG and displays the PNG.
-- **Ten module tabs** with placeholder editors for the modules that are not implemented yet.
+- **Ten module tabs** — completed mockup pages for eight modules and the two working pipelines for PhotoCraft and VectorCraft.
 
 The clipboard is an in-process `RwLock<Option<ClipboardItem>>`; payloads are Base64-encoded and copied across Tauri IPC. It is not shared memory and it is not zero-copy. Both the `set_clipboard` command and VectorCraft's export write through `SharedState::set_clipboard`, which emits `clipboard-updated` so the sidebar refreshes.
+
+The embedded mockups are fully offline: the Tailwind runtime is vendored at `ui/public/vendor/tailwind.js`, Google Fonts are mirrored under `ui/public/vendor/fonts`, and the photographic artwork is downloaded into `ui/public/vendor/images`. No external network requests are made at runtime.
 
 ## 🚀 Quick start
 
@@ -71,6 +74,7 @@ No installer/bundler configuration exists yet; the release build produces the bi
 - **`crates/craft-libs`** — the `CraftModule` trait, `ModuleAction` capabilities, `ModuleRegistry`, and `SharedState` (clipboard).
 - **`crates/craft-studio-shell`** — the Tauri 2 application, its commands, `tauri.conf.json`, and the Vite + TypeScript frontend in `ui/`.
 - **`apps/*`** — one crate per creative module, each implementing `CraftModule`.
+- **`crates/craft-studio-shell/ui/public/pages`** — the completed module mockups embedded by the frontend (source copies live in `assets/pages`).
 
 ## 🛡️ CI
 
