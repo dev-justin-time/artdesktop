@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ArtCraft Studio</title>
+</head>
+<body class="h-screen flex flex-col bg-gray-900 text-gray-200 overflow-hidden">
+  <header class="h-14 bg-gray-950 border-b border-gray-800 flex items-center px-4 gap-4 shrink-0">
+    <div class="flex gap-2" id="module-tabs"></div>
+    <div class="h-6 w-px bg-gray-700"></div>
+    <div class="flex gap-1 overflow-x-auto" id="dynamic-toolbar">
+      <span class="text-gray-500 text-sm italic">Select a module</span>
+    </div>
+  </header>
+
+  <div class="flex-1 flex overflow-hidden">
+    <aside class="w-64 bg-gray-900 border-r border-gray-800 flex flex-col shrink-0">
+      <div class="p-3 border-b border-gray-800 text-xs font-bold uppercase text-gray-500">Shared Clipboard</div>
+      <div class="flex-1 p-4 flex flex-col items-center justify-center" id="clipboard-preview">
+        <span class="text-gray-600 text-sm italic">Empty</span>
+      </div>
+    </aside>
+
+    <main class="flex-1 bg-gray-800 flex items-center justify-center relative" id="canvas-workspace">
+      <h2 class="text-4xl text-gray-600 font-bold">Select a Module to Begin</h2>
+    </main>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

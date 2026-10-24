@@ -1,0 +1,28 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/craft-libs",
+    "crates/craft-studio-shell",
+    "apps/photocraft",
+    "apps/vectorcraft",
+    "apps/filmcraft",
+    "apps/wordcraft",
+    "apps/deckcraft",
+    "apps/designcraft",
+    "apps/effectcraft",
+    "apps/lightcraft",
+    "apps/gridcraft",
+    "apps/pdfcraft",
+]
+[workspace.dependencies]
+tauri = { version = "2.0", features = [] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+craft-libs = { path = "crates/craft-libs" }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 16
+strip = true

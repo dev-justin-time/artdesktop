@@ -1,0 +1,56 @@
+name: ArtCraft Studio CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Install Rust Toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: rustfmt, clippy
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: crates/craft-studio-shell/ui/package-lock.json
+
+    - name: Install Tauri System Dependencies (Linux)
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file \
+          libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+
+    - name: Install Frontend Dependencies
+      run: npm ci
+      working-directory: crates/craft-studio-shell/ui
+
+    - name: Check Rust Formatting
+      run: cargo fmt --all -- --check
+
+    - name: Run Clippy (Linting)
+      run: cargo clippy --workspace --all-targets -- -D warnings
+
+    - name: Run Workspace Tests
+      run: cargo test --workspace
+
+    - name: Build Frontend (Vite)
+      run: npm run build
+      working-directory: crates/craft-studio-shell/ui
+
+    - name: Build Full Release Binary
+      run: cargo build --release --workspace

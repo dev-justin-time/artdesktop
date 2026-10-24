@@ -1,0 +1,6 @@
+/target
+**/*.rs.bk
+*.pdb
+crates/craft-studio-shell/ui/node_modules/
+crates/craft-studio-shell/ui/dist/
+.DS_Store

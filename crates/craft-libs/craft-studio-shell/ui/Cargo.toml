@@ -1,0 +1,25 @@
+[package]
+name = "craft-studio-shell"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tauri = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+craft-libs = { workspace = true }
+
+# Link all 10 modules
+photocraft = { path = "../../apps/photocraft" }
+vectorcraft = { path = "../../apps/vectorcraft" }
+filmcraft = { path = "../../apps/filmcraft" }
+wordcraft = { path = "../../apps/wordcraft" }
+deckcraft = { path = "../../apps/deckcraft" }
+designcraft = { path = "../../apps/designcraft" }
+effectcraft = { path = "../../apps/effectcraft" }
+lightcraft = { path = "../../apps/lightcraft" }
+gridcraft = { path = "../../apps/gridcraft" }
+pdfcraft = { path = "../../apps/pdfcraft" }
+
+[build-dependencies]
+tauri-build = { version = "2.0", features = [] }
