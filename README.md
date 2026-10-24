@@ -6,6 +6,19 @@ ArtCraft Studio is a Rust + Tauri 2.0 monorepo that registers ten creative modul
 
 > **Status:** proof of concept. PhotoCraft's SVG → PNG rasterizer and VectorCraft's SVG export to the shared clipboard work. All ten modules embed completed interactive mockup pages from `assets/pages`; only PhotoCraft and VectorCraft currently call real Rust actions from those pages. See [audit.md](audit.md) for the current known issues.
 
+<p align="center">
+  <img src="assets/marketing/display-banner.png" alt="ArtCraft Studio — one workspace, ten creative modules" width="100%" />
+</p>
+
+## 🎬 Intro film
+
+<video controls muted loop playsinline poster="assets/video/intro-poster.jpg" width="100%">
+  <source src="assets/video/intro.mp4" type="video/mp4">
+  Your browser does not support the video tag. <a href="assets/video/intro.mp4">Open the MP4</a>.
+</video>
+
+[▶ Watch the 5-second intro film](assets/video/intro.mp4) · *Concept film, not a screen recording.*
+
 ## 🌟 The ten modules
 
 | Module | Domain | Current state |
@@ -25,7 +38,7 @@ ArtCraft Studio is a Rust + Tauri 2.0 monorepo that registers ten creative modul
 
 - **One process, ten modules.** Modules implement the `CraftModule` trait and are registered in a `ModuleRegistry`; the shell invokes their actions through Tauri commands.
 - **Capability-driven toolbar.** Each module declares its actions, and the frontend renders the toolbar from that list.
-- **Completed module mockups.** Eight modules embed their completed page from `ui/public/pages` inside the canvas, with duplicate shell chrome hidden so they fit the studio. Each page injects a compact module nav bar; clicking it switches the studio's active tab, including back to the dashboard.
+- **Completed module pages.** All ten modules embed their completed page from `ui/public/pages` inside the canvas; the three extracted pages have duplicate shell chrome hidden so they fit the studio. Each page injects a compact module nav bar; clicking it switches the studio's active tab, including back to the dashboard.
 - **Shared clipboard state.** A `SharedState` clipboard holds a Base64 payload with its source module and MIME type, exposed through `get_clipboard` / `set_clipboard`.
 - **SVG → PNG pipeline.** VectorCraft's **Export SVG** writes the artboard to the shared clipboard; PhotoCraft's **Rasterize SVG** button rasterizes that clipboard SVG and opens the PNG preview.
 - **Ten module tabs** — every module embeds its completed mockup page; PhotoCraft and VectorCraft additionally connect page buttons to their working Rust pipelines.
@@ -88,41 +101,47 @@ No installer/bundler configuration exists yet; the release build produces the bi
 
 The same sequence is available locally through `just ci`.
 
-## 🖼️ Screenshots
+## 🖼️ Concept gallery
 
-> **Placeholder images:** every image below is a generated placeholder, not a screenshot of the running app. Replace them with real captures as the modules land.
+> **Design exploration, not current screenshots.** These renders were produced during the visual exploration of the suite. They show intended UI directions; the build currently embeds simplified interactive pages, and most module actions are stubs. See [audit.md](audit.md) for what actually works.
 
 <p align="center">
-  <img src="assets/hero-banner.png" alt="ArtCraft Studio unified workspace" width="100%" />
+  <img src="assets/concepts/dashboard.jpg" alt="ArtCraft Studio dashboard concept" width="100%" />
 </p>
 
-| Unified shell | Shared clipboard | SVG → PNG |
-|:---:|:---:|:---:|
-| ![Dashboard](assets/03-dashboard.png) | ![Clipboard](assets/07-clipboard-svg.png) | ![Rasterize](assets/13-success.png) |
-| Ten modules, one process | Base64 payload in `SharedState` | Rendered in pure Rust |
-
-| Vector → Photo | Clipboard hand-off |
+| Workstation concept | Detail study |
 |:---:|:---:|
-| ![Workflow](assets/31-workflow.png) | ![Clipboard preview](assets/11-dropzone.png) |
-| Export SVG, then press **Rasterize SVG** in PhotoCraft | The same Base64 payload is read by the rasterizer |
+| ![Workstation concept](assets/concepts/workstation.jpg) | ![UI detail concept](assets/concepts/detail.jpg) |
+| Multi-module workspace direction | Neon control-surface direction |
 
 <details>
-<summary>🎛️ Module placeholders (expand)</summary>
+<summary>🎛️ Ten module concepts (expand)</summary>
 
-| Module | Preview |
+| Module | Concept |
 |---|---|
-| PhotoCraft | ![](assets/15-photocraft.png) |
-| VectorCraft | ![](assets/16-vectorcraft.png) |
-| FilmCraft | ![](assets/17-filmcraft.png) |
-| WordCraft | ![](assets/18-wordcraft.png) |
-| DeckCraft | ![](assets/19-deckcraft.png) |
-| EffectCraft | ![](assets/20-effectcraft.png) |
-| LightCraft | ![](assets/21-lightcraft.png) |
-| DesignCraft | ![](assets/22-designcraft.png) |
-| GridCraft | ![](assets/23-gridcraft.png) |
-| PDFCraft | ![](assets/24-pdfcraft.png) |
+| PhotoCraft | ![](assets/concepts/photocraft.jpg) |
+| VectorCraft | ![](assets/concepts/vectorcraft.jpg) |
+| FilmCraft | ![](assets/concepts/filmcraft.jpg) |
+| WordCraft | ![](assets/concepts/wordcraft.jpg) |
+| DeckCraft | ![](assets/concepts/deckcraft.jpg) |
+| DesignCraft | ![](assets/concepts/designcraft.jpg) |
+| EffectCraft | ![](assets/concepts/effectcraft.jpg) |
+| LightCraft | ![](assets/concepts/lightcraft.jpg) |
+| GridCraft | ![](assets/concepts/gridcraft.jpg) |
+| PDFCraft | ![](assets/concepts/pdfcraft.jpg) |
 
 </details>
+
+## 🚀 Launch kit
+
+Build-aligned launch assets with accurate copy: ten creative modules, Rust + Tauri 2.0, two live pipelines, and an explicit proof-of-concept status.
+
+| Social card | Display banner | Email header |
+|:---:|:---:|:---:|
+| ![Social card](assets/marketing/social-card.png) | ![Display banner](assets/marketing/display-banner.png) | ![Email header](assets/marketing/email-header.png) |
+| 1200 × 1200 | 1920 × 1080 | 1600 × 900 |
+
+[Open the local marketing preview](assets/marketing/preview.html) · [HTML launch email](assets/marketing/launch-email.html) · [Copy deck and asset notes](assets/marketing/README.md)
 
 ## 🤝 Contributing
 

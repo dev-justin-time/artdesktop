@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ArtCraft Studio — Marketing Kit Preview</title>
+<style>
+  :root {
+    --bg: #05070b;
+    --panel: #0b0d12;
+    --panel-2: #0f131b;
+    --line: #232833;
+    --line-soft: #1b202b;
+    --text: #e5eaf2;
+    --muted: #8b97a8;
+    --dim: #5b6677;
+    --cyan: #22d3ee;
+    --violet: #a855f7;
+    --magenta: #e879f9;
+    --sans: "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    --display: "Bahnschrift", "Segoe UI", sans-serif;
+    --mono: "Cascadia Mono", Consolas, "SFMono-Regular", monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(900px 520px at 12% -8%, rgba(34, 211, 238, .12), transparent 60%),
+      radial-gradient(900px 620px at 95% 18%, rgba(168, 85, 247, .12), transparent 66%),
+      var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+  button { font: inherit; }
+
+  .wrap { width: min(1200px, calc(100% - 40px)); margin: 0 auto; }
+  .mono { font-family: var(--mono); }
+  .eyebrow {
+    margin: 0 0 12px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    line-height: 16px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--cyan);
+  }
+  .eyebrow.violet { color: #d8b4fe; }
+  h2 {
+    margin: 0 0 12px;
+    font-family: var(--display);
+    font-size: clamp(30px, 4vw, 46px);
+    line-height: 1.06;
+    letter-spacing: -.02em;
+    font-weight: 650;
+  }
+  .section { padding: 72px 0 0; }
+  .section-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 26px; }
+  .section-head p { max-width: 610px; margin: 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
+  .section-head .aside { flex: 0 0 auto; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .06em; }
+
+  /* Header */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    border-bottom: 1px solid rgba(35, 40, 51, .8);
+    background: rgba(5, 7, 11, .84);
+    backdrop-filter: blur(18px);
+  }
+  .topbar .inner {
+    width: min(1200px, calc(100% - 40px));
+    margin: 0 auto;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .brand img { width: 30px; height: 30px; border-radius: 8px; box-shadow: 0 0 18px rgba(34, 211, 238, .25); }
+  .brand b { font-family: var(--display); font-size: 17px; letter-spacing: .01em; }
+  .brand span { color: var(--dim); font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; display: block; margin-top: 1px; }
+  .topnav { margin-left: auto; display: flex; align-items: center; gap: 3px; }
+  .topnav a {
+    padding: 6px 9px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .topnav a:hover { color: var(--text); background: #151a23; }
+  .topnav .repo {
+    margin-left: 8px;
+    color: #04222a;
+    background: var(--cyan);
+    font-weight: 700;
+  }
+  .topnav .repo:hover { color: #04222a; filter: brightness(1.08); }
+
+  /* Hero */
+  .hero { padding: 64px 0 0; }
+  .hero-grid { display: grid; grid-template-columns: 1.08fr .92fr; gap: 38px; align-items: center; }
+  .hero h1 {
+    margin: 0 0 20px;
+    font-family: var(--display);
+    font-size: clamp(48px, 7vw, 88px);
+    line-height: .94;
+    letter-spacing: -.035em;
+    font-weight: 650;
+  }
+  .hero h1 .accent {
+    background: linear-gradient(100deg, #e5eaf2 0%, #a5f3fc 44%, #c084fc 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero p.lede { margin: 0 0 24px; max-width: 560px; color: #b9c4d3; font-size: 17px; line-height: 1.65; }
+  .hero .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #0d1118;
+    color: #aeb9c9;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .08em;
+  }
+  .chip.live { border-color: rgba(34, 211, 238, .35); background: rgba(34, 211, 238, .08); color: #a5f3fc; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #11151d;
+    color: #d5deea;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .btn:hover { border-color: #344052; background: #171d27; }
+  .btn.primary { border-color: transparent; background: var(--cyan); color: #04222a; font-weight: 700; }
+  .btn.primary:hover { filter: brightness(1.08); }
+  .btn.ghost { background: transparent; }
+  .video-card {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #080b11;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, .5), 0 0 60px rgba(34, 211, 238, .06);
+  }
+  .video-card video { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #05070b; }
+  .video-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 14px; border-top: 1px solid var(--line-soft); }
+  .video-meta span { font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: .08em; }
+  .video-meta a { font-size: 11px; color: var(--muted); text-decoration: none; }
+  .video-meta a:hover { color: var(--cyan); }
+
+  /* Asset grid */
+  .asset-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .asset {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--panel);
+  }
+  .asset .thumb { display: block; background: #05070b; cursor: zoom-in; }
+  .asset .thumb img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; transition: transform .35s ease, filter .35s ease; }
+  .asset.square .thumb img { aspect-ratio: 1 / 1; }
+  .asset .thumb:hover img { transform: scale(1.02); filter: brightness(1.06); }
+  .asset .body { padding: 14px 15px 15px; display: flex; flex-direction: column; gap: 5px; flex: 1; }
+  .asset h3 { margin: 0; font-size: 14px; font-weight: 650; }
+  .asset .meta { font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: .05em; }
+  .asset .links { margin-top: auto; padding-top: 10px; display: flex; gap: 14px; }
+  .asset .links a { color: var(--muted); font-size: 11.5px; text-decoration: none; border-bottom: 1px solid transparent; }
+  .asset .links a:hover { color: var(--cyan); border-color: rgba(34, 211, 238, .4); }
+
+  /* Email */
+  .email-grid { display: grid; grid-template-columns: 1.25fr .75fr; gap: 22px; align-items: start; }
+  .browser {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    background: #080b11;
+    box-shadow: 0 26px 70px rgba(0, 0, 0, .42);
+  }
+  .browser-bar { display: flex; align-items: center; gap: 6px; padding: 10px 13px; border-bottom: 1px solid var(--line-soft); background: #0d1118; }
+  .browser-bar i { width: 8px; height: 8px; border-radius: 50%; background: #3a4556; }
+  .browser-bar i:nth-child(1) { background: #f87171; }
+  .browser-bar i:nth-child(2) { background: #fbbf24; }
+  .browser-bar i:nth-child(3) { background: #4ade80; }
+  .browser-bar span { margin-left: 8px; font-family: var(--mono); font-size: 10px; color: var(--dim); }
+  .browser iframe { display: block; width: 100%; height: 1200px; border: 0; background: #05070b; }
+  .email-aside {
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--panel);
+  }
+  .email-aside h3 { margin: 0 0 10px; font-family: var(--display); font-size: 24px; letter-spacing: -.02em; }
+  .email-aside p { margin: 0 0 14px; color: var(--muted); font-size: 13px; line-height: 1.65; }
+  .email-aside ul { margin: 0 0 18px; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .email-aside li { display: flex; gap: 8px; color: #b9c4d3; font-size: 12px; line-height: 1.5; }
+  .email-aside li::before { content: "→"; color: var(--cyan); font-family: var(--mono); }
+  .note {
+    margin: 22px 0 0;
+    padding: 14px 16px;
+    border-left: 2px solid var(--violet);
+    border-radius: 6px;
+    background: #0e131a;
+    color: #aeb9c9;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+  .note b { color: var(--text); }
+
+  /* Concept gallery */
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .shot {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #07090e;
+    cursor: zoom-in;
+  }
+  .shot img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .4s ease, filter .4s ease; }
+  .shot:hover img { transform: scale(1.025); filter: brightness(1.07); }
+  .shot figcaption {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 24px 11px 9px;
+    background: linear-gradient(transparent, rgba(4, 6, 10, .94));
+    font-size: 11.5px;
+    color: #d5deea;
+  }
+  .shot figcaption span { font-family: var(--mono); font-size: 9px; color: var(--dim); letter-spacing: .07em; }
+  .art-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .art-grid .shot img { aspect-ratio: 16 / 9; }
+
+  /* Copy */
+  .copy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .copy-card { padding: 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+  .copy-card h3 { margin: 0 0 7px; font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); }
+  .copy-card p { margin: 0; color: #c7d2e0; font-size: 16px; line-height: 1.5; }
+  .copy-card p.small { font-size: 13px; color: var(--muted); line-height: 1.65; }
+  .copy-card code { font-family: var(--mono); font-size: 12px; color: #a5f3fc; }
+
+  /* Footer */
+  footer { margin-top: 74px; border-top: 1px solid var(--line); background: #07090e; }
+  footer .inner { width: min(1200px, calc(100% - 40px)); margin: 0 auto; padding: 26px 0 34px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+  footer p { margin: 0; color: var(--dim); font-size: 11px; }
+  footer .links { display: flex; gap: 16px; }
+  footer a { color: var(--muted); font-size: 11.5px; text-decoration: none; }
+  footer a:hover { color: var(--cyan); }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: none;
+    place-items: center;
+    padding: 28px;
+    background: rgba(3, 5, 9, .94);
+    backdrop-filter: blur(8px);
+    cursor: zoom-out;
+  }
+  .lightbox.open { display: grid; }
+  .lightbox img { max-width: 96vw; max-height: 90vh; border-radius: 10px; box-shadow: 0 40px 120px rgba(0, 0, 0, .8); }
+  .lightbox .close {
+    position: fixed;
+    top: 18px; right: 20px;
+    width: 36px; height: 36px;
+    border: 1px solid #3b465a;
+    border-radius: 50%;
+    background: #0d1118;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  @media (max-width: 980px) {
+    .hero-grid, .email-grid { grid-template-columns: 1fr; }
+    .asset-grid, .gallery, .art-grid { grid-template-columns: repeat(2, 1fr); }
+    .section-head { align-items: start; flex-direction: column; gap: 8px; }
+  }
+  @media (max-width: 620px) {
+    .wrap, .topbar .inner, footer .inner { width: calc(100% - 28px); }
+    .topnav { display: none; }
+    .hero { padding-top: 42px; }
+    .hero h1 { font-size: 52px; }
+    .asset-grid, .gallery, .art-grid, .copy-grid { grid-template-columns: 1fr; }
+    .browser iframe { height: 900px; }
+    .section { padding-top: 54px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="inner">
+    <a class="brand" href="#top">
+      <img src="../concepts/app-icon.png" alt="ArtCraft Studio app icon">
+      <span><b>ArtCraft Studio</b><span>MARKETING KIT / POC</span></span>
+    </a>
+    <nav class="topnav" aria-label="Kit sections">
+      <a href="#film">Film</a>
+      <a href="#assets">Assets</a>
+      <a href="#email">Email</a>
+      <a href="#concepts">Concepts</a>
+      <a href="#copy">Copy</a>
+      <a class="repo" href="https://github.com/dev-justin-time/artdesktop" target="_blank" rel="noreferrer">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero wrap">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Launch kit / v0.1 proof of concept</p>
+        <h1>One workspace.<br><span class="accent">Ten creative modules.</span></h1>
+        <p class="lede">A complete launch kit for the Rust + Tauri 2.0 desktop shell: accurate social and display artwork, a responsive email, intro film, and the visual exploration behind the suite.</p>
+        <div class="chips">
+          <span class="chip live">TEN MODULE PAGES</span>
+          <span class="chip live">TWO LIVE PIPELINES</span>
+          <span class="chip">RUST + TAURI 2.0</span>
+          <span class="chip">OPEN SOURCE</span>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="#assets">Browse the kit ↓</a>
+          <a class="btn" href="launch-email.html" target="_blank">Open the email</a>
+          <a class="btn ghost" href="https://github.com/dev-justin-time/artdesktop" target="_blank" rel="noreferrer">View source ↗</a>
+        </div>
+      </div>
+
+      <figure class="video-card" style="margin:0">
+        <video controls muted loop playsinline poster="../video/intro-poster.jpg">
+          <source src="../video/intro.mp4" type="video/mp4">
+          <a href="../video/intro.mp4">Open the intro film</a>
+        </video>
+        <figcaption class="video-meta">
+          <span>INTRO FILM / 5.2 SEC / 640 × 352</span>
+          <a href="../video/intro.mp4" download>Download MP4 ↓</a>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section wrap" id="film">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">01 / Film</p>
+        <h2>The five-second mood piece.</h2>
+      </div>
+      <p>Concept film for launch posts and the README. It is abstract brand art, not a screen recording or a product demo.</p>
+    </div>
+    <div class="asset-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="asset">
+        <a class="thumb" data-zoom="../video/intro-poster.jpg" href="../video/intro-poster.jpg"><img src="../video/intro-poster.jpg" alt="Poster frame from the ArtCraft intro film"></a>
+        <div class="body">
+          <h3>Poster frame</h3>
+          <div class="meta">JPG · 640 × 352</div>
+          <div class="links"><a href="../video/intro-poster.jpg" download>Download poster ↓</a><a href="../video/intro.mp4" download>Download film ↓</a></div>
+        </div>
+      </div>
+      <div class="asset">
+        <a class="thumb" data-zoom="../concepts/brand-artwork.jpg" href="../concepts/brand-artwork.jpg"><img src="../concepts/brand-artwork.jpg" alt="Cinematic brand artwork split view"></a>
+        <div class="body">
+          <h3>Brand artwork</h3>
+          <div class="meta">Concept visual · 1376 × 768</div>
+          <div class="links"><a href="../concepts/brand-artwork.jpg" download>Download JPG ↓</a><a href="#concepts">See all concepts</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" id="assets">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">02 / Launch assets</p>
+        <h2>Copy that matches the build.</h2>
+      </div>
+      <p>Ten creative modules, two live pipelines and an honest proof-of-concept status. No WebGPU, zero-latency, installer or “download free” claims.</p>
+    </div>
+    <div class="asset-grid">
+      <article class="asset square">
+        <a class="thumb" data-zoom="social-card.png" href="social-card.png"><img src="social-card.png" alt="ArtCraft Studio social launch card"></a>
+        <div class="body">
+          <h3>Social card</h3>
+          <div class="meta">PNG · 1200 × 1200 · 1:1</div>
+          <div class="links"><a href="social-card.png" download>Download ↓</a><a href="#copy">Copy deck</a></div>
+        </div>
+      </article>
+      <article class="asset">
+        <a class="thumb" data-zoom="display-banner.png" href="display-banner.png"><img src="display-banner.png" alt="ArtCraft Studio display banner"></a>
+        <div class="body">
+          <h3>Display banner</h3>
+          <div class="meta">PNG · 1920 × 1080 · 16:9</div>
+          <div class="links"><a href="display-banner.png" download>Download ↓</a><a href="#copy">Copy deck</a></div>
+        </div>
+      </article>
+      <article class="asset">
+        <a class="thumb" data-zoom="email-header.png" href="email-header.png"><img src="email-header.png" alt="ArtCraft Studio email header"></a>
+        <div class="body">
+          <h3>Email header</h3>
+          <div class="meta">PNG · 1600 × 900 · 16:9</div>
+          <div class="links"><a href="email-header.png" download>Download ↓</a><a href="#email">Email preview</a></div>
+        </div>
+      </article>
+    </div>
+    <div class="note"><b>Source of truth:</b> the launch email and copy deck deliberately describe eight stub-backed modules plus two working pipelines. The concept images below are design exploration and contain aspirations that are not implemented.</div>
+  </section>
+
+  <section class="section wrap" id="email">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">03 / Launch email</p>
+        <h2>Responsive, dark, ready to adapt.</h2>
+      </div>
+      <p>A table-based email with inline CSS, a ten-module status matrix, quick-start commands and a clear “what this is / isn’t” block.</p>
+    </div>
+    <div class="email-grid">
+      <div class="browser">
+        <div class="browser-bar"><i></i><i></i><i></i><span>launch-email.html</span></div>
+        <iframe id="email-frame" src="launch-email.html" title="ArtCraft Studio launch email preview"></iframe>
+      </div>
+      <aside class="email-aside">
+        <h3>What’s inside</h3>
+        <ul>
+          <li>Header image, preheader and accurate launch copy</li>
+          <li>Ten-module matrix with live / mockup badges</li>
+          <li>Quick-start commands for the real repo</li>
+          <li>Source and audit CTAs</li>
+          <li>Unsubscribe placeholder and compliance note</li>
+        </ul>
+        <div class="actions" style="margin-bottom:14px">
+          <a class="btn primary" href="launch-email.html" target="_blank">Open full email ↗</a>
+          <a class="btn" href="README.md">Copy deck</a>
+        </div>
+        <p style="margin:0;font-size:11.5px;color:var(--dim);line-height:1.6">Before sending: host <span class="mono">email-header.png</span>, replace the relative image URL with an absolute one, and swap <span class="mono">{{unsubscribe_url}}</span> for your provider’s link.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section wrap" id="concepts">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow violet">04 / Concept gallery</p>
+        <h2>The visual exploration.</h2>
+      </div>
+      <p>The original UI direction for the ten modules. These are concept renders — some show planned capabilities that the current build does not implement.</p>
+    </div>
+    <div class="gallery">
+      <figure class="shot" data-zoom="../concepts/dashboard.jpg"><img src="../concepts/dashboard.jpg" alt="Dashboard concept" loading="lazy"><figcaption>Dashboard <span>CONCEPT</span></figcaption></figure>
+      <figure class="shot" data-zoom="../concepts/photocraft.jpg"><img src="../concepts/photocraft.jpg" alt="PhotoCraft concept" loading="lazy"><figcaption>PhotoCraft <span>CONCEPT</span></figcaption></figure>
+      <figure class="shot" data-zoom="../concepts/vectorcraft.jpg"><img src="../concepts/vectorcraft.jpg" alt="VectorCraft concept" loading="lazy"><figcaption>VectorCraft <span>CONCEPT</span></figcaption></figure>
+      <figure class="shot" data-zoom="../concepts/filmcraft.jpg"><img src="../concepts/filmcraft.jpg" alt="FilmCraft concept" loading="lazy"><figcaption>FilmCraft <span>CONCEPT</span></figcaption></figure>
+      <figure class="shot" data-zoom="../concepts/wordcraft.jpg"><img src="../concepts/wordcraft.jpg" alt="WordCraft concept" loading="lazy"><figcaption>WordCraft <span>CONCEPT</span></figcaption></figure>
+      <figure class="shot" data-zoom="../concepts/deckcraft.jpg"><img src="../concepts/deckcraft.jpg" alt="DeckCraft concept" loading="lazy"><figcaption>DeckCraft <span>CONCEPT</span></figcaption></figure>
+      <figure class="shot" data-zoom="../concepts/designcraft.jpg"><img src="../concepts/designcraft.jpg" alt="DesignCraft concept" loading="lazy"><figcaption>DesignCraft <span>CONCEPT</span></figcaption></figure>
+      <figure class="shot" data-zoom="../concepts/effectcraft.jpg"><img src="../concepts/effectcraft.jpg" alt="EffectCraft concept" loading="lazy"><figcaption>EffectCraft <span>CONCEPT</span></figcaption></figure>
+      <figure class="shot" data-zoom="../concepts/lightcraft.jpg"><img src="../concepts/lightcraft.jpg" alt="LightCraft concept" loading="lazy"><figcaption>LightCraft <span>CONCEPT</span></figcaption></figure>
+      <figure class="shot" data-zoom="../concepts/gridcraft.jpg"><img src="../concepts/gridcraft.jpg" alt="GridCraft concept" loading="lazy"><figcaption>GridCraft <span>CONCEPT</span></figcaption></figure>
+      <figure class="shot" data-zoom="../concepts/pdfcraft.jpg"><img src="../concepts/pdfcraft.jpg" alt="PDFCraft concept" loading="lazy"><figcaption>PDFCraft <span>CONCEPT</span></figcaption></figure>
+      <figure class="shot" data-zoom="../concepts/workstation.jpg"><img src="../concepts/workstation.jpg" alt="Workstation concept" loading="lazy"><figcaption>Workstation <span>CONCEPT</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="section wrap" id="originals">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">05 / Original art direction</p>
+        <h2>Superseded explorations.</h2>
+      </div>
+      <p>These AI art explorations set the visual tone but used claims that were not true for the build. They are kept for reference, not for launch.</p>
+    </div>
+    <div class="art-grid">
+      <figure class="shot" data-zoom="originals/social-card.jpg"><img src="originals/social-card.jpg" alt="Original social card concept with aspirational claims" loading="lazy"><figcaption>Social card <span>SUPERSEDED</span></figcaption></figure>
+      <figure class="shot" data-zoom="originals/display-banner.jpg"><img src="originals/display-banner.jpg" alt="Original display banner concept with aspirational claims" loading="lazy"><figcaption>Display banner <span>SUPERSEDED</span></figcaption></figure>
+      <figure class="shot" data-zoom="originals/email-header.jpg"><img src="originals/email-header.jpg" alt="Original email header concept with aspirational claims" loading="lazy"><figcaption>Email header <span>SUPERSEDED</span></figcaption></figure>
+    </div>
+    <div class="note"><b>Do not ship the originals.</b> They claim “WebGPU”, “zero latency”, “10 creative engines”, “v1.0 launch edition” and “download free”. The current build has no WebGPU renderer, no published installer and no measured zero-latency path.</div>
+  </section>
+
+  <section class="section wrap" id="copy">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">06 / Copy deck</p>
+        <h2>The lines to reuse.</h2>
+      </div>
+      <p>Short, reusable copy for posts, email and banners. Everything here is consistent with the README and audit.</p>
+    </div>
+    <div class="copy-grid">
+      <div class="copy-card">
+        <h3>Primary headline</h3>
+        <p>One workspace.<br>Ten creative modules.</p>
+      </div>
+      <div class="copy-card">
+        <h3>Supporting line</h3>
+        <p>Rust + Tauri 2.0 shell · shared module registry · IPC clipboard.</p>
+      </div>
+      <div class="copy-card">
+        <h3>Proof line</h3>
+        <p>Ten interactive module pages. Two live Rust pipelines.</p>
+      </div>
+      <div class="copy-card">
+        <h3>Status</h3>
+        <p>Open-source proof of concept · Apache-2.0 · v0.1.</p>
+      </div>
+      <div class="copy-card">
+        <h3>Call to action</h3>
+        <p>Explore the source <span style="color:var(--dim)">→</span><br><code>github.com/dev-justin-time/artdesktop</code></p>
+      </div>
+      <div class="copy-card">
+        <h3>Quick start</h3>
+        <p class="small"><code>git clone https://github.com/dev-justin-time/artdesktop.git</code><br><code>cd artdesktop</code><br><code>cargo build --workspace</code></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="inner">
+    <p>ArtCraft Studio · Marketing kit · v0.1 proof of concept · Apache-2.0</p>
+    <div class="links">
+      <a href="https://github.com/dev-justin-time/artdesktop" target="_blank" rel="noreferrer">GitHub ↗</a>
+      <a href="README.md">Asset notes</a>
+      <a href="launch-email.html">Email</a>
+      <a href="https://github.com/dev-justin-time/artdesktop/blob/main/audit.md" target="_blank" rel="noreferrer">Audit ↗</a>
+    </div>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="close" id="lightbox-close" aria-label="Close preview">×</button>
+  <img id="lightbox-img" alt="Expanded marketing asset">
+</div>
+
+<script>
+  (function () {
+    const lightbox = document.getElementById("lightbox");
+    const image = document.getElementById("lightbox-img");
+    const close = document.getElementById("lightbox-close");
+    function open(src, alt) {
+      image.src = src;
+      image.alt = alt || "Expanded marketing asset";
+      lightbox.classList.add("open");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+    function hide() {
+      lightbox.classList.remove("open");
+      lightbox.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      image.src = "";
+    }
+    document.querySelectorAll("[data-zoom]").forEach((node) => {
+      node.addEventListener("click", (event) => {
+        event.preventDefault();
+        const src = node.getAttribute("data-zoom");
+        const img = node.querySelector("img");
+        open(src, img ? img.alt : "");
+      });
+    });
+    const emailFrame = document.getElementById("email-frame");
+    emailFrame.addEventListener("load", () => {
+      try {
+        const height = emailFrame.contentDocument.documentElement.scrollHeight;
+        if (height > 400) emailFrame.style.height = height + "px";
+      } catch (error) {
+        /* file:// iframes are opaque; keep the fixed-height fallback. */
+      }
+    });
+    close.addEventListener("click", hide);
+    lightbox.addEventListener("click", (event) => { if (event.target === lightbox) hide(); });
+    document.addEventListener("keydown", (event) => { if (event.key === "Escape") hide(); });
+  })();
+</script>
+</body>
+</html>

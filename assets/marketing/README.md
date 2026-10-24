@@ -10,6 +10,7 @@ Accurate launch assets for the current proof-of-concept build. The visuals use t
 | [`display-banner.png`](display-banner.png) | 1920 × 1080 (16:9) | Web banners, sponsorship slots, developer-platform headers |
 | [`email-header.png`](email-header.png) | 1600 × 900 (16:9) | Newsletter hero / launch-email header |
 | [`launch-email.html`](launch-email.html) | responsive HTML | Launch email template |
+| [`preview.html`](preview.html) | local gallery | Whole kit in one page: film, assets, email, concepts and copy |
 
 ![Social card](social-card.png)
 
@@ -37,6 +38,17 @@ The first draft repeated claims that do not match the repository:
 | “Download Free” | “Explore the source” | No installer, store listing or published binary exists. |
 | `cargo install artcraft-studio` | `git clone …` + `cargo build --workspace` | The crate is not published to crates.io. |
 | “v1.0 Launch Edition” | “v0.1 · Proof of concept” | Bundling, native file workflows and most module actions are still open. |
+
+## Previewing the kit
+
+Open `preview.html` directly, or serve the **repository root** and visit `/assets/marketing/preview.html` so the `../video` and `../concepts` assets resolve:
+
+```bash
+python -m http.server 8000
+# then open http://127.0.0.1:8000/assets/marketing/preview.html
+```
+
+The `originals/` folder holds the earlier AI art direction. It is shown in the preview under “Superseded explorations” only; those images contain claims that do not match the build.
 
 ## Using the email
 
