@@ -3,7 +3,7 @@
 **Date:** 2026-10-24
 **Repository:** `dev-justin-time/artdesktop` (branch `main`, HEAD `40e9b80 "poc"`)
 **Scope:** all tracked files plus the untracked `txt.txt` — Rust workspace, Tauri shell, frontend, CI, tooling, docs.
-**Verdict (revised after fixes):** The repository **builds and every CI step passes when run locally**. `cargo metadata`, `cargo build --workspace`, `cargo build --release --workspace`, `cargo test --workspace`, `cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets -- -D warnings`, `npm ci` and `npm run build` all exit 0. The original blockers — workspace path, corrupted build script, PhotoCraft API mismatch, duplicate UI manifest — plus the CI location, ordering, formatting and lockfile problems are fixed and verified (see §0). Remaining work: the Shared Clipboard event bug, frontend error handling, and zero tests. The workflow still has to be committed and pushed before GitHub executes it.
+**Verdict (revised after fixes):** The repository **builds and every CI step passes when run locally**. `cargo metadata`, `cargo build --workspace`, `cargo build --release --workspace`, `cargo test --workspace`, `cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets -- -D warnings`, `npm ci` and `npm run build` all exit 0. The original blockers — workspace path, corrupted build script, PhotoCraft API mismatch, duplicate UI manifest — plus the CI location, ordering, formatting and lockfile problems are fixed and verified (see §0). Remaining work: frontend error handling and zero tests. The workflow still has to be committed and pushed before GitHub executes it.
 **Revision:** A fix pass was applied after the initial audit; §0 records exactly what changed and the new verification evidence.
 
 ---
@@ -29,6 +29,7 @@ The following were fixed in this pass, in severity order. Every verification com
 | Release build | No code changes; exercised the final CI step. | `cargo build --release --workspace` → exit 0 (10m28s) |
 | Documentation | Rewrote `README.md` to match the proof-of-concept state, corrected the clone URL to `dev-justin-time/artdesktop`, removed the zero-copy/production-grade/updater claims, and replaced the truncated ending. Added the Apache-2.0 `LICENSE` the README already claimed. | README reviewed; link check |
 | Placeholder images | Added 14 generated PNGs under `assets/` covering every image the README references; each is labelled "PLACEHOLDER - NOT A SCREENSHOT". | 14/14 refs resolve; images inspected |
+| Clipboard refresh | Clipboard writes now go through `SharedState::set_clipboard`, which stores the item, drops the lock and emits `clipboard-updated`. Both the `set_clipboard` command and VectorCraft's `export_svg` use it, so the sidebar refreshes. | `cargo check`/clippy/test/fmt pass; event path code-reviewed |
 
 `Cargo.lock` and the new `icons/` are included in the follow-up commit `aec3764 "update build"`; `ui/package-lock.json` is staged but still uncommitted. `node_modules/` and `dist/` are already ignored.
 
@@ -46,7 +47,7 @@ The following were fixed in this pass, in severity order. Every verification com
 | 4 | **High** | Front-end folder contained a duplicate, invalid Cargo manifest | `crates/craft-studio-shell/ui/Cargo.toml` | ✅ Deleted |
 | 5 | **High** | CI workflow was in `.github/ci.yml`; Actions only reads `.github/workflows/*.yml` | `.github/workflows/ci.yml` | ✅ Moved |
 | 6 | **High** | `npm ci` / setup-node cache required a `package-lock.json` that did not exist | `crates/craft-studio-shell/ui/` | ✅ Lockfile generated, `npm ci` passes |
-| 7 | **High** | "Export SVG" never emits `clipboard-updated`, so the Shared Clipboard sidebar never updates | `apps/vectorcraft/src/lib.rs:17-28` | ❌ Open |
+| 7 | **High** | "Export SVG" never emits `clipboard-updated`, so the Shared Clipboard sidebar never updates | `apps/vectorcraft/src/lib.rs:17-28` | ✅ Fixed via `SharedState::set_clipboard` |
 | 8 | **High** | `just dev` / `just ci` / README Quick Start used a directory that did not exist | `Justfile:7,18`, `README.md:34-42` | ✅ Fixed by crate move |
 | 9 | **High** | No `LICENSE` file despite the README licensing the project as Apache-2.0 | repo root | ✅ Apache-2.0 added |
 | 10 | **Medium** | Clippy `-D warnings` failed on an unused `Manager` import | `crates/craft-studio-shell/src/main.rs:3` | ✅ Fixed, clippy passes |
@@ -170,9 +171,9 @@ It was not a workspace member, so it never affected the root build, but it was a
 
 ## 3. Functional defects
 
-### 3.1 The signature workflow is broken in the UI
+### 3.1 The signature workflow was broken in the UI (fixed)
 
-`apps/vectorcraft/src/lib.rs` writes the clipboard directly:
+`apps/vectorcraft/src/lib.rs` used to write the clipboard directly:
 
 ```rust
 let state = app.state::<SharedState>();
@@ -180,9 +181,9 @@ let mut clip = state.global_clipboard.write()...;
 *clip = Some(ClipboardItem { ... });
 ```
 
-Only the Tauri command `set_clipboard` (`src/main.rs:26-31`) emits `clipboard-updated`, and the frontend never calls that command. Therefore clicking **Export SVG** changes backend state but the left "Shared Clipboard" panel stays on "Empty" until something else emits. The drag-drop rasterize path still works because it calls `get_clipboard`, but the advertised "Vector → Photo" demo looks broken.
+Only the Tauri command `set_clipboard` (`src/main.rs:26-31`) emitted `clipboard-updated`, and the frontend never called that command. Clicking **Export SVG** therefore changed backend state while the left "Shared Clipboard" panel stayed on "Empty". The drag-drop rasterize path still worked because it calls `get_clipboard`, but the advertised "Vector → Photo" demo looked broken.
 
-Fix: emit `clipboard-updated` from `VectorCraftModule::handle_action` (it already has `&AppHandle`), preferably by moving the write+emit into one `SharedState` helper so no module can forget.
+**Resolution:** writes are centralized in `SharedState::set_clipboard`, which stores the item, releases the lock and emits `clipboard-updated`. `VectorCraftModule::export_svg` and the `set_clipboard` command both call it, so no module can forget the notification.
 
 ### 3.2 Frontend error handling
 
@@ -289,10 +290,11 @@ Version/format inconsistencies: `README.md` still says "10 tabs" in its final ch
 - `cargo fmt --all -- --check` → exit 0 after running `cargo fmt --all`.
 - `cargo clippy --workspace --all-targets -- -D warnings` → exit 0 (re-run after formatting).
 - `cargo test --workspace` → exit 0 (0 tests exist).
+- After the clipboard fix: `cargo check`, `cargo clippy -D warnings`, `cargo test` and `cargo fmt --check` all exit 0.
 - `cargo build --release --workspace` → exit 0 (10m28s), producing a stripped 11.7 MB `craft-studio-shell.exe`.
 - Documentation: all 14 `assets/*.png` references resolve to generated files; `LICENSE` is the 11,357-byte Apache-2.0 text; no `storytold` clone URL or production/zero-copy claims remain in the README.
 
-**Not performed:** `tauri build` bundling/installers, a real interaction test of the desktop window (the Shared Clipboard bug in §3.1 is code-inspected, not reproduced in a running app), and execution of the workflow on GitHub — the changes have not been committed or pushed.
+**Not performed:** `tauri build` bundling/installers, a real interaction test of the desktop window (the clipboard fix is compile-verified and the event path reviewed, but not exercised in a running webview), and execution of the workflow on GitHub — the changes have not been committed or pushed.
 
 ---
 
@@ -300,7 +302,7 @@ Version/format inconsistencies: `README.md` still says "10 tabs" in its final ch
 
 Items 1–5 of the original list are done. Remaining, in order:
 
-1. Emit `clipboard-updated` from VectorCraft's export (or centralize clipboard writes), and add error handling to the drop zone (§3.1, §3.2). This is the highest-impact functional bug.
+1. Add error handling to the PhotoCraft drop zone (§3.2) so failed rasterizations recover instead of hanging on "Rasterizing...".
 2. Commit `ui/package-lock.json` and push the branch so GitHub Actions runs for the first time; remove `crates/craft-studio-shell/gen/schemas` from the index and ignore it.
-3. Remove `txt.txt` and the unused `tokio` dependency; add tests for the rasterize path and the registry/clipboard commands.
+3. Remove `txt.txt` and the unused `tokio` dependency; add tests for the rasterize path and clipboard behavior.
 4. Replace the placeholder image and icon artwork with real captures/icons before a release build.
