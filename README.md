@@ -119,6 +119,8 @@ The same sequence is available locally through `just ci`.
 | EffectCraft | ![](assets/20-effectcraft.png) |
 | LightCraft | ![](assets/21-lightcraft.png) |
 | DesignCraft | ![](assets/22-designcraft.png) |
+| GridCraft | ![](assets/23-gridcraft.png) |
+| PDFCraft | ![](assets/24-pdfcraft.png) |
 
 </details>
 
