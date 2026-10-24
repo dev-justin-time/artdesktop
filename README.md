@@ -2,16 +2,16 @@
 
 **A unified desktop shell for ten creative modules**
 
-ArtCraft Studio is a Rust + Tauri 2.0 monorepo that registers ten creative modules behind a shared `CraftModule` trait and hosts them in one desktop process. It is an early-stage proof of concept: the shell, module registry, shared clipboard and two asset pipelines are implemented; eight modules embed completed interactive mockup pages, while PhotoCraft and VectorCraft expose the two working pipelines.
+ArtCraft Studio is a Rust + Tauri 2.0 monorepo that registers ten creative modules behind a shared `CraftModule` trait and hosts them in one desktop process. It is an early-stage proof of concept: the shell, module registry, shared clipboard and two asset pipelines are implemented, and all ten modules embed completed interactive mockup pages from `assets/pages`. PhotoCraft's and VectorCraft's pages wire their buttons to the working pipelines; the other modules' Rust actions are still stubs.
 
-> **Status:** proof of concept. PhotoCraft's SVG → PNG rasterizer and VectorCraft's SVG export to the shared clipboard work. FilmCraft, WordCraft, DeckCraft, DesignCraft, EffectCraft, LightCraft, GridCraft and PDFCraft embed completed interactive mockup pages from `assets/pages` (their Rust actions are still stubs). See [audit.md](audit.md) for the current known issues.
+> **Status:** proof of concept. PhotoCraft's SVG → PNG rasterizer and VectorCraft's SVG export to the shared clipboard work. All ten modules embed completed interactive mockup pages from `assets/pages`; only PhotoCraft and VectorCraft currently call real Rust actions from those pages. See [audit.md](audit.md) for the current known issues.
 
 ## 🌟 The ten modules
 
 | Module | Domain | Current state |
 | :--- | :--- | :--- |
-| **PhotoCraft** | Raster editing | **Implemented:** `rasterize_svg` decodes a Base64 SVG and renders it to PNG with `usvg` + `tiny-skia` + `resvg` |
-| **VectorCraft** | Vector graphics | **Implemented:** `export_svg` writes an SVG into the shared clipboard |
+| **PhotoCraft** | Raster editing | **Completed mockup UI + implemented:** the page's **Rasterize SVG** button sends the shared clipboard SVG to `rasterize_svg`, which renders it to PNG with `usvg` + `tiny-skia` + `resvg` |
+| **VectorCraft** | Vector graphics | **Completed mockup UI + implemented:** the page's **Export SVG** button serializes its artboard into the shared clipboard through `export_svg` |
 | **FilmCraft** | Video editing | **Completed mockup UI** embedded from `assets/pages/filmcraft`; `add_clip`, `split_clip`, `render_timeline` are stubs |
 | **WordCraft** | Word processing | **Completed mockup UI** embedded from `assets/pages/wordcraft`; `insert_text`, `apply_style`, `export_pdf` are stubs |
 | **DeckCraft** | Presentations | **Completed mockup UI** embedded from `assets/pages/deckcraft`; `add_slide`, `apply_theme`, `start_presentation` are stubs |
@@ -27,8 +27,8 @@ ArtCraft Studio is a Rust + Tauri 2.0 monorepo that registers ten creative modul
 - **Capability-driven toolbar.** Each module declares its actions, and the frontend renders the toolbar from that list.
 - **Completed module mockups.** Eight modules embed their completed page from `ui/public/pages` inside the canvas, with duplicate shell chrome hidden so they fit the studio. Each page injects a compact module nav bar; clicking it switches the studio's active tab, including back to the dashboard.
 - **Shared clipboard state.** A `SharedState` clipboard holds a Base64 payload with its source module and MIME type, exposed through `get_clipboard` / `set_clipboard`.
-- **SVG → PNG pipeline.** Dropping onto the PhotoCraft canvas rasterizes the clipboard's SVG and displays the PNG.
-- **Ten module tabs** — completed mockup pages for eight modules and the two working pipelines for PhotoCraft and VectorCraft.
+- **SVG → PNG pipeline.** VectorCraft's **Export SVG** writes the artboard to the shared clipboard; PhotoCraft's **Rasterize SVG** button rasterizes that clipboard SVG and opens the PNG preview.
+- **Ten module tabs** — every module embeds its completed mockup page; PhotoCraft and VectorCraft additionally connect page buttons to their working Rust pipelines.
 
 The clipboard is an in-process `RwLock<Option<ClipboardItem>>`; payloads are Base64-encoded and copied across Tauri IPC. It is not shared memory and it is not zero-copy. Both the `set_clipboard` command and VectorCraft's export write through `SharedState::set_clipboard`, which emits `clipboard-updated` so the sidebar refreshes.
 
@@ -101,10 +101,10 @@ The same sequence is available locally through `just ci`.
 | ![Dashboard](assets/03-dashboard.png) | ![Clipboard](assets/07-clipboard-svg.png) | ![Rasterize](assets/13-success.png) |
 | Ten modules, one process | Base64 payload in `SharedState` | Rendered in pure Rust |
 
-| Vector → Photo | Drop target |
+| Vector → Photo | Clipboard hand-off |
 |:---:|:---:|
-| ![Workflow](assets/31-workflow.png) | ![Drop zone](assets/11-dropzone.png) |
-| Export SVG, then rasterize in PhotoCraft | PhotoCraft accepts a dropped SVG |
+| ![Workflow](assets/31-workflow.png) | ![Clipboard preview](assets/11-dropzone.png) |
+| Export SVG, then press **Rasterize SVG** in PhotoCraft | The same Base64 payload is read by the rasterizer |
 
 <details>
 <summary>🎛️ Module placeholders (expand)</summary>

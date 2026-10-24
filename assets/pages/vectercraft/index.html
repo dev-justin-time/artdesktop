@@ -1,790 +1,335 @@
 <!DOCTYPE html>
-
-<html class="dark" lang="en" rtrvr-gl-click="1" rtrvr-gl-input="1" rtrvr-gl-keydown="1" rtrvr-mw-ready="1"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link rel="stylesheet" href="/vendor/fonts/font-de9b7b5eb580.css">
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ArtCraft Studio - VectorCraft</title>
+<link rel="stylesheet" href="/vendor/fonts/font-4eed1cc85dbe.css">
 <link rel="stylesheet" href="/vendor/fonts/font-de9b7b5eb580.css">
-<link rel="stylesheet" href="/vendor/fonts/font-de9b7b5eb580.css"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="/vendor/tailwind.js"></script><script id="tailwind-config">tailwind.config = {
-    darkMode: "class",
-    theme: {
-      extend: {
-        "colors": {
-          "surface-container-low": "#191b22",
-          "outline-variant": "#3b494b",
-          "primary-container": "#00f0ff",
-          "background": "#111319",
-          "primary": "#dbfcff",
-          "on-primary-fixed": "#002022",
-          "on-secondary-fixed-variant": "#6900b3",
-          "on-error": "#690005",
-          "surface-variant": "#33353b",
-          "outline": "#849495",
-          "on-tertiary-container": "#8523dd",
-          "surface-tint": "#00dbe9",
-          "error": "#ffb4ab",
-          "on-secondary-container": "#d6a9ff",
-          "on-tertiary-fixed": "#2c0051",
-          "on-secondary-fixed": "#2c0051",
-          "tertiary": "#fdf3ff",
-          "inverse-surface": "#e2e2ea",
-          "tertiary-container": "#e9d0ff",
-          "inverse-on-surface": "#2e3037",
-          "on-secondary": "#490080",
-          "surface-container-highest": "#33353b",
-          "tertiary-fixed": "#efdbff",
-          "on-background": "#e2e2ea",
-          "on-primary": "#00363a",
-          "secondary": "#ddb7ff",
-          "surface-container-lowest": "#0c0e14",
-          "on-surface-variant": "#b9cacb",
-          "on-primary-fixed-variant": "#004f54",
-          "primary-fixed-dim": "#00dbe9",
-          "tertiary-fixed-dim": "#dcb8ff",
-          "surface-container": "#1d1f26",
-          "on-tertiary": "#480081",
-          "surface-container-high": "#282a30",
-          "on-tertiary-fixed-variant": "#6700b5",
-          "secondary-fixed": "#f0dbff",
-          "inverse-primary": "#006970",
-          "on-surface": "#e2e2ea",
-          "on-error-container": "#ffdad6",
-          "surface": "#111319",
-          "on-primary-container": "#006970",
-          "secondary-container": "#6f00be",
-          "error-container": "#93000a",
-          "primary-fixed": "#7df4ff",
-          "surface-dim": "#111319",
-          "surface-bright": "#373940",
-          "secondary-fixed-dim": "#ddb7ff"
-        },
-        "borderRadius": {
-          "DEFAULT": "0.125rem",
-          "lg": "0.25rem",
-          "xl": "0.5rem",
-          "full": "0.75rem"
-        },
-        "spacing": {
-          "space-sm": "0.5rem",
-          "space-xl": "1.5rem",
-          "space-xs": "0.25rem",
-          "margin": "1rem",
-          "gutter": "0.75rem",
-          "gutter-compact": "0.5rem",
-          "space-md": "0.75rem",
-          "space-lg": "1rem"
-        },
-        "fontFamily": {
-          "label-lg": [
-            "Inter"
-          ],
-          "headline-md": [
-            "Geist"
-          ],
-          "label-sm": [
-            "JetBrains Mono"
-          ],
-          "headline-lg": [
-            "Geist"
-          ],
-          "body-md": [
-            "Inter"
-          ],
-          "mono-data": [
-            "JetBrains Mono"
-          ],
-          "body-lg": [
-            "Inter"
-          ],
-          "headline-xl": [
-            "Geist"
-          ],
-          "label-md": [
-            "Inter"
-          ],
-          "body-sm": [
-            "Inter"
-          ]
-        },
-        "fontSize": {
-          "label-lg": [
-            "12px",
-            {
-              "lineHeight": "16px",
-              "letterSpacing": "0.01em",
-              "fontWeight": "500"
-            }
-          ],
-          "headline-md": [
-            "18px",
-            {
-              "lineHeight": "24px",
-              "letterSpacing": "-0.015em",
-              "fontWeight": "500"
-            }
-          ],
-          "label-sm": [
-            "10px",
-            {
-              "lineHeight": "12px",
-              "letterSpacing": "0.03em",
-              "fontWeight": "400"
-            }
-          ],
-          "headline-lg": [
-            "24px",
-            {
-              "lineHeight": "32px",
-              "letterSpacing": "-0.02em",
-              "fontWeight": "600"
-            }
-          ],
-          "body-md": [
-            "13px",
-            {
-              "lineHeight": "18px",
-              "letterSpacing": "0em",
-              "fontWeight": "400"
-            }
-          ],
-          "mono-data": [
-            "11px",
-            {
-              "lineHeight": "14px",
-              "letterSpacing": "-0.01em",
-              "fontWeight": "400"
-            }
-          ],
-          "body-lg": [
-            "14px",
-            {
-              "lineHeight": "20px",
-              "letterSpacing": "-0.01em",
-              "fontWeight": "400"
-            }
-          ],
-          "headline-xl": [
-            "32px",
-            {
-              "lineHeight": "40px",
-              "letterSpacing": "-0.025em",
-              "fontWeight": "600"
-            }
-          ],
-          "label-md": [
-            "11px",
-            {
-              "lineHeight": "14px",
-              "letterSpacing": "0.02em",
-              "fontWeight": "500"
-            }
-          ],
-          "body-sm": [
-            "12px",
-            {
-              "lineHeight": "16px",
-              "letterSpacing": "0em",
-              "fontWeight": "400"
-            }
-          ]
-        }
-      },
-    },
-  }</script></head><body class="bg-surface-container-lowest font-body-md text-on-surface antialiased select-none"><header class="fixed top-0 left-0 right-0 h-10 z-50 bg-surface-container/90 backdrop-blur-xl shadow-[0_1px_12px_rgba(0,0,0,0.5)]"><div class="h-10 w-full px-space-md flex items-center justify-between"><div class="flex items-center gap-space-md"><img alt="ArtCraft Studio Brand Glyph" class="h-8 w-auto object-contain" src="/vendor/images/c9201374530d.png"/><span class="font-headline-md text-headline-md font-semibold text-primary tracking-tight">ArtCraft</span><div class="h-4 w-px bg-surface-variant mx-space-xs"></div><nav class="flex items-center gap-space-xs bg-surface-container-lowest p-0.5 rounded-lg" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg"><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors" data-path="dashboard-launcher" href="#">Dashboard</a><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors" data-path="photocraft" href="#">PhotoCraft</a><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors" data-path="vectorcraft" href="#">VectorCraft</a><a aria-current="page" class="px-space-sm py-0.5 transition-colors bg-primary-container text-on-primary-container font-semibold rounded-lg" data-path="filmcraft" href="#">FilmCraft</a><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors" data-path="effectcraft" href="#">EffectCraft</a></nav></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-0.5 rounded"><span class="material-symbols-outlined text-sm text-secondary">draft</span><span class="font-mono-data text-mono-data text-on-surface">Cybernetic_Genesis_v4.art</span></div><div class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-sm text-primary-container">hub</span><span class="font-mono-data text-mono-data text-primary-container">Synced P2P</span></div><div class="h-4 w-px bg-surface-variant"></div><div class="flex items-center gap-1"><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded transition-colors" rtrvr-ls="0~1" rtrvr-ro="38" title="Undo (Ctrl+Z)" type="button"><span class="material-symbols-outlined text-base">undo</span></button><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded transition-colors" rtrvr-ls="0~1" rtrvr-ro="38" title="Redo (Ctrl+Y)" type="button"><span class="material-symbols-outlined text-base">redo</span></button></div><div class="flex items-center bg-surface-container-low px-space-xs py-0.5 rounded"><span class="font-mono-data text-mono-data text-on-surface font-medium">125%</span><span class="material-symbols-outlined text-xs text-on-surface-variant ml-0.5">arrow_drop_down</span></div></div><div class="flex items-center gap-space-sm"><button class="flex items-center gap-1 px-space-sm py-1 bg-secondary-container text-on-secondary-container font-label-md text-label-md rounded-lg hover:brightness-110 transition-all" type="button"><span class="material-symbols-outlined text-sm">share</span><span class="">Share</span></button><div class="h-4 w-px bg-surface-variant"></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-primary-container/40" src="/vendor/images/3864a2f0deef.jpg"/></div></div></header><aside class="fixed left-0 top-10 bottom-0 w-64 bg-surface-container-low/95 backdrop-blur-xl z-40 flex flex-col justify-between shadow-[2px_0_12px_rgba(0,0,0,0.3)]"><div class="flex flex-col flex-1 overflow-y-auto"><div class="flex items-center justify-between px-space-md py-space-sm bg-surface-container-lowest/50"><span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Workspace Modules</span><span class="material-symbols-outlined text-sm text-outline hover:text-on-surface cursor-pointer">dock_to_left</span></div><nav class="flex flex-col gap-space-xs p-space-sm" data-active-classes="bg-surface-container-high text-primary font-medium rounded-lg"><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="shared-clipboard" href="#"><span class="material-symbols-outlined text-base text-primary-container">content_paste_go</span><span class="font-label-md text-label-md">Shared Clipboard</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="layers-palette" href="#"><span class="material-symbols-outlined text-base text-secondary">layers</span><span class="font-label-md text-label-md">Layers &amp; Masks</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="asset-library" href="#"><span class="material-symbols-outlined text-base text-primary-fixed">auto_awesome_motion</span><span class="font-label-md text-label-md">Design Tokens</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="export-inspector" href="#"><span class="material-symbols-outlined text-base text-tertiary-fixed-dim">output</span><span class="font-label-md text-label-md">Export Telemetry</span></a></nav></div><div class="p-space-sm bg-surface-container-lowest/60 flex items-center justify-between text-on-surface-variant"><div class="flex items-center gap-space-xs"><span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span><span class="font-mono-data text-mono-data">GPU: Metal V2 Active</span></div><span class="material-symbols-outlined text-xs cursor-pointer hover:text-on-surface">settings</span></div></aside><div class="pl-64"><main class="relative pt-10 min-h-screen bg-surface-container-lowest w-full overflow-hidden"><div class="flex flex-col w-full h-[calc(100vh-2.5rem)] overflow-hidden select-none">
-<!-- FilmCraft Command Strip -->
-<div class="h-10 px-space-md bg-surface-container flex items-center justify-between shadow-md z-30">
-<div class="flex items-center gap-space-xs">
-<div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-high rounded text-primary">
-<span class="material-symbols-outlined text-base text-primary-container" style="font-variation-settings: 'FILL' 1;">movie_edit</span>
-<span class="font-headline-md text-label-lg font-semibold tracking-wide text-on-surface">FilmCraft</span>
-<span class="font-mono-data text-label-sm text-primary-container bg-surface-container-lowest px-1.5 py-0.5 rounded ml-1">Pro Ultra v3.4</span>
-</div>
-<div class="w-px h-4 bg-surface-variant mx-1"></div>
-<!-- Action Buttons -->
-<button class="flex items-center gap-1 px-2.5 py-1 bg-surface-container-high hover:bg-surface-bright text-on-surface rounded transition-colors group" title="Add Media Clip (Cmd+I)">
-<span class="material-symbols-outlined text-sm text-primary-container group-hover:scale-110 transition-transform">add_photo_alternate</span>
-<span class="font-label-md text-label-md">Add Clip</span>
-</button>
-<button class="flex items-center gap-1 px-2.5 py-1 bg-surface-container-high hover:bg-surface-bright text-on-surface rounded transition-colors group" title="Razor Split at Playhead (C)">
-<span class="material-symbols-outlined text-sm text-secondary group-hover:scale-110 transition-transform">content_cut</span>
-<span class="font-label-md text-label-md">Razor Split</span>
-</button>
-<button class="flex items-center gap-1 px-2.5 py-1 bg-surface-container-high hover:bg-surface-bright text-on-surface rounded transition-colors group" title="Optical Flow Retime Vector">
-<span class="material-symbols-outlined text-sm text-primary-fixed group-hover:scale-110 transition-transform">slow_motion_video</span>
-<span class="font-label-md text-label-md">Optical Flow</span>
-</button>
-<button class="flex items-center gap-1 px-2.5 py-1 bg-surface-container-high hover:bg-surface-bright text-on-surface rounded transition-colors group" title="Crossfade / Neural Morph Transition">
-<span class="material-symbols-outlined text-sm text-secondary-fixed group-hover:scale-110 transition-transform">auto_transmission</span>
-<span class="font-label-md text-label-md">Transition</span>
-</button>
-<button class="flex items-center gap-1 px-2.5 py-1 bg-surface-container-high hover:bg-surface-bright text-on-surface rounded transition-colors group" title="Sidechain Auto Ducking">
-<span class="material-symbols-outlined text-sm text-tertiary-fixed-dim group-hover:scale-110 transition-transform">graphic_eq</span>
-<span class="font-label-md text-label-md">Audio Duck</span>
-</button>
-</div>
-<!-- Right Quick Actions -->
-<div class="flex items-center gap-space-sm">
-<div class="flex items-center gap-2 bg-surface-container-lowest px-2.5 py-1 rounded">
-<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
-<span class="font-mono-data text-mono-data text-on-surface-variant">COLOR ENGINE: REC.2020 PQ</span>
-</div>
-<button class="flex items-center gap-1.5 px-3 py-1 bg-surface-container-high hover:bg-surface-bright text-on-surface rounded transition-colors" title="Sync Playhead Across Multitracks">
-<span class="material-symbols-outlined text-sm text-primary">sync</span>
-<span class="font-label-md text-label-md">Sync Timeline</span>
-</button>
-<button class="flex items-center gap-1.5 px-3.5 py-1 bg-primary-container text-on-primary-container hover:brightness-110 active:scale-95 transition-all shadow-[0_0_12px_rgba(0,240,255,0.35)] font-semibold rounded" title="Export Full ProRes Pipeline">
-<span class="material-symbols-outlined text-sm">video_file</span>
-<span class="font-label-md text-label-md">Render ProRes</span>
-</button>
-</div>
-</div>
-<!-- Primary Workspace: Split Upper & Lower with Right Inspector -->
-<div class="flex-1 flex overflow-hidden">
-<!-- Center Stage (Upper: Monitor & Bin, Lower: Multitrack Timeline) -->
-<div class="flex-1 flex flex-col min-w-0 bg-surface-container-lowest">
-<!-- UPPER WORKSPACE: Media Bin + Video Preview Monitor -->
-<div class="h-[52%] flex min-w-0 bg-surface-container-low">
-<!-- Left Media Pool / Bin -->
-<div class="w-72 flex flex-col bg-surface-container-low/95 shadow-lg z-10 flex-shrink-0">
-<!-- Bin Header -->
-<div class="h-8 px-space-sm bg-surface-container-lowest flex items-center justify-between">
-<div class="flex items-center gap-1.5">
-<span class="material-symbols-outlined text-xs text-primary-container">folder_open</span>
-<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface font-semibold">Media Pool</span>
-<span class="font-mono-data text-label-sm text-outline bg-surface-container px-1 rounded">3 Items</span>
-</div>
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-xs text-outline hover:text-on-surface cursor-pointer">filter_list</span>
-<span class="material-symbols-outlined text-xs text-outline hover:text-on-surface cursor-pointer">grid_view</span>
-</div>
-</div>
-<!-- Bin Search -->
-<div class="p-2 bg-surface-container-low">
-<div class="flex items-center gap-1.5 bg-surface-container-lowest px-2 py-1 rounded">
-<span class="material-symbols-outlined text-xs text-outline">search</span>
-<input class="bg-transparent font-body-sm text-body-sm text-on-surface placeholder:text-outline/60 focus:outline-none w-full" placeholder="Search pool..." type="text" value=""/>
-</div>
-</div>
-<!-- Clips List -->
-<div class="flex-1 overflow-y-auto px-2 space-y-1.5">
-<!-- Clip 1 -->
-<div class="p-2 bg-surface-container hover:bg-surface-container-high rounded transition-all cursor-pointer group shadow-sm">
-<div class="flex gap-2">
-<div class="w-16 h-11 bg-surface-container-lowest rounded overflow-hidden relative flex-shrink-0">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform" data-alt="Futuristic neon phoenix hologram dissipating into golden particle fields in high dynamic range 4k cinematic render" src="/vendor/images/384314e00bc1.jpg"/>
-<span class="absolute bottom-0.5 right-0.5 font-mono-data text-[9px] bg-surface-container-lowest/90 text-primary-container px-0.5 rounded">4K</span>
-</div>
-<div class="flex-1 min-w-0">
-<p class="font-label-md text-label-md text-on-surface truncate group-hover:text-primary transition-colors">Intro_Phoenix_Morph.mp4</p>
-<p class="font-mono-data text-label-sm text-outline truncate">3840x2160 · 60.00 fps</p>
-<div class="flex items-center gap-1 mt-0.5">
-<span class="font-mono-data text-[9px] text-secondary">00:00:42:15</span>
-<span class="font-mono-data text-[9px] text-outline">H.265 Master</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Clip 2 (Selected / Active) -->
-<div class="p-2 bg-surface-container-high rounded transition-all cursor-pointer group shadow-md shadow-primary-container/5">
-<div class="flex gap-2">
-<div class="w-16 h-11 bg-surface-container-lowest rounded overflow-hidden relative flex-shrink-0 ring-1 ring-primary-container/60">
-<img class="w-full h-full object-cover" data-alt="Ethereal bioluminescent aquatic creature emitting cyan volumetric rays and organic energy tentacles deep oceanic abyss" src="/vendor/images/c97fda93837d.jpg"/>
-<span class="absolute bottom-0.5 right-0.5 font-mono-data text-[9px] bg-secondary-container text-on-secondary-container px-0.5 rounded">ALPHA</span>
-</div>
-<div class="flex-1 min-w-0">
-<div class="flex items-center justify-between">
-<p class="font-label-md text-label-md text-primary truncate font-semibold">VFX_Cyber_Glow.mov</p>
-<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
-</div>
-<p class="font-mono-data text-label-sm text-on-surface-variant truncate">ProRes 4444 XQ</p>
-<div class="flex items-center gap-1 mt-0.5">
-<span class="font-mono-data text-[9px] text-primary-container font-medium">00:02:18:04</span>
-<span class="font-mono-data text-[9px] text-outline">12-bit Deep</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Clip 3 -->
-<div class="p-2 bg-surface-container hover:bg-surface-container-high rounded transition-all cursor-pointer group shadow-sm">
-<div class="flex gap-2">
-<div class="w-16 h-11 bg-surface-container-lowest rounded overflow-hidden relative flex-shrink-0 flex items-center justify-center">
-<div class="flex items-end gap-0.5 h-6">
-<span class="w-1 bg-secondary-fixed-dim h-3 rounded-full"></span>
-<span class="w-1 bg-primary-container h-5 rounded-full"></span>
-<span class="w-1 bg-secondary h-4 rounded-full"></span>
-<span class="w-1 bg-primary h-6 rounded-full"></span>
-<span class="w-1 bg-primary-container h-2 rounded-full"></span>
-</div>
-<span class="absolute bottom-0.5 right-0.5 font-mono-data text-[9px] bg-surface-container-lowest/90 text-on-surface-variant px-0.5 rounded">WAV</span>
-</div>
-<div class="flex-1 min-w-0">
-<p class="font-label-md text-label-md text-on-surface truncate group-hover:text-primary transition-colors">Soundtrack_Synth_Wave.wav</p>
-<p class="font-mono-data text-label-sm text-outline truncate">96kHz · 32-bit Float</p>
-<div class="flex items-center gap-1 mt-0.5">
-<span class="font-mono-data text-[9px] text-secondary">00:04:30:00</span>
-<span class="font-mono-data text-[9px] text-outline">Stereo Dual</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Storage Meter -->
-<div class="p-2 bg-surface-container-lowest flex items-center justify-between text-outline">
-<span class="font-mono-data text-label-sm">NVMe Scratch Cache: 1.84 TB / 4.0 TB</span>
-<span class="font-mono-data text-label-sm text-primary">46%</span>
-</div>
-</div>
-<!-- Center/Right: Video Preview Monitor -->
-<div class="flex-1 flex flex-col min-w-0 bg-surface-container-lowest p-2 relative">
-<!-- Monitor Canvas Frame Area -->
-<div class="flex-1 relative bg-surface-container-lowest rounded overflow-hidden flex items-center justify-center shadow-inner group">
-<!-- Video Canvas Image -->
-<div class="relative w-full h-full max-w-4xl max-h-full flex items-center justify-center overflow-hidden">
-<img class="w-full h-full object-contain select-none" data-alt="Dramatic cinematic still of a cybernetic bioluminescent creature swimming through an obsidian abyss, with pulsing cyan neural veins, deep violet light rays, cinematic chromatic aberration and film grain, highly detailed 8k film still" src="/vendor/images/2b5ba3687fa0.jpg"/>
-<!-- Action Safe Guidelines (Hairline overlays) -->
-<div class="absolute inset-[10%] pointer-events-none">
-<div class="w-full h-full border border-primary-container/20 border-dashed rounded relative">
-<!-- Title Safe 80% -->
-<div class="absolute inset-[10%] border border-secondary/25 border-dotted"></div>
-<!-- Center Crosshairs -->
-<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none">
-<div class="w-full h-px bg-primary-container/40 absolute top-1/2"></div>
-<div class="h-full w-px bg-primary-container/40 absolute left-1/2"></div>
-</div>
-<!-- Corner ticks -->
-<span class="absolute top-1 left-1 font-mono-data text-[8px] text-primary-container/40">ACTION 90%</span>
-<span class="absolute top-1 right-1 font-mono-data text-[8px] text-secondary/40">TITLE 80%</span>
-</div>
-</div>
-<!-- Top Left Source Tag -->
-<div class="absolute top-3 left-3 flex items-center gap-2 bg-surface-container-lowest/80 backdrop-blur-md px-2.5 py-1 rounded shadow">
-<span class="w-2 h-2 rounded-full bg-primary-container"></span>
-<span class="font-mono-data text-label-sm text-primary uppercase">Program: UHD Rec.709 Preview</span>
-</div>
-<!-- Top Right Timecode Readout -->
-<div class="absolute top-3 right-3 flex items-center gap-2 bg-surface-container-lowest/90 backdrop-blur-md px-3 py-1 rounded shadow">
-<span class="font-mono-data text-body-md text-primary-container font-semibold tracking-wider">00:01:24:18</span>
-<span class="font-mono-data text-label-sm text-outline">/</span>
-<span class="font-mono-data text-body-sm text-on-surface-variant">00:04:30:00</span>
-</div>
-</div>
-<!-- Floating Transport & Shuttle Control Deck -->
-<div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-surface-container/90 backdrop-blur-xl px-3 py-1.5 rounded-full shadow-2xl z-20">
-<button class="w-7 h-7 flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-bright rounded transition-colors" title="Mark In Point (I)">
-<span class="material-symbols-outlined text-base">arrow_left</span>
-</button>
-<button class="w-7 h-7 flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-bright rounded transition-colors" title="Previous Keyframe (Up)">
-<span class="material-symbols-outlined text-base">skip_previous</span>
-</button>
-<button class="w-7 h-7 flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-bright rounded transition-colors" title="Reverse Shuttle 1x-8x (J)">
-<span class="material-symbols-outlined text-base">fast_rewind</span>
-</button>
-<!-- Central Play/Pause Toggle -->
-<button class="w-8 h-8 flex items-center justify-center bg-primary-container text-on-primary-container rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_12px_rgba(0,240,255,0.4)] mx-1" id="playback-btn" title="Play/Pause (Space)">
-<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">pause</span>
-</button>
-<button class="w-7 h-7 flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-bright rounded transition-colors" title="Forward Shuttle 1x-8x (L)">
-<span class="material-symbols-outlined text-base">fast_forward</span>
-</button>
-<button class="w-7 h-7 flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-bright rounded transition-colors" title="Next Keyframe (Down)">
-<span class="material-symbols-outlined text-base">skip_next</span>
-</button>
-<button class="w-7 h-7 flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-bright rounded transition-colors" title="Mark Out Point (O)">
-<span class="material-symbols-outlined text-base">arrow_right</span>
-</button>
-<div class="w-px h-4 bg-surface-variant mx-1"></div>
-<button class="w-7 h-7 flex items-center justify-center text-primary-container hover:bg-surface-bright rounded transition-colors" title="Loop Preview">
-<span class="material-symbols-outlined text-base">repeat</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-<!-- LOWER WORKSPACE: Multi-Track Timeline Editor -->
-<div class="flex-1 flex flex-col min-w-0 bg-surface-container-lowest overflow-hidden">
-<!-- Timeline Control Bar & Time Ruler Header -->
-<div class="h-7 bg-surface-container flex items-center justify-between px-space-sm z-10 shadow-sm">
-<div class="w-56 flex items-center justify-between pr-2">
-<span class="font-label-md text-label-md text-outline uppercase font-semibold">Track Hierarchy</span>
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-xs text-outline hover:text-on-surface cursor-pointer" title="Lock All">lock</span>
-<span class="material-symbols-outlined text-xs text-outline hover:text-on-surface cursor-pointer" title="Solo Mode">hearing</span>
-</div>
-</div>
-<!-- Ruler Seconds / Frames Strip -->
-<div class="flex-1 relative h-full flex items-center overflow-hidden bg-surface-container-low px-2">
-<!-- Calibrated Tick Marks -->
-<div class="w-full flex justify-between font-mono-data text-[9px] text-outline">
-<div class="flex items-center gap-1"><span>00:00:00</span><div class="w-px h-2 bg-surface-variant"></div></div>
-<div class="flex items-center gap-1"><span>00:00:30</span><div class="w-px h-2 bg-surface-variant"></div></div>
-<div class="flex items-center gap-1"><span>00:01:00</span><div class="w-px h-2 bg-surface-variant"></div></div>
-<div class="flex items-center gap-1 text-primary-container font-semibold"><span>00:01:24:18 (PLAYHEAD)</span><div class="w-px h-3 bg-primary-container"></div></div>
-<div class="flex items-center gap-1"><span>00:02:00</span><div class="w-px h-2 bg-surface-variant"></div></div>
-<div class="flex items-center gap-1"><span>00:02:30</span><div class="w-px h-2 bg-surface-variant"></div></div>
-<div class="flex items-center gap-1"><span>00:03:00</span><div class="w-px h-2 bg-surface-variant"></div></div>
-<div class="flex items-center gap-1"><span>00:03:30</span><div class="w-px h-2 bg-surface-variant"></div></div>
-<div class="flex items-center gap-1"><span>00:04:00</span><div class="w-px h-2 bg-surface-variant"></div></div>
-</div>
-</div>
-<!-- Zoom & Snapping Controls -->
-<div class="flex items-center gap-2 pl-2">
-<span class="material-symbols-outlined text-xs text-primary-container cursor-pointer" title="Snapping ON (N)">qr_code_2</span>
-<div class="flex items-center gap-1 bg-surface-container-lowest px-1.5 py-0.5 rounded">
-<span class="material-symbols-outlined text-xs text-outline">zoom_out</span>
-<div class="w-16 h-1 bg-surface-variant rounded-full relative">
-<div class="w-10 h-1 bg-primary-container rounded-full"></div>
-</div>
-<span class="material-symbols-outlined text-xs text-outline">zoom_in</span>
-</div>
-</div>
-</div>
-<!-- Tracks Canvas Body (Tracks List on Left + Timeline Lanes on Right) -->
-<div class="flex-1 flex overflow-y-auto relative bg-surface-container-lowest">
-<!-- Left: Track Controls Sidebar (V3, V2, V1, A1, A2) -->
-<div class="w-56 bg-surface-container flex flex-col flex-shrink-0 z-10 shadow-md">
-<!-- Video Track 3 (V3) Header -->
-<div class="h-14 px-2 py-1 bg-surface-container-low flex items-center justify-between hover:bg-surface-container transition-colors">
-<div class="flex items-center gap-2">
-<span class="font-mono-data text-label-md text-secondary font-bold">V3</span>
-<span class="font-label-md text-label-md text-on-surface truncate">Title Overlays</span>
-</div>
-<div class="flex items-center gap-1 text-outline">
-<span class="material-symbols-outlined text-xs hover:text-on-surface cursor-pointer">visibility</span>
-<span class="material-symbols-outlined text-xs hover:text-on-surface cursor-pointer">lock_open</span>
-</div>
-</div>
-<!-- Video Track 2 (V2) Header (Active Selected Track) -->
-<div class="h-14 px-2 py-1 bg-surface-container-high flex items-center justify-between">
-<div class="flex items-center gap-2">
-<span class="font-mono-data text-label-md text-primary-container font-bold">V2</span>
-<span class="font-label-md text-label-md text-primary font-medium truncate">Morph Mesh FX</span>
-</div>
-<div class="flex items-center gap-1 text-primary-container">
-<span class="material-symbols-outlined text-xs cursor-pointer" style="font-variation-settings: 'FILL' 1;">visibility</span>
-<span class="material-symbols-outlined text-xs cursor-pointer">lock_open</span>
-</div>
-</div>
-<!-- Video Track 1 (V1) Header -->
-<div class="h-14 px-2 py-1 bg-surface-container-low flex items-center justify-between hover:bg-surface-container transition-colors">
-<div class="flex items-center gap-2">
-<span class="font-mono-data text-label-md text-outline font-bold">V1</span>
-<span class="font-label-md text-label-md text-on-surface truncate">Base Backplate</span>
-</div>
-<div class="flex items-center gap-1 text-outline">
-<span class="material-symbols-outlined text-xs hover:text-on-surface cursor-pointer">visibility</span>
-<span class="material-symbols-outlined text-xs hover:text-on-surface cursor-pointer">lock</span>
-</div>
-</div>
-<!-- Track Separation Bar -->
-<div class="h-1 bg-surface-container-lowest"></div>
-<!-- Audio Track 1 (A1) Header -->
-<div class="h-14 px-2 py-1 bg-surface-container-low flex items-center justify-between hover:bg-surface-container transition-colors">
-<div class="flex items-center gap-2">
-<span class="font-mono-data text-label-md text-tertiary-fixed-dim font-bold">A1</span>
-<span class="font-label-md text-label-md text-on-surface truncate">Master Synth Wave</span>
-</div>
-<div class="flex items-center gap-1 text-outline">
-<span class="font-mono-data text-[10px] bg-surface-container px-1 rounded text-primary hover:text-on-surface cursor-pointer">M</span>
-<span class="font-mono-data text-[10px] bg-surface-container px-1 rounded text-secondary hover:text-on-surface cursor-pointer">S</span>
-<span class="material-symbols-outlined text-xs hover:text-on-surface cursor-pointer">volume_up</span>
-</div>
-</div>
-<!-- Audio Track 2 (A2) Header -->
-<div class="h-14 px-2 py-1 bg-surface-container-low flex items-center justify-between hover:bg-surface-container transition-colors">
-<div class="flex items-center gap-2">
-<span class="font-mono-data text-label-md text-tertiary-fixed-dim font-bold">A2</span>
-<span class="font-label-md text-label-md text-on-surface truncate">Ambience SFX</span>
-</div>
-<div class="flex items-center gap-1 text-outline">
-<span class="font-mono-data text-[10px] bg-surface-container px-1 rounded text-outline hover:text-on-surface cursor-pointer">M</span>
-<span class="font-mono-data text-[10px] bg-surface-container px-1 rounded text-outline hover:text-on-surface cursor-pointer">S</span>
-<span class="material-symbols-outlined text-xs hover:text-on-surface cursor-pointer">volume_up</span>
-</div>
-</div>
-</div>
-<!-- Right: Horizontal Lanes with Clips and Glow Marker -->
-<div class="flex-1 relative flex flex-col min-w-0 bg-surface-container-lowest overflow-x-hidden">
-<!-- Global Vertical Hairline Playhead across all lanes -->
-<div class="absolute top-0 bottom-0 left-[38%] w-px z-30 pointer-events-none flex flex-col items-center">
-<!-- Playhead Top Needle Head -->
-<div class="w-3.5 h-3.5 bg-primary-container rotate-45 -mt-1.5 shadow-[0_0_12px_rgba(0,240,255,0.9)] flex items-center justify-center">
-<div class="w-1.5 h-1.5 bg-surface-container-lowest rounded-full"></div>
-</div>
-<!-- Vertical Hairline Line with dual glow -->
-<div class="w-0.5 flex-1 bg-gradient-to-b from-primary-container via-cyan-300 to-primary-container shadow-[0_0_10px_rgba(0,240,255,0.7)]"></div>
-</div>
-<!-- Lane V3: Title Overlay Glyphs -->
-<div class="h-14 relative flex items-center px-4 bg-surface-container-lowest/60">
-<!-- Grid Ticks background -->
-<div class="absolute inset-0 bg-[linear-gradient(to_right,#1f222b_1px,transparent_1px)] bg-[size:48px_100%] pointer-events-none opacity-40"></div>
-<!-- Clip V3 -->
-<div class="absolute left-[32%] w-[35%] h-10 bg-secondary-container/80 rounded flex items-center px-2.5 shadow-md hover:brightness-110 transition-all cursor-move">
-<span class="material-symbols-outlined text-xs text-secondary-fixed mr-1">title</span>
-<span class="font-mono-data text-label-md text-on-secondary-container font-semibold truncate">Title_Overlay_Glyphs.sub</span>
-<div class="ml-auto flex items-center gap-1">
-<span class="font-mono-data text-[10px] text-secondary-fixed">Screen Blended</span>
-</div>
-</div>
-</div>
-<!-- Lane V2: Bioluminescent Morph Mesh (Highlighted active) -->
-<div class="h-14 relative flex items-center px-4 bg-surface-container-high/30">
-<div class="absolute inset-0 bg-[linear-gradient(to_right,#1f222b_1px,transparent_1px)] bg-[size:48px_100%] pointer-events-none opacity-40"></div>
-<!-- Clip Before Transition -->
-<div class="absolute left-[5%] w-[20%] h-10 bg-surface-container-highest rounded flex items-center px-2 opacity-80">
-<span class="font-mono-data text-label-sm text-outline truncate">Intro_Phoenix_Morph.mp4</span>
-</div>
-<!-- Neural Transition Crossfade Wedge -->
-<div class="absolute left-[24%] w-[8%] h-10 bg-gradient-to-r from-secondary-container to-surface-container-high rounded flex items-center justify-center shadow-[0_0_8px_rgba(111,0,190,0.4)] z-10">
-<span class="font-mono-data text-[9px] text-tertiary-fixed tracking-tighter">MORPH 12F</span>
-</div>
-<!-- Main Selected Clip V2 -->
-<div class="absolute left-[31%] w-[48%] h-10 bg-surface-container-high rounded flex items-center px-3 shadow-[0_0_16px_rgba(0,240,255,0.3)] z-10 ring-1 ring-primary-container">
-<span class="material-symbols-outlined text-xs text-primary-container mr-1.5 animate-pulse">grain</span>
-<div class="flex flex-col">
-<span class="font-mono-data text-label-md text-primary font-bold truncate">Bioluminescent_Morph_Mesh.mov</span>
-<span class="font-mono-data text-[9px] text-on-surface-variant">ProRes 4444 · Speed: 100% · Screen Mode</span>
-</div>
-<!-- Mini keyframe node markers on clip -->
-<div class="ml-auto flex items-center gap-3">
-<div class="w-2 h-2 rotate-45 bg-primary-container shadow-[0_0_6px_rgba(0,240,255,0.8)]" title="Transform Keyframe"></div>
-<div class="w-2 h-2 rotate-45 bg-primary-container shadow-[0_0_6px_rgba(0,240,255,0.8)]" title="Opacity Keyframe"></div>
-<div class="w-2 h-2 rotate-45 bg-secondary shadow-[0_0_6px_rgba(221,183,255,0.8)]" title="Warp Mesh Keyframe"></div>
-</div>
-</div>
-</div>
-<!-- Lane V1: Cybernetic Background with diamond keyframes -->
-<div class="h-14 relative flex items-center px-4 bg-surface-container-lowest/60">
-<div class="absolute inset-0 bg-[linear-gradient(to_right,#1f222b_1px,transparent_1px)] bg-[size:48px_100%] pointer-events-none opacity-40"></div>
-<div class="absolute left-[2%] w-[88%] h-10 bg-surface-container-low rounded flex items-center px-3 shadow">
-<span class="material-symbols-outlined text-xs text-outline mr-2">wallpaper</span>
-<span class="font-mono-data text-label-md text-on-surface-variant truncate">Cybernetic_Background.mp4</span>
-<!-- Keyframe Diamonds Strip -->
-<div class="flex-1 relative h-4 mx-6">
-<div class="absolute left-[15%] top-1 w-2 h-2 rotate-45 bg-outline-variant hover:bg-primary-container transition-colors cursor-pointer"></div>
-<div class="absolute left-[36%] top-1 w-2 h-2 rotate-45 bg-primary-container shadow-[0_0_6px_rgba(0,240,255,0.7)] cursor-pointer"></div>
-<div class="absolute left-[58%] top-1 w-2 h-2 rotate-45 bg-outline-variant hover:bg-primary-container transition-colors cursor-pointer"></div>
-<div class="absolute left-[82%] top-1 w-2 h-2 rotate-45 bg-outline-variant hover:bg-primary-container transition-colors cursor-pointer"></div>
-</div>
-<span class="font-mono-data text-[10px] text-outline">Rec.2020</span>
-</div>
-</div>
-<!-- Audio Separator -->
-<div class="h-1 bg-surface-container-lowest"></div>
-<!-- Lane A1: Soundtrack Synth Wave (Full Waveform Graphic) -->
-<div class="h-14 relative flex items-center px-4 bg-surface-container-lowest/70">
-<div class="absolute inset-0 bg-[linear-gradient(to_right,#1f222b_1px,transparent_1px)] bg-[size:48px_100%] pointer-events-none opacity-40"></div>
-<div class="absolute left-[2%] w-[85%] h-10 bg-surface-container rounded overflow-hidden flex flex-col justify-between p-1 shadow-inner">
-<div class="flex items-center justify-between px-1">
-<span class="font-mono-data text-[10px] text-tertiary-fixed font-medium truncate">Soundtrack_Synth_Wave.wav</span>
-<span class="font-mono-data text-[9px] text-outline">Volume: +1.2 dB · Pan: C</span>
-</div>
-<!-- Inline SVG Audio Waveform with Volume Envelope Spline -->
-<div class="relative w-full h-5">
-<svg class="w-full h-full text-secondary opacity-70" preserveaspectratio="none" viewbox="0 0 500 40">
-<path d="M0,20 Q10,5 20,20 T40,20 T60,10 T80,30 T100,5 T120,35 T140,20 T160,8 T180,32 T200,18 T220,22 T240,4 T260,36 T280,15 T300,25 T320,10 T340,30 T360,12 T380,28 T400,18 T420,22 T440,6 T460,34 T480,20 L500,20" fill="none" stroke="currentColor" stroke-width="2"></path>
-<path class="opacity-50" d="M0,20 Q10,12 20,20 T40,20 T60,15 T80,25 T100,12 T120,28 T140,20 T160,14 T180,26 T200,20 T220,20 T240,12 T260,28 T280,18 T300,22 T320,15 T340,25 T360,16 T380,24 T400,20 T420,20 T440,14 T460,26 T480,20 L500,20" fill="none" stroke="currentColor" stroke-width="1"></path>
-</svg>
-<!-- Volume Envelope Curve Overlay -->
-<div class="absolute inset-0 pointer-events-none">
-<svg class="w-full h-full text-primary-container" preserveaspectratio="none" viewbox="0 0 500 40">
-<polyline fill="none" points="0,20 180,20 220,10 320,10 380,25 500,25" stroke="currentColor" stroke-dasharray="2,2" stroke-width="1.5"></polyline>
-<circle cx="220" cy="10" fill="#00f0ff" r="3"></circle>
-<circle cx="320" cy="10" fill="#00f0ff" r="3"></circle>
-<circle cx="380" cy="25" fill="#00f0ff" r="3"></circle>
-</svg>
-</div>
-</div>
-</div>
-</div>
-<!-- Lane A2: SFX Volumetric Ambience with Peak Meter -->
-<div class="h-14 relative flex items-center px-4 bg-surface-container-lowest/70">
-<div class="absolute inset-0 bg-[linear-gradient(to_right,#1f222b_1px,transparent_1px)] bg-[size:48px_100%] pointer-events-none opacity-40"></div>
-<div class="absolute left-[20%] w-[60%] h-10 bg-surface-container rounded overflow-hidden flex items-center px-2 justify-between shadow-inner">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-xs text-primary-fixed">surround_sound</span>
-<span class="font-mono-data text-[10px] text-on-surface truncate">SFX_Volumetric_Abyss_Deep.flac</span>
-</div>
-<!-- Live Peak Meter (-6dB active) -->
-<div class="flex items-center gap-1.5 bg-surface-container-lowest px-2 py-1 rounded">
-<span class="font-mono-data text-[9px] text-primary-container font-semibold">-6.0 dB</span>
-<div class="w-24 h-2 bg-surface-container-high rounded-full overflow-hidden flex gap-0.5 p-0.5">
-<div class="w-[65%] h-full bg-primary-container rounded-full"></div>
-<div class="w-[15%] h-full bg-secondary rounded-full"></div>
-<div class="w-[20%] h-full bg-surface-variant rounded-full"></div>
-</div>
-<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-ping"></span>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- RIGHT INSPECTOR PANEL: Video & Motion Graphics Telemetry -->
-<div class="w-72 bg-surface-container flex flex-col flex-shrink-0 shadow-2xl z-20">
-<!-- Panel Header & Mode Switcher -->
-<div class="h-10 px-3 bg-surface-container-low flex items-center justify-between">
-<div class="flex items-center gap-1.5">
-<span class="material-symbols-outlined text-sm text-primary-container">tune</span>
-<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface font-semibold">Clip Inspector</span>
-</div>
-<div class="flex items-center gap-1 bg-surface-container-lowest p-0.5 rounded">
-<button class="px-2 py-0.5 bg-surface-container-high text-primary font-label-md text-[10px] rounded">Video</button>
-<button class="px-2 py-0.5 text-outline hover:text-on-surface font-label-md text-[10px] rounded">Color</button>
-<button class="px-2 py-0.5 text-outline hover:text-on-surface font-label-md text-[10px] rounded">Audio</button>
-</div>
-</div>
-<!-- Properties Scroll Area -->
-<div class="flex-1 overflow-y-auto p-3 space-y-3.5">
-<!-- Active Target Header Card -->
-<div class="p-2.5 bg-surface-container-low rounded flex items-center gap-2.5">
-<div class="w-8 h-8 rounded bg-surface-container-lowest flex items-center justify-center text-primary-container">
-<span class="material-symbols-outlined text-base">video_settings</span>
-</div>
-<div class="min-w-0 flex-1">
-<p class="font-label-md text-label-md text-on-surface font-semibold truncate">Bioluminescent_Morph_Mesh.mov</p>
-<p class="font-mono-data text-label-sm text-primary-container">Track V2 · Composite Layer</p>
-</div>
-</div>
-<!-- Transform Parameters -->
-<div class="space-y-2">
-<div class="flex items-center justify-between">
-<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Transform</span>
-<span class="material-symbols-outlined text-xs text-primary-container cursor-pointer" title="Add Keyframe">diamond</span>
-</div>
-<!-- Position X & Y -->
-<div class="grid grid-cols-2 gap-2">
-<div class="flex items-center bg-surface-container-lowest px-2 py-1 rounded">
-<span class="font-mono-data text-label-sm text-outline w-3 cursor-ew-resize">X</span>
-<input class="w-full bg-transparent font-mono-data text-label-md text-on-surface text-right focus:outline-none" type="text" value="1920.0"/>
-<span class="font-mono-data text-[10px] text-outline ml-1">px</span>
-</div>
-<div class="flex items-center bg-surface-container-lowest px-2 py-1 rounded">
-<span class="font-mono-data text-label-sm text-outline w-3 cursor-ew-resize">Y</span>
-<input class="w-full bg-transparent font-mono-data text-label-md text-on-surface text-right focus:outline-none" type="text" value="1080.0"/>
-<span class="font-mono-data text-[10px] text-outline ml-1">px</span>
-</div>
-</div>
-<!-- Scale & Uniform Aspect Lock -->
-<div class="flex items-center gap-2">
-<div class="flex-1 flex items-center bg-surface-container-lowest px-2 py-1 rounded">
-<span class="font-mono-data text-label-sm text-outline mr-2 cursor-ew-resize">SCALE</span>
-<input class="w-full bg-transparent font-mono-data text-label-md text-on-surface text-right focus:outline-none" type="text" value="100.0"/>
-<span class="font-mono-data text-[10px] text-outline ml-1">%</span>
-</div>
-<button class="p-1.5 bg-surface-container-lowest text-primary-container hover:bg-surface-container-high rounded" title="Constraint Proportion Locked">
-<span class="material-symbols-outlined text-xs">link</span>
-</button>
-<div class="w-20 flex items-center bg-surface-container-lowest px-2 py-1 rounded">
-<span class="font-mono-data text-label-sm text-outline mr-1 cursor-ew-resize">ROT</span>
-<input class="w-full bg-transparent font-mono-data text-label-md text-on-surface text-right focus:outline-none" type="text" value="0.0"/>
-<span class="font-mono-data text-[10px] text-outline">°</span>
-</div>
-</div>
-</div>
-<!-- Compositing & Blend Mode -->
-<div class="space-y-2">
-<div class="flex items-center justify-between">
-<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Compositing</span>
-<span class="font-mono-data text-[10px] text-secondary">HDR PASS</span>
-</div>
-<div class="space-y-1.5">
-<label class="font-label-md text-label-sm text-outline">Blend Mode</label>
-<div class="flex items-center justify-between bg-surface-container-lowest px-2.5 py-1.5 rounded cursor-pointer hover:bg-surface-container-high transition-colors">
-<div class="flex items-center gap-1.5">
-<span class="w-2 h-2 rounded-full bg-primary-container"></span>
-<span class="font-mono-data text-label-md text-primary font-semibold">Screen</span>
-</div>
-<span class="material-symbols-outlined text-xs text-outline">unfold_more</span>
-</div>
-</div>
-<!-- Speed Percentage -->
-<div class="space-y-1">
-<div class="flex items-center justify-between">
-<label class="font-label-md text-label-sm text-outline">Playback Speed</label>
-<span class="font-mono-data text-label-sm text-on-surface font-medium">100.0% (Constant)</span>
-</div>
-<div class="flex items-center gap-2">
-<div class="flex-1 h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
-<div class="w-1/2 h-full bg-primary-container rounded-full"></div>
-</div>
-<span class="font-mono-data text-[10px] text-outline bg-surface-container-lowest px-1.5 py-0.5 rounded">60.00 fps</span>
-</div>
-</div>
-</div>
-<!-- Opacity Curve Editor -->
-<div class="space-y-2">
-<div class="flex items-center justify-between">
-<div class="flex items-center gap-1.5">
-<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Opacity Curve</span>
-<span class="font-mono-data text-label-sm text-primary-container">92%</span>
-</div>
-<span class="material-symbols-outlined text-xs text-primary-container cursor-pointer">alt_route</span>
-</div>
-<!-- Spline Interactive Canvas Preview Box -->
-<div class="h-24 bg-surface-container-lowest rounded p-2 relative flex flex-col justify-between overflow-hidden shadow-inner">
-<div class="absolute inset-0 bg-[radial-gradient(#282a30_1px,transparent_1px)] bg-[size:12px_12px] opacity-40"></div>
-<svg class="w-full h-full relative z-10" viewbox="0 0 200 80">
-<!-- Bezier Curve Line -->
-<path d="M 10,70 C 60,70 120,15 190,15" fill="none" stroke="#00f0ff" stroke-width="2.5"></path>
-<!-- Handle bars -->
-<line stroke="#849495" stroke-dasharray="2,2" stroke-width="1" x1="10" x2="60" y1="70" y2="70"></line>
-<line stroke="#849495" stroke-dasharray="2,2" stroke-width="1" x1="190" x2="120" y1="15" y2="15"></line>
-<!-- Anchor Points -->
-<circle cx="10" cy="70" fill="#111319" r="3.5" stroke="#00f0ff" stroke-width="1.5"></circle>
-<circle cx="60" cy="70" fill="#00f0ff" r="2.5"></circle>
-<circle cx="120" cy="15" fill="#00f0ff" r="2.5"></circle>
-<circle cx="190" cy="15" fill="#00f0ff" r="3.5"></circle>
-</svg>
-<div class="flex items-center justify-between text-[9px] font-mono-data text-outline relative z-10">
-<span>Ease In: Cubic (0.42)</span>
-<span>Ease Out: Power (0.85)</span>
-</div>
-</div>
-</div>
-<!-- Keyframe Easing Quick Presets -->
-<div class="space-y-1.5">
-<label class="font-label-md text-label-sm text-outline">Easing Curve Presets</label>
-<div class="grid grid-cols-3 gap-1.5">
-<button class="py-1 px-1.5 bg-surface-container-lowest hover:bg-surface-container-high rounded text-center transition-colors">
-<span class="font-mono-data text-[10px] text-on-surface">Linear</span>
-</button>
-<button class="py-1 px-1.5 bg-surface-container-high rounded text-center ring-1 ring-primary-container/40">
-<span class="font-mono-data text-[10px] text-primary font-semibold">Cubic Out</span>
-</button>
-<button class="py-1 px-1.5 bg-surface-container-lowest hover:bg-surface-container-high rounded text-center transition-colors">
-<span class="font-mono-data text-[10px] text-on-surface">Bezier Pro</span>
-</button>
-</div>
-</div>
-<!-- Optical Flow Tensor Engine Settings -->
-<div class="p-2.5 bg-surface-container-lowest rounded space-y-2">
-<div class="flex items-center justify-between">
-<span class="font-label-md text-label-md text-on-surface font-medium">Neural Flow Resample</span>
-<div class="w-7 h-4 bg-secondary-container rounded-full relative flex items-center p-0.5 cursor-pointer">
-<div class="w-3 h-3 bg-tertiary rounded-full ml-auto shadow-sm"></div>
-</div>
-</div>
-<p class="font-mono-data text-[10px] text-outline leading-tight">Motion vector estimation via GPU Tensor Cores enabled for 120fps virtual frame interpolation.</p>
-</div>
-</div>
-<!-- Right Panel Bottom Status -->
-<div class="p-2 bg-surface-container-low flex items-center justify-between text-outline">
-<span class="font-mono-data text-label-sm">Render Engine: Metal V2 Pro</span>
-<span class="font-mono-data text-label-sm text-primary">0 Dropped Frames</span>
-</div>
-</div>
-</div>
-</div>
-<script>
-  // FilmCraft Transport Play/Pause Micro-interaction
-  const playbackBtn = document.getElementById('playback-btn');
-  if (playbackBtn) {
-    let isPlaying = false;
-    playbackBtn.addEventListener('click', () => {
-      isPlaying = !isPlaying;
-      const icon = playbackBtn.querySelector('.material-symbols-outlined');
-      if (icon) {
-        icon.textContent = isPlaying ? 'play_arrow' : 'pause';
-      }
-    });
+<link rel="stylesheet" href="/pages/_studio.css">
+<style>
+  .stage { padding: 22px; }
+  .artboard-wrap {
+    width: min(100%, 860px);
+    aspect-ratio: 19 / 12;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 255, 255, .06);
+    background: #0a0c11;
   }
-</script></main></div>
-</body></html>
+  #vector-artboard { display: block; width: 100%; height: 100%; }
+  #vector-artboard [data-shape] { cursor: pointer; transition: filter .15s; }
+  #vector-artboard [data-shape]:hover { filter: brightness(1.18); }
+  .selection {
+    fill: none;
+    stroke: #22d3ee;
+    stroke-width: 1.4;
+    stroke-dasharray: 5 4;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .12s;
+  }
+  .selection.on { opacity: 1; }
+  .zoom-pill {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--muted);
+    background: rgba(13, 16, 22, .85);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 3px 8px;
+  }
+  .layer-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 7px;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .layer-row:hover { background: #1a1f2a; color: var(--text); }
+  .layer-row.active { background: #1b2630; color: #c9f7ff; box-shadow: inset 2px 0 0 var(--cyan); }
+  .layer-row .material-symbols-outlined { font-size: 16px; color: var(--dim); }
+  .layer-row .eye { margin-left: auto; font-size: 15px; }
+  .align-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .align-grid button {
+    height: 30px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #0f1218;
+    color: var(--muted);
+    display: grid;
+    place-items: center;
+  }
+  .align-grid button:hover { border-color: #344052; color: var(--text); }
+  .align-grid button.active { border-color: rgba(34, 211, 238, .55); color: var(--cyan); background: rgba(34, 211, 238, .08); }
+  .swatch[data-fill] { cursor: pointer; }
+  .readout { font-family: var(--mono); font-size: 10.5px; color: var(--dim); }
+  .action-toast {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    transform: translate(-50%, 10px);
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(74, 222, 128, .4);
+    background: rgba(18, 34, 25, .94);
+    color: #bbf7d0;
+    font-size: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s, transform .2s;
+    z-index: 5;
+  }
+  .action-toast.show { opacity: 1; transform: translate(-50%, 0); }
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="rail" aria-label="VectorCraft tools">
+    <div class="brand" title="ArtCraft Studio"></div>
+    <button class="active" title="Select"><span class="material-symbols-outlined">near_me</span></button>
+    <button title="Pen"><span class="material-symbols-outlined">stylus</span></button>
+    <button title="Node editor"><span class="material-symbols-outlined">polyline</span></button>
+    <button title="Shape"><span class="material-symbols-outlined">category</span></button>
+    <button title="Text"><span class="material-symbols-outlined">title</span></button>
+    <button title="Gradient"><span class="material-symbols-outlined">gradient</span></button>
+    <div class="spacer"></div>
+    <button title="Help"><span class="material-symbols-outlined">help</span></button>
+    <div class="avatar">AR</div>
+  </nav>
+
+  <aside class="side">
+    <h3>Document</h3>
+    <div class="item active"><span class="material-symbols-outlined">folder_open</span> Cybernetic Mark.svg <span class="count">03</span></div>
+    <h3>Layers</h3>
+    <div class="layer-row active" data-layer="orb"><span class="material-symbols-outlined">circle</span> Neural Orb <span class="material-symbols-outlined eye">visibility</span></div>
+    <div class="layer-row" data-layer="rings"><span class="material-symbols-outlined">radio_button_unchecked</span> Orbit Rings <span class="material-symbols-outlined eye">visibility</span></div>
+    <div class="layer-row" data-layer="grid"><span class="material-symbols-outlined">grid_4x4</span> Signal Grid <span class="material-symbols-outlined eye">visibility</span></div>
+    <div class="layer-row" data-layer="type"><span class="material-symbols-outlined">title</span> Wordmark <span class="material-symbols-outlined eye">visibility</span></div>
+    <h3>Artboards</h3>
+    <div class="item"><span class="material-symbols-outlined">crop_square</span> Mark / 1200 x 760 <span class="count">01</span></div>
+    <div class="item"><span class="material-symbols-outlined">crop_square</span> Icon / 512 x 512 <span class="count">02</span></div>
+    <h3>Palette</h3>
+    <div class="meta">Cyan #22D3EE<br>Violet #A855F7<br>Void #0A0C11</div>
+  </aside>
+
+  <div class="main">
+    <div class="subbar">
+      <span class="material-symbols-outlined" style="color:var(--cyan)">polyline</span>
+      <span class="title">VectorCraft</span>
+      <span class="pill">Cybernetic Mark.svg</span>
+      <span class="pill cyan">SVG 1.1</span>
+      <div class="right">
+        <button class="btn icon" title="Undo"><span class="material-symbols-outlined">undo</span></button>
+        <button class="btn icon" title="Redo"><span class="material-symbols-outlined">redo</span></button>
+        <button class="btn primary" type="button" data-studio-action="export_svg" data-studio-svg="#vector-artboard">
+          <span class="material-symbols-outlined" style="font-size:16px">output</span> Export SVG
+        </button>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="stage" id="stage">
+        <div class="artboard-wrap">
+          <svg id="vector-artboard" viewBox="0 0 1200 760" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cybernetic mark: a cyan and violet orb with orbital rings">
+            <defs>
+              <radialGradient id="orbFill" cx="36%" cy="32%" r="72%">
+                <stop offset="0%" stop-color="#9df8ff"/>
+                <stop offset="42%" stop-color="#22d3ee"/>
+                <stop offset="74%" stop-color="#7c3aed"/>
+                <stop offset="100%" stop-color="#160d2e"/>
+              </radialGradient>
+              <linearGradient id="ringFill" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#22d3ee"/>
+                <stop offset="55%" stop-color="#a855f7"/>
+                <stop offset="100%" stop-color="#22d3ee"/>
+              </linearGradient>
+              <linearGradient id="wordFill" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#e5eaf2"/>
+                <stop offset="100%" stop-color="#8b97a8"/>
+              </linearGradient>
+              <pattern id="gridPattern" width="48" height="48" patternUnits="userSpaceOnUse">
+                <path d="M48 0H0V48" fill="none" stroke="#232833" stroke-width="1"/>
+              </pattern>
+              <filter id="orbGlow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="26" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <rect width="1200" height="760" fill="#080a0f"/>
+            <rect width="1200" height="760" fill="url(#gridPattern)" opacity=".55"/>
+            <circle cx="600" cy="355" r="300" fill="#22d3ee" opacity=".06"/>
+            <circle cx="600" cy="355" r="198" fill="none" stroke="#22d3ee" stroke-width="1.2" opacity=".22" stroke-dasharray="3 9"/>
+
+            <g data-shape="rings" data-fill="#a855f7">
+              <ellipse cx="600" cy="350" rx="330" ry="132" fill="none" stroke="url(#ringFill)" stroke-width="3" transform="rotate(-18 600 350)" opacity=".85"/>
+              <ellipse cx="600" cy="350" rx="286" ry="106" fill="none" stroke="#22d3ee" stroke-width="1.4" transform="rotate(26 600 350)" opacity=".6"/>
+              <ellipse cx="600" cy="350" rx="360" ry="150" fill="none" stroke="#7c3aed" stroke-width="1" transform="rotate(62 600 350)" opacity=".42"/>
+            </g>
+
+            <g data-shape="grid" data-fill="#22d3ee">
+              <path d="M120 610H1080" stroke="#232833" stroke-width="1.5"/>
+              <path d="M120 150H1080" stroke="#232833" stroke-width="1.5"/>
+              <path d="M120 150V610" stroke="#232833" stroke-width="1.5"/>
+              <path d="M1080 150V610" stroke="#232833" stroke-width="1.5"/>
+              <path d="M600 96V664" stroke="#22d3ee" stroke-width="1" opacity=".18" stroke-dasharray="2 8"/>
+            </g>
+
+            <g data-shape="orb" data-fill="#22d3ee" filter="url(#orbGlow)">
+              <circle cx="600" cy="350" r="142" fill="url(#orbFill)"/>
+              <circle cx="600" cy="350" r="142" fill="none" stroke="#e5eaf2" stroke-width="1.2" opacity=".5"/>
+              <path d="M494 350c38-66 174-66 212 0-38 66-174 66-212 0Z" fill="#080a0f" opacity=".22"/>
+              <circle cx="552" cy="304" r="34" fill="#fff" opacity=".2"/>
+              <circle cx="600" cy="350" r="12" fill="#f0fdff" opacity=".85"/>
+            </g>
+
+            <g data-shape="type" data-fill="#e5eaf2">
+              <text x="600" y="672" text-anchor="middle" font-family="Inter, sans-serif" font-size="30" font-weight="650" letter-spacing="10" fill="url(#wordFill)">ARTCRAFT</text>
+              <text x="600" y="704" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="4.5" fill="#5b6677">GENERATIVE FORM / 2026</text>
+            </g>
+
+            <rect class="selection" id="selection" x="0" y="0" width="0" height="0" rx="8"/>
+          </svg>
+          <div class="zoom-pill" id="zoom-label">100%</div>
+          <div class="action-toast" id="page-toast">Action completed</div>
+        </div>
+      </div>
+
+      <aside class="inspector">
+        <div class="panel-label">Selection</div>
+        <div class="field"><label>Layer <span id="selected-name">Neural Orb</span></label></div>
+        <div class="field">
+          <label>Fill <span id="fill-value">#22D3EE</span></label>
+          <div class="swatches">
+            <div class="swatch active" data-fill="#22d3ee" style="background:#22d3ee"></div>
+            <div class="swatch" data-fill="#a855f7" style="background:#a855f7"></div>
+            <div class="swatch" data-fill="#4ade80" style="background:#4ade80"></div>
+            <div class="swatch" data-fill="#fbbf24" style="background:#fbbf24"></div>
+            <div class="swatch" data-fill="#f87171" style="background:#f87171"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Opacity <span id="opacity-label">100%</span></label><input id="opacity" type="range" min="10" max="100" value="100"></div>
+        </div>
+        <div class="field"><label>Stroke width <span>1.4 px</span></label><input type="range" min="0" max="8" value="1"></div>
+        <div class="panel-label">Transform</div>
+        <div class="field"><label>X <span>600</span></label><input type="text" value="600"></div>
+        <div class="field"><label>Y <span>350</span></label><input type="text" value="350"></div>
+        <div class="panel-label">Align</div>
+        <div class="align-grid">
+          <button title="Align left"><span class="material-symbols-outlined" style="font-size:15px">align_horizontal_left</span></button>
+          <button class="active" title="Align center"><span class="material-symbols-outlined" style="font-size:15px">align_horizontal_center</span></button>
+          <button title="Align right"><span class="material-symbols-outlined" style="font-size:15px">align_horizontal_right</span></button>
+          <button title="Align top"><span class="material-symbols-outlined" style="font-size:15px">align_vertical_top</span></button>
+          <button title="Align middle"><span class="material-symbols-outlined" style="font-size:15px">align_vertical_center</span></button>
+          <button title="Align bottom"><span class="material-symbols-outlined" style="font-size:15px">align_vertical_bottom</span></button>
+        </div>
+        <div class="panel-label">Export</div>
+        <div class="field"><label>Format <span>SVG 1.1</span></label><select><option>SVG 1.1</option><option>SVG + fallback PNG</option></select></div>
+        <div class="toggle on" data-toggle><span>Include layers</span><span class="switch"></span></div>
+        <div class="readout" style="margin-top:10px">Click a shape to select it. Export SVG writes the artboard to the shared clipboard.</div>
+      </aside>
+    </div>
+
+    <div class="statusbar">
+      <span>4 layers</span>
+      <span>1200 x 760</span>
+      <span class="grow"></span>
+      <span class="ok">Vector clean</span>
+      <span>100%</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const artboard = document.getElementById("vector-artboard");
+    const selection = document.getElementById("selection");
+    const selectedName = document.getElementById("selected-name");
+    const fillValue = document.getElementById("fill-value");
+    const opacity = document.getElementById("opacity");
+    const opacityLabel = document.getElementById("opacity-label");
+    const toast = document.getElementById("page-toast");
+    const names = { orb: "Neural Orb", rings: "Orbit Rings", grid: "Signal Grid", type: "Wordmark" };
+    let selected = artboard.querySelector('[data-shape="orb"]');
+
+    function toastMessage(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+    window.pageToast = toastMessage;
+
+    function drawSelection() {
+      if (!selected) return;
+      const box = selected.getBBox();
+      selection.setAttribute("x", box.x - 6);
+      selection.setAttribute("y", box.y - 6);
+      selection.setAttribute("width", box.width + 12);
+      selection.setAttribute("height", box.height + 12);
+      selection.classList.add("on");
+    }
+
+    function select(shape) {
+      selected = shape;
+      document.querySelectorAll("[data-shape]").forEach(n => n === shape ? n.setAttribute("data-selected", "true") : n.removeAttribute("data-selected"));
+      const key = shape.getAttribute("data-shape");
+      selectedName.textContent = names[key] || key;
+      fillValue.textContent = (shape.getAttribute("data-fill") || "#22d3ee").toUpperCase();
+      document.querySelectorAll(".layer-row").forEach(row => row.classList.toggle("active", row.dataset.layer === key));
+      document.querySelectorAll(".swatch[data-fill]").forEach(sw => sw.classList.toggle("active", sw.dataset.fill.toLowerCase() === (shape.getAttribute("data-fill") || "").toLowerCase()));
+      drawSelection();
+    }
+
+    artboard.querySelectorAll("[data-shape]").forEach(shape => {
+      shape.addEventListener("click", (e) => { e.stopPropagation(); select(shape); });
+    });
+    document.querySelectorAll(".layer-row").forEach(row => {
+      row.addEventListener("click", () => {
+        const shape = artboard.querySelector(`[data-shape="${row.dataset.layer}"]`);
+        if (shape) select(shape);
+      });
+    });
+    document.querySelectorAll(".swatch[data-fill]").forEach(sw => {
+      sw.addEventListener("click", () => {
+        if (!selected) return;
+        selected.setAttribute("data-fill", sw.dataset.fill);
+        document.querySelectorAll(`[data-shape="${selected.getAttribute("data-shape")}"] *`).forEach(child => {
+          ["fill", "stroke"].forEach(attr => {
+            const value = child.getAttribute(attr);
+            if (value && value !== "none") child.setAttribute(attr, sw.dataset.fill);
+          });
+        });
+        select(selected);
+        toastMessage("Fill updated");
+      });
+    });
+    opacity.addEventListener("input", () => {
+      if (selected) selected.setAttribute("opacity", String(opacity.value / 100));
+      opacityLabel.textContent = opacity.value + "%";
+    });
+    document.querySelectorAll(".align-grid button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".align-grid button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+      });
+    });
+    document.querySelectorAll(".toggle").forEach(t => t.addEventListener("click", () => t.classList.toggle("on")));
+
+    select(selected);
+    window.addEventListener("resize", drawSelection);
+    artboard.addEventListener("load", drawSelection);
+  })();
+</script>
+<script src="/pages/_studio.js" defer></script>
+</body>
+</html>

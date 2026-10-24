@@ -34,6 +34,8 @@ The following were fixed in this pass, in severity order. Every verification com
 | Offline mockups | Localized all remote assets: Google Fonts CSS/woff2 mirrored to `ui/public/vendor/fonts`, ten Google-hosted images hashed into `ui/public/vendor/images`, and the Tailwind CDN build vendored as `ui/public/vendor/tailwind.js`. Every `<link>`/`<img>`/`<script>` now points at a local path. | Headless Chrome on all eight embedded pages: 0 external resources, 0 failed resources, 0 broken images; `document.fonts.status === "loaded"` and both Inter and Material Symbols available |
 | Completed mockups | Added full interactive mockup pages for WordCraft, DeckCraft, DesignCraft, EffectCraft and GridCraft under `assets/pages/`, sharing `_studio.css`. The shell now embeds eight pages; only PhotoCraft and VectorCraft keep their bespoke working canvases. | `npm run build` → exit 0; every tab in `COMPLETED_PAGES` resolves |
 | Embedded module nav | `assets/pages/_studio.js` injects a fixed 30 px module bar into every embedded page with `a[data-path]` links; `wireModuleNavigation` already maps those paths to `activateModule`, so clicks switch the studio's active tab or return to the dashboard. | Headless Chrome with a mocked Tauri IPC: clicking DeckCraft inside the WordCraft iframe switched the canvas to `pages/deckcraft/index.html`; clicking Dashboard restored the "Select a Module to Begin" state |
+| All ten module pages | Added PhotoCraft to `COMPLETED_PAGES` and replaced VectorCraft's custom canvas with a new SVG-editor page (the old `assets/pages/vectercraft` extraction actually contained a FilmCraft timeline). Localized PhotoCraft's fonts, Tailwind runtime and three Google-hosted images. `HIDE_PAGE_CHROME` now hides duplicate chrome only on the three extracted pages. | `npm run build` → exit 0; all ten tabs resolve; headless Chrome offline check on PhotoCraft and VectorCraft: 0 external resources, 0 failed resources, 0 broken images, both web fonts loaded |
+| Page action bridge | `wirePageActions` attaches to `[data-studio-action]` controls inside the iframe. VectorCraft's **Export SVG** serializes `#vector-artboard` and calls `export_svg`; PhotoCraft's new **Rasterize SVG** reads the shared clipboard and calls `rasterize_svg`, showing the returned PNG in an overlay; PhotoCraft's Neural Bake calls `apply_filter`. Errors and success are surfaced by an in-page toast. | Headless Chrome with mocked IPC: PhotoCraft invoked `rasterize_svg` with the clipboard SVG and rendered the returned PNG; VectorCraft invoked `export_svg` with the edited artboard (fill change preserved); both toasts appeared |
 
 `Cargo.lock` and the new `icons/` are included in the follow-up commit `aec3764 "update build"`; `ui/package-lock.json` is staged but still uncommitted. `node_modules/` and `dist/` are already ignored.
 
@@ -55,7 +57,7 @@ The following were fixed in this pass, in severity order. Every verification com
 | 8 | **High** | `just dev` / `just ci` / README Quick Start used a directory that did not exist | `Justfile:7,18`, `README.md:34-42` | ✅ Fixed by crate move |
 | 9 | **High** | No `LICENSE` file despite the README licensing the project as Apache-2.0 | repo root | ✅ Apache-2.0 added |
 | 10 | **Medium** | Clippy `-D warnings` failed on an unused `Manager` import | `crates/craft-studio-shell/src/main.rs:3` | ✅ Fixed, clippy passes |
-| 11 | **Medium** | Frontend swallows every IPC error; the drop zone can hang on "Rasterizing..." | `ui/src/app.ts:72-90` | ❌ Open |
+| 11 | **Medium** | Module activation and event setup still lack error handling; page actions now catch and toast errors, but a failed `get_module_capabilities` or `listen` remains unhandled | `ui/src/app.ts` | ❌ Open (partially fixed) |
 | 12 | **Medium** | README claims (zero-copy, lazy loading, updater, tests, CI) are not implemented | `README.md` | ✅ Rewritten accurately |
 | 13 | **Medium** | All 18 images in the README are broken links (no `assets/` directory) | `README.md` | ✅ 14 placeholder PNGs added |
 | 14 | **Medium** | Dead, uncompilable duplicate of PhotoCraft at the repo root | `src/lib.rs` | ✅ Deleted |
@@ -189,9 +191,11 @@ Only the Tauri command `set_clipboard` (`src/main.rs:26-31`) emitted `clipboard-
 
 **Resolution:** writes are centralized in `SharedState::set_clipboard`, which stores the item, releases the lock and emits `clipboard-updated`. `VectorCraftModule::export_svg` and the `set_clipboard` command both call it, so no module can forget the notification.
 
-### 3.2 Frontend error handling
+### 3.2 Frontend error handling (partially fixed)
 
-`ui/src/app.ts:72-90`: the drop handler has no `try/catch`, no `dragenter` guard, and no `else` branch. If the clipboard is not an SVG, or `rasterize_svg` returns `Err`, the zone is left permanently on "Rasterizing..." and the promise rejection is unhandled. The `<img>` success branch also never revokes/limits payload size.
+The old PhotoCraft drop handler (no `try/catch`, no `else` branch, could hang on "Rasterizing...") was removed when PhotoCraft switched to its page. Its replacement, `wirePageActions`, catches IPC failures, restores the button and shows an in-page error toast.
+
+Still open: `activateModule` calls `invoke("get_module_capabilities")` without a `try/catch`, and `void activateModule(target)` in `wireModuleNavigation` discards the promise, so a failed activation leaves the previous module on screen with an unhandled rejection. `setupClipboardListener` also awaits `listen` without handling failure.
 
 ### 3.3 Untrusted SVG injected via `innerHTML`
 
@@ -297,10 +301,11 @@ Version/format inconsistencies: `README.md` still says "10 tabs" in its final ch
 - After the clipboard fix: `cargo build --workspace`, `cargo check`, `cargo clippy -D warnings`, `cargo test` and `cargo fmt --check` all exit 0.
 - `cargo build --release --workspace` → exit 0 (10m28s), producing a stripped 11.7 MB `craft-studio-shell.exe`.
 - Documentation: all 14 `assets/*.png` references resolve to generated files; `LICENSE` is the 11,357-byte Apache-2.0 text; no `storytold` clone URL or production/zero-copy claims remain in the README.
-- Mockup localization: all eight embedded pages load with zero external resources, zero failed subresources and zero broken images; Inter and Material Symbols report as loaded.
+- Mockup localization: all ten embedded pages load with zero external resources, zero failed subresources and zero broken images; Inter and Material Symbols report as loaded. PhotoCraft's previously missing image was downloaded into `ui/public/vendor/images/465e40d5b3a4.jpg`.
 - Module navigation: with mocked Tauri IPC in headless Chrome, an in-page nav click changed the studio canvas to the requested module, and the Dashboard link returned to the empty selection state.
+- Page actions: PhotoCraft's **Rasterize SVG** sent the clipboard's Base64 SVG to `rasterize_svg` and displayed the returned PNG; VectorCraft's **Export SVG** sent the serialized, edited artboard to `export_svg`, with the edited fill and artboard id present in the decoded payload. Both success toasts rendered.
 
-**Not performed:** `tauri build` bundling/installers, and execution of the workflow on GitHub — the changes have not been committed or pushed. The iframe UI and module switching were exercised in headless Chrome against the built `ui/dist`, not inside a running Tauri webview.
+**Not performed:** `tauri build` bundling/installers, and execution of the workflow on GitHub — the changes have not been committed or pushed. The iframe UI, module switching and page actions were exercised in headless Chrome against the built `ui/dist`, not inside a running Tauri webview.
 
 ---
 
