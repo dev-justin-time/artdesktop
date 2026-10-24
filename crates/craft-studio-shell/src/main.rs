@@ -1,6 +1,6 @@
 use craft_libs::{ClipboardItem, ModuleAction, ModuleRegistry, SharedState};
 use serde_json::Value;
-use tauri::{AppHandle, Emitter, State};
+use tauri::{AppHandle, State};
 
 #[tauri::command]
 fn invoke_module_action(
@@ -26,16 +26,12 @@ fn get_module_capabilities(
 }
 
 #[tauri::command]
-async fn set_clipboard(
+fn set_clipboard(
     app: AppHandle,
     state: State<'_, SharedState>,
     item: ClipboardItem,
 ) -> Result<(), String> {
-    let mut clip = state.global_clipboard.write().map_err(|e| e.to_string())?;
-    *clip = Some(item.clone());
-    app.emit("clipboard-updated", &item)
-        .map_err(|e| e.to_string())?;
-    Ok(())
+    state.set_clipboard(&app, item)
 }
 
 #[tauri::command]

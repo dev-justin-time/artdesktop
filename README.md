@@ -29,7 +29,7 @@ ArtCraft Studio is a Rust + Tauri 2.0 monorepo that registers ten creative modul
 - **SVG → PNG pipeline.** Dropping onto the PhotoCraft canvas rasterizes the clipboard's SVG and displays the PNG.
 - **Ten module tabs** with placeholder editors for the modules that are not implemented yet.
 
-The clipboard is an in-process `RwLock<Option<ClipboardItem>>`; payloads are Base64-encoded and copied across Tauri IPC. It is not shared memory and it is not zero-copy. VectorCraft's export currently writes clipboard state without emitting the `clipboard-updated` event, so the left sidebar does not refresh until another module sets it.
+The clipboard is an in-process `RwLock<Option<ClipboardItem>>`; payloads are Base64-encoded and copied across Tauri IPC. It is not shared memory and it is not zero-copy. Both the `set_clipboard` command and VectorCraft's export write through `SharedState::set_clipboard`, which emits `clipboard-updated` so the sidebar refreshes.
 
 ## 🚀 Quick start
 

@@ -30,12 +30,14 @@ impl CraftModule for VectorCraftModule {
                 let svg_data = payload["svg_data"].as_str().unwrap_or("<svg></svg>");
                 let encoded_svg = general_purpose::STANDARD.encode(svg_data.as_bytes());
                 let state = app.state::<SharedState>();
-                let mut clip = state.global_clipboard.write().map_err(|e| e.to_string())?;
-                *clip = Some(ClipboardItem {
-                    source_module: "vectorcraft".into(),
-                    data_type: "image/svg+xml".into(),
-                    payload: encoded_svg,
-                });
+                state.set_clipboard(
+                    app,
+                    ClipboardItem {
+                        source_module: "vectorcraft".into(),
+                        data_type: "image/svg+xml".into(),
+                        payload: encoded_svg,
+                    },
+                )?;
                 Ok(json!({ "status": "success" }))
             }
             _ => Ok(json!({ "status": "success", "action": action })),

@@ -29,7 +29,7 @@ The following were fixed in this pass, in severity order. Every verification com
 | Release build | No code changes; exercised the final CI step. | `cargo build --release --workspace` → exit 0 (10m28s) |
 | Documentation | Rewrote `README.md` to match the proof-of-concept state, corrected the clone URL to `dev-justin-time/artdesktop`, removed the zero-copy/production-grade/updater claims, and replaced the truncated ending. Added the Apache-2.0 `LICENSE` the README already claimed. | README reviewed; link check |
 | Placeholder images | Added 14 generated PNGs under `assets/` covering every image the README references; each is labelled "PLACEHOLDER - NOT A SCREENSHOT". | 14/14 refs resolve; images inspected |
-| Clipboard refresh | Clipboard writes now go through `SharedState::set_clipboard`, which stores the item, drops the lock and emits `clipboard-updated`. Both the `set_clipboard` command and VectorCraft's `export_svg` use it, so the sidebar refreshes. | `cargo check`/clippy/test/fmt pass; event path code-reviewed |
+| Clipboard refresh | Clipboard writes now go through `SharedState::set_clipboard`, which stores the item, drops the lock and emits `clipboard-updated`. Both the `set_clipboard` command and VectorCraft's `export_svg` use it, so the sidebar refreshes. | `cargo build`/check/clippy/test/fmt pass; event path code-reviewed |
 
 `Cargo.lock` and the new `icons/` are included in the follow-up commit `aec3764 "update build"`; `ui/package-lock.json` is staged but still uncommitted. `node_modules/` and `dist/` are already ignored.
 
@@ -290,7 +290,7 @@ Version/format inconsistencies: `README.md` still says "10 tabs" in its final ch
 - `cargo fmt --all -- --check` → exit 0 after running `cargo fmt --all`.
 - `cargo clippy --workspace --all-targets -- -D warnings` → exit 0 (re-run after formatting).
 - `cargo test --workspace` → exit 0 (0 tests exist).
-- After the clipboard fix: `cargo check`, `cargo clippy -D warnings`, `cargo test` and `cargo fmt --check` all exit 0.
+- After the clipboard fix: `cargo build --workspace`, `cargo check`, `cargo clippy -D warnings`, `cargo test` and `cargo fmt --check` all exit 0.
 - `cargo build --release --workspace` → exit 0 (10m28s), producing a stripped 11.7 MB `craft-studio-shell.exe`.
 - Documentation: all 14 `assets/*.png` references resolve to generated files; `LICENSE` is the 11,357-byte Apache-2.0 text; no `storytold` clone URL or production/zero-copy claims remain in the README.
 
