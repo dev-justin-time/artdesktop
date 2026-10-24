@@ -39,7 +39,7 @@ ArtCraft Studio is a Rust + Tauri 2.0 shell that runs the official browser build
 - **Ten real apps, one window.** Each tab mounts the corresponding official web build inside the canvas; the app owns its own menus, tools, canvas and dialogs.
 - **Pinned, verified assets.** `ui/web-apps.json` pins each release tag, web-build filename and SHA-256 hash. `ui/scripts/fetch-web-apps.mjs` downloads the zips, verifies the hash, rejects unsafe archive paths and extracts them into `ui/public/apps/<id>`.
 - **Offline runtime.** The apps are bundled into the installer; no app assets are fetched at runtime. The shell does not need network access after it is built.
-- **WebGL2 first.** Iframes load with `?webgl` so the apps use the WebGL2 backend instead of waiting on an unavailable WebGPU adapter in WebView2 or headless browsers.
+- **WebGL2 first.** Iframes load with `?webgl` so the apps use the WebGL2 backend instead of waiting on an unavailable WebGPU adapter in WebView2 or headless browsers. WebView2 is configured to use SwiftShader for WebGL; EffectCraft needs this software path, and the other apps accept it too.
 - **Fast rebuilds.** Extracted apps are cached by version; `npm run build` only downloads an app when its pinned version is not present (or when run with `--force`).
 - **Shell chrome.** The ten tabs, per-app status line and clipboard sidebar remain around the embedded apps.
 
@@ -109,6 +109,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-windows-signed
 The script merges a temporary `certificateThumbprint`, SHA-256 digest and DigiCert timestamp settings into the Tauri config, builds the installers, and verifies each signature with `signtool`. The overlay is written under the ignored `target/` directory and deleted afterwards; the thumbprint does not need to be committed. Use `-TimestampUrl` or `WINDOWS_TIMESTAMP_URL` to use a different RFC 3161 timestamp service.
 
 Signing identifies the publisher, but SmartScreen reputation is separate: a new certificate can still trigger a warning until Microsoft accumulates reputation for it. Sign every release with the same certificate to build that reputation.
+
+### Dependency security
+
+`npm audit` is clean after the Vite 7, Tailwind 4 and adm-zip 0.6.1 upgrades. One Rust advisory remains: `glib 0.18.5` ([RUSTSEC-2024-0429](https://rustsec.org/advisories/RUSTSEC-2024-0429.html)) is pulled in by Tauri 2's GTK 0.18 stack on Linux. It is fixed only in glib 0.20, which `gtk 0.18` does not accept; it cannot be resolved until Tauri moves to a newer GTK binding. It does not affect the Windows build.
 
 ## 🏗️ Architecture
 

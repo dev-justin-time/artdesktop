@@ -1,4 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@source "../index.html";
+@source "./**/*.{ts,js}";
+
 body { margin: 0; font-family: sans-serif; }

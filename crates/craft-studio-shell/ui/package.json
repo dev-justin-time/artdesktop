@@ -11,12 +11,13 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
     "@tauri-apps/api": "^2.0.0",
-    "adm-zip": "^0.5.18",
+    "adm-zip": "^0.6.1",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5.4.5",
-    "vite": "^5.2.11"
+    "vite": "^7.3.7"
   }
 }
