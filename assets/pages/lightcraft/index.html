@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><title>ArtCraft Studio - LightCraft (Animated)</title><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+/* Custom range slider styling */
+input[type=range] {
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  background: #00f0ff;
+  box-shadow: 0 0 8px #00f0ff;
+  cursor: pointer;
+  margin-top: -3px;
+  transition: transform 0.1s ease;
+}
+input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.35);
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 6px;
+  cursor: pointer;
+  background: #0c0e14;
+  border-radius: 9999px;
+}
+/* Shimmer overlay animation */
+@keyframes specularShimmer {
+  0% { transform: translateY(-100%) rotate(25deg); opacity: 0; }
+  40% { opacity: 0.12; }
+  80% { opacity: 0.08; }
+  100% { transform: translateY(200%) rotate(25deg); opacity: 0; }
+}
+.specular-beam {
+  position: absolute;
+  top: -50%;
+  left: -20%;
+  width: 140%;
+  height: 200%;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 240, 255, 0.15) 50%, transparent 100%);
+  animation: specularShimmer 7s infinite ease-in-out;
+  pointer-events: none;
+}
+/* Subtle scanline effect */
+.scanline-grid {
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 240, 255, 0.02) 50%);
+  background-size: 100% 4px;
+}
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "surface-container-low": "#191b22",
+          "outline-variant": "#3b494b",
+          "primary-container": "#00f0ff",
+          "background": "#111319",
+          "primary": "#dbfcff",
+          "on-primary-fixed": "#002022",
+          "on-secondary-fixed-variant": "#6900b3",
+          "on-error": "#690005",
+          "surface-variant": "#33353b",
+          "outline": "#849495",
+          "on-tertiary-container": "#8523dd",
+          "surface-tint": "#00dbe9",
+          "error": "#ffb4ab",
+          "on-secondary-container": "#d6a9ff",
+          "on-tertiary-fixed": "#2c0051",
+          "on-secondary-fixed": "#2c0051",
+          "tertiary": "#fdf3ff",
+          "inverse-surface": "#e2e2ea",
+          "tertiary-container": "#e9d0ff",
+          "inverse-on-surface": "#2e3037",
+          "on-secondary": "#490080",
+          "surface-container-highest": "#33353b",
+          "tertiary-fixed": "#efdbff",
+          "on-background": "#e2e2ea",
+          "on-primary": "#00363a",
+          "secondary": "#ddb7ff",
+          "surface-container-lowest": "#0c0e14",
+          "on-surface-variant": "#b9cacb",
+          "on-primary-fixed-variant": "#004f54",
+          "primary-fixed-dim": "#00dbe9",
+          "tertiary-fixed-dim": "#dcb8ff",
+          "surface-container": "#1d1f26",
+          "on-tertiary": "#480081",
+          "surface-container-high": "#282a30",
+          "on-tertiary-fixed-variant": "#6700b5",
+          "secondary-fixed": "#f0dbff",
+          "inverse-primary": "#006970",
+          "on-surface": "#e2e2ea",
+          "on-error-container": "#ffdad6",
+          "surface": "#111319",
+          "on-primary-container": "#006970",
+          "secondary-container": "#6f00be",
+          "error-container": "#93000a",
+          "primary-fixed": "#7df4ff",
+          "surface-dim": "#111319",
+          "surface-bright": "#373940",
+          "secondary-fixed-dim": "#ddb7ff"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "space-sm": "0.5rem",
+          "space-xl": "1.5rem",
+          "space-xs": "0.25rem",
+          "margin": "1rem",
+          "gutter": "0.75rem",
+          "gutter-compact": "0.5rem",
+          "space-md": "0.75rem",
+          "space-lg": "1rem"
+        },
+        "fontFamily": {
+          "label-lg": ["Inter"],
+          "headline-md": ["Geist"],
+          "label-sm": ["JetBrains Mono"],
+          "headline-lg": ["Geist"],
+          "body-md": ["Inter"],
+          "mono-data": ["JetBrains Mono"],
+          "body-lg": ["Inter"],
+          "headline-xl": ["Geist"],
+          "label-md": ["Inter"],
+          "body-sm": ["Inter"]
+        },
+        "fontSize": {
+          "label-lg": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+          "headline-md": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.015em", "fontWeight": "500"}],
+          "label-sm": ["10px", {"lineHeight": "12px", "letterSpacing": "0.03em", "fontWeight": "400"}],
+          "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+          "body-md": ["13px", {"lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400"}],
+          "mono-data": ["11px", {"lineHeight": "14px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+          "body-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+          "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "600"}],
+          "label-md": ["11px", {"lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+          "body-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400"}]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface-container-lowest font-body-md text-on-surface antialiased select-none"><header class="fixed top-0 left-0 right-0 h-10 z-50 bg-surface-container/90 backdrop-blur-xl shadow-[0_1px_12px_rgba(0,0,0,0.5)]"><div class="h-10 w-full px-space-md flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0 flex-1"><div class="flex items-center gap-space-xs flex-shrink-0"><img alt="ArtCraft Studio Brand Glyph" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1USg28q4eLTb-Uz0APHwRyVS8HIBHKQX5fCPP-FchfyC0g2H626N1pUYxvbmXP9m6j7Gv5IVuGAvi_W7ihgyObVfW4lrRwzXEu8lQIok-GyW07KDrxNS6TG4G70_vmpJA74jD-gVBjLf0n-UZHen2t29wk7fTseFHKB5j9JOU7t15_Y6MaWX9MNfLoTxDeMFrOGnnS2esuTq2KSFEBryxyayb8tPbi8ljZLBE0ZRBxEuZEt1B8rsHgBAQ"/><span class="font-headline-md text-headline-md font-semibold text-primary tracking-tight">ArtCraft</span></div><div class="h-4 w-px bg-surface-variant mx-space-xs flex-shrink-0"></div><nav class="flex items-center gap-0.5 bg-surface-container-lowest p-0.5 rounded-lg overflow-x-auto flex-nowrap" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg"><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" data-path="dashboard" href="#">Dashboard</a><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" data-path="vectorcraft" href="#">VectorCraft</a><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" data-path="photocraft" href="#">PhotoCraft</a><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" data-path="filmcraft" href="#">FilmCraft</a><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" data-path="effectcraft" href="#">EffectCraft</a><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" data-path="wordcraft" href="#">WordCraft</a><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" data-path="deckcraft" href="#">DeckCraft</a><a aria-current="page" class="px-space-sm py-0.5 transition-colors whitespace-nowrap bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-[0_0_8px_rgba(0,240,255,0.4)]" data-path="lightcraft" href="#">LightCraft</a><a class="px-space-sm py-0.5 font-label-md text-label-md rounded text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" data-path="designcraft" href="#">DesignCraft</a></nav></div><div class="flex items-center gap-space-sm flex-shrink-0"><div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-0.5 rounded border border-outline-variant/30"><span class="material-symbols-outlined text-sm text-secondary animate-pulse">draft</span><span class="font-mono-data text-mono-data text-on-surface" id="header-filename">Cybernetic_Genesis_v4.art</span></div><div class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-sm text-primary-container">hub</span><span class="font-mono-data text-mono-data text-primary-container">Synced P2P</span></div><div class="h-4 w-px bg-surface-variant"></div><div class="flex items-center gap-1"><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded transition-all active:scale-90" id="btn-undo" title="Undo (Ctrl+Z)" type="button"><span class="material-symbols-outlined text-base">undo</span></button><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded transition-all active:scale-90" id="btn-redo" title="Redo (Ctrl+Y)" type="button"><span class="material-symbols-outlined text-base">redo</span></button></div><div class="flex items-center bg-surface-container-low px-space-xs py-0.5 rounded cursor-pointer hover:bg-surface-container transition-colors"><span class="font-mono-data text-mono-data text-on-surface font-medium" id="header-zoom-label">125%</span><span class="material-symbols-outlined text-xs text-on-surface-variant ml-0.5">arrow_drop_down</span></div><div class="h-4 w-px bg-surface-variant"></div><button class="flex items-center gap-1 px-space-sm py-1 bg-secondary-container text-on-secondary-container font-label-md text-label-md rounded-lg hover:brightness-110 active:scale-95 transition-all shadow-[0_0_10px_rgba(111,0,190,0.3)]" type="button"><span class="material-symbols-outlined text-sm">share</span><span>Share</span></button><div class="h-4 w-px bg-surface-variant"></div><img alt="Profile" class="w-7 h-7 rounded-full object-cover ring-1 ring-primary-container/40 hover:ring-primary-container transition-all cursor-pointer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRz83RHz3sM2uo96cpM8p5RP9zOTyCsPFdNAXJjRp-dcl__XET73JQKUYJdx2jox5cSAeWh1q7EfQowBQhS0JzcnvkvcVZz8alkwOgWhZt50QUQI_x2EFtMActNMXl-F4Hc351SwvTn2YzwtBrUTnP0KKcOYDVxOgtpUWOngP-fI4NnTX0pJ5faNxds0Tosr-kwPVecwKYR3UE9YfWflG2PBVmEjkAl40ncSoUYLYhgczgNUHw3uv5"/></div></div></header><aside class="fixed left-0 top-10 bottom-0 w-64 bg-surface-container-low/95 backdrop-blur-xl z-40 flex flex-col justify-between shadow-[2px_0_12px_rgba(0,0,0,0.3)]"><div class="flex flex-col flex-1 overflow-y-auto"><div class="flex items-center justify-between px-space-md py-space-sm bg-surface-container-lowest/50"><span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Workspace Modules</span><span class="material-symbols-outlined text-sm text-outline hover:text-on-surface cursor-pointer transition-colors">dock_to_left</span></div><nav class="flex flex-col gap-space-xs p-space-sm" data-active-classes="bg-surface-container-high text-primary font-medium rounded-lg"><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="shared-clipboard" href="#"><span class="material-symbols-outlined text-base text-primary-container">content_paste_go</span><span class="font-label-md text-label-md">Shared Clipboard</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="layers-palette" href="#"><span class="material-symbols-outlined text-base text-secondary">layers</span><span class="font-label-md text-label-md">Layers &amp; Masks</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="asset-library" href="#"><span class="material-symbols-outlined text-base text-primary-fixed">auto_awesome_motion</span><span class="font-label-md text-label-md">Design Tokens</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="export-inspector" href="#"><span class="material-symbols-outlined text-base text-tertiary-fixed-dim">output</span><span class="font-label-md text-label-md">Export Telemetry</span></a></nav></div><div class="p-space-sm bg-surface-container-lowest/60 flex items-center justify-between text-on-surface-variant"><div class="flex items-center gap-space-xs"><span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-ping"></span><span class="font-mono-data text-mono-data">GPU: Metal V2 Active</span></div><span class="material-symbols-outlined text-xs cursor-pointer hover:text-on-surface transition-transform hover:rotate-45">settings</span></div></aside><div class="pl-64"><main class="relative pt-10 min-h-screen bg-surface-container-lowest w-full overflow-hidden"><div class="flex flex-col w-full text-on-surface select-none">
+<!-- Top Engine Sub-Toolbar & Telemetry -->
+<div class="w-full bg-surface-container-low/90 backdrop-blur-md px-space-md py-space-xs flex flex-wrap items-center justify-between gap-space-sm shadow-sm z-30 border-b border-surface-variant/30">
+<div class="flex items-center gap-space-md flex-wrap">
+<!-- Engine Indicator -->
+<div class="flex items-center gap-space-xs bg-surface-container px-space-sm py-1 rounded-lg border border-outline-variant/30 shadow-inner">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse shadow-[0_0_8px_#00f0ff]"></span>
+<span class="font-headline-md text-headline-md font-semibold text-primary-container tracking-tight">LightCraft</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant bg-surface-container-high px-1.5 py-0.5 rounded">LibRaw • 64b HDR v5.0.1</span>
+</div>
+<!-- Quick Action Toolset -->
+<div class="flex items-center gap-1 bg-surface-container-lowest p-0.5 rounded-lg border border-outline-variant/30">
+<button class="tool-btn flex items-center gap-1 px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all font-label-md text-label-md active:scale-95" data-tool="wb" title="Toggle White Balance Auto-Calibration (W)" type="button">
+<span class="material-symbols-outlined text-sm text-secondary">palette</span>
+<span>White Balance</span>
+<span class="font-mono-data text-label-sm text-outline">W</span>
+</button>
+<button class="tool-btn flex items-center gap-1 px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all font-label-md text-label-md active:scale-95" data-tool="curves" title="Jump to Tone Curves Inspector (C)" type="button">
+<span class="material-symbols-outlined text-sm text-primary">show_chart</span>
+<span>Tone Curves</span>
+<span class="font-mono-data text-label-sm text-outline">C</span>
+</button>
+<button class="tool-btn flex items-center gap-1 px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all font-label-md text-label-md active:scale-95" data-tool="wheels" title="Focus 3-Way Color Wheels" type="button">
+<span class="material-symbols-outlined text-sm text-tertiary-fixed-dim">lens</span>
+<span>Color Wheels</span>
+</button>
+<button class="tool-btn flex items-center gap-1 px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all font-label-md text-label-md active:scale-95" data-tool="spectral" title="Toggle Spectral 3D Mask" type="button">
+<span class="material-symbols-outlined text-sm text-primary-fixed">tune</span>
+<span>Spectral Mask</span>
+</button>
+<button class="tool-btn flex items-center gap-1 px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all font-label-md text-label-md active:scale-95" data-tool="denoise" title="Metal Neural Denoise AI Engine" type="button">
+<span class="material-symbols-outlined text-sm text-secondary-fixed">auto_fix_high</span>
+<span>Denoise AI</span>
+</button>
+<button class="flex items-center gap-1 px-space-sm py-1 rounded bg-primary-container/20 text-primary-container font-label-md text-label-md shadow-[0_0_10px_rgba(0,240,255,0.25)] border border-primary-container/40 transition-all hover:bg-primary-container/30 active:scale-95" id="toggle-split-btn" title="Toggle A/B Split Comparison View" type="button">
+<span class="material-symbols-outlined text-sm">compare</span>
+<span id="wipe-btn-text">A/B Wipe</span>
+</button>
+</div>
+</div>
+<!-- Metadata Readout & Export CTA -->
+<div class="flex items-center gap-space-md">
+<div class="hidden xl:flex items-center gap-space-xs text-outline font-mono-data text-mono-data bg-surface-container px-space-sm py-1 rounded border border-outline-variant/30">
+<span class="material-symbols-outlined text-xs text-primary-fixed-dim">photo_camera</span>
+<span class="text-on-surface">Sony A7R V RAW (.ARW)</span>
+<span>•</span>
+<span>61.0 MP</span>
+<span>•</span>
+<span id="meta-ev-tag">ISO 100</span>
+<span>•</span>
+<span>50mm f/1.2</span>
+<span>•</span>
+<span class="text-secondary">ProPhoto RGB / ACES 2065-1</span>
+</div>
+<button class="flex items-center gap-1.5 px-space-md py-1 bg-primary-container text-on-primary-container rounded-lg font-label-lg text-label-lg font-semibold hover:brightness-110 active:scale-95 transition-all shadow-[0_0_14px_rgba(0,240,255,0.35)]" id="btn-export" type="button">
+<span class="material-symbols-outlined text-sm">download</span>
+<span id="export-label">Export DNG / ACEScg</span>
+</button>
+</div>
+</div>
+<!-- Primary Studio Workspace: Tri-Pane Layout -->
+<div class="grid grid-cols-12 gap-0 w-full min-h-[calc(100vh-80px)] bg-surface-container-lowest overflow-hidden">
+<!-- LEFT PANEL: RAW Roll & History Stack (3 Cols) -->
+<aside class="col-span-12 lg:col-span-3 xl:col-span-2 bg-surface-container-low/80 p-space-sm flex flex-col gap-space-md overflow-y-auto max-h-[calc(100vh-80px)] border-r border-surface-variant/30">
+<!-- Roll Filmstrip -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between px-space-xs py-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">RAW Batch Stream</span>
+<span class="font-mono-data text-mono-data text-primary-container font-semibold" id="batch-stream-counter">04 / 32</span>
+</div>
+<div class="grid grid-cols-2 gap-space-xs" id="raw-stream-grid">
+<!-- Active RAW item 1 -->
+<div class="raw-thumb relative bg-surface-container p-1 rounded-lg ring-2 ring-primary-container shadow-[0_0_10px_rgba(0,240,255,0.3)] cursor-pointer transition-all hover:scale-[1.02]" data-ev="+0.0 EV" data-filename="DSC09241.ARW" data-img-after="https://lh3.googleusercontent.com/aida-public/AB6AXuA5qVI1i_LVp0cftjccDauquQFqEFb6vtQGgJUggwgfwOtrJHG97honhMeYnL_owxmuZqjxxustBlaJHDwcVU392XFwO7MBpDerj_QvVN28-_ma-drKHkrr7jdr_d0nqndzuNTCjEsnkQ5vrOcKHKcXK1qQtR15t1QIJWBfj0POeYncBhsbr-41kvU8DNbeKv9ZiTa09LYe3GXFdPzjABVSnPRBA9iG8kq7QdxxJ_eT6TsRdlWbaNlr" data-img-before="https://lh3.googleusercontent.com/aida-public/AB6AXuBPprJgqW39We5_jSziauKhA99DZR1j_2njzvAlemHphBLja9vc8MhCmVU8gibieJaXpgOh2rOUcmllhfZEBwlTHIcm-052meKTPNo-84FotAfUQpRATJQ0FY6d9uLpM7oz1dK9fdpuTZCBlXg6SvcKMEr6W5kLvoxb685C4pVlQpEF_WlyfN3KdUQzY_hS0adlATxImMOkOKDQYkQ3V8fSryJ8OueDjGvm2ZxTKL5fGjNb6sqXD4nH">
+<div class="relative h-20 w-full rounded overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" data-alt="High-resolution Sony RAW photograph of a cybernetic neon city street at twilight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPprJgqW39We5_jSziauKhA99DZR1j_2njzvAlemHphBLja9vc8MhCmVU8gibieJaXpgOh2rOUcmllhfZEBwlTHIcm-052meKTPNo-84FotAfUQpRATJQ0FY6d9uLpM7oz1dK9fdpuTZCBlXg6SvcKMEr6W5kLvoxb685C4pVlQpEF_WlyfN3KdUQzY_hS0adlATxImMOkOKDQYkQ3V8fSryJ8OueDjGvm2ZxTKL5fGjNb6sqXD4nH"/>
+<span class="ev-badge absolute bottom-1 right-1 bg-surface-container-lowest/90 text-primary-container font-mono-data text-label-sm px-1 rounded shadow">+0.0 EV</span>
+<span class="active-badge absolute top-1 left-1 bg-primary-container text-on-primary-container font-label-sm text-label-sm px-1 rounded font-bold shadow-[0_0_6px_rgba(0,240,255,0.6)]">ACTIVE</span>
+</div>
+<div class="flex justify-between items-center mt-1 px-0.5">
+<span class="font-mono-data text-label-sm text-on-surface truncate">DSC09241.ARW</span>
+<span class="material-symbols-outlined text-xs text-primary-container status-icon">done_all</span>
+</div>
+</div>
+<!-- Thumbnail 2 -->
+<div class="raw-thumb relative bg-surface-container p-1 rounded-lg opacity-75 hover:opacity-100 transition-all cursor-pointer hover:scale-[1.02]" data-ev="-0.7 EV" data-filename="DSC09242.ARW" data-img-after="https://lh3.googleusercontent.com/aida-public/AB6AXuBoCq4w7cBTsJsU1Rnqd7raJh3b-xcOreDfZq41k7CdvndGUP4SNyoia657KFGcrcQRyw5YNxdKkH2_OR2s3gWpPBoAkI0On7pc4Nzu9jMJylOY1Zji1Bk_oKr_v1JuDY-kEw3cmkueVW_aG0taKGRtXiUNmD-OaMJBqgpbK_IRZfoI9lEmxO5bJXs-54xuf4sQiguRlfqzVlYU918bIEmTOaky-gx3xXktaBh-Yl-uP3-Eh2VfK6I9" data-img-before="https://lh3.googleusercontent.com/aida-public/AB6AXuBoCq4w7cBTsJsU1Rnqd7raJh3b-xcOreDfZq41k7CdvndGUP4SNyoia657KFGcrcQRyw5YNxdKkH2_OR2s3gWpPBoAkI0On7pc4Nzu9jMJylOY1Zji1Bk_oKr_v1JuDY-kEw3cmkueVW_aG0taKGRtXiUNmD-OaMJBqgpbK_IRZfoI9lEmxO5bJXs-54xuf4sQiguRlfqzVlYU918bIEmTOaky-gx3xXktaBh-Yl-uP3-Eh2VfK6I9">
+<div class="relative h-20 w-full rounded overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Raw camera capture of futuristic cybernetic tower with misty atmospheric lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoCq4w7cBTsJsU1Rnqd7raJh3b-xcOreDfZq41k7CdvndGUP4SNyoia657KFGcrcQRyw5YNxdKkH2_OR2s3gWpPBoAkI0On7pc4Nzu9jMJylOY1Zji1Bk_oKr_v1JuDY-kEw3cmkueVW_aG0taKGRtXiUNmD-OaMJBqgpbK_IRZfoI9lEmxO5bJXs-54xuf4sQiguRlfqzVlYU918bIEmTOaky-gx3xXktaBh-Yl-uP3-Eh2VfK6I9"/>
+<span class="ev-badge absolute bottom-1 right-1 bg-surface-container-lowest/80 text-on-surface-variant font-mono-data text-label-sm px-1 rounded">-0.7 EV</span>
+</div>
+<div class="flex justify-between items-center mt-1 px-0.5">
+<span class="font-mono-data text-label-sm text-outline truncate">DSC09242.ARW</span>
+<span class="material-symbols-outlined text-xs text-outline status-icon">check</span>
+</div>
+</div>
+<!-- Thumbnail 3 -->
+<div class="raw-thumb relative bg-surface-container p-1 rounded-lg opacity-75 hover:opacity-100 transition-all cursor-pointer hover:scale-[1.02]" data-ev="+1.2 EV" data-filename="DSC09243.ARW" data-img-after="https://lh3.googleusercontent.com/aida-public/AB6AXuDlrYTaHMRNU7kCJZLgju3XPEblIHQme1ubx5HPkzZvdaD_qEemJuCCHy6hR5Im6_eISipcFo93e8lbALdl_BQfzvkZE4wC5ukusO26sVbAb5SkwtrV-KGjtlfZWT_axjjIw65NOwTRzVtPL0EN4NzoqGYqhHLszuXXjrQwhxUbwfogQ0OqYaddDWtx7bhE71SKYDuw9bOemIoczr57Jmfd2V87Kp0kj0AaNo4TvRfR8fkQdz2jmn2n" data-img-before="https://lh3.googleusercontent.com/aida-public/AB6AXuDlrYTaHMRNU7kCJZLgju3XPEblIHQme1ubx5HPkzZvdaD_qEemJuCCHy6hR5Im6_eISipcFo93e8lbALdl_BQfzvkZE4wC5ukusO26sVbAb5SkwtrV-KGjtlfZWT_axjjIw65NOwTRzVtPL0EN4NzoqGYqhHLszuXXjrQwhxUbwfogQ0OqYaddDWtx7bhE71SKYDuw9bOemIoczr57Jmfd2V87Kp0kj0AaNo4TvRfR8fkQdz2jmn2n">
+<div class="relative h-20 w-full rounded overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Raw camera capture portrait with intense neon sidelight reflections" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlrYTaHMRNU7kCJZLgju3XPEblIHQme1ubx5HPkzZvdaD_qEemJuCCHy6hR5Im6_eISipcFo93e8lbALdl_BQfzvkZE4wC5ukusO26sVbAb5SkwtrV-KGjtlfZWT_axjjIw65NOwTRzVtPL0EN4NzoqGYqhHLszuXXjrQwhxUbwfogQ0OqYaddDWtx7bhE71SKYDuw9bOemIoczr57Jmfd2V87Kp0kj0AaNo4TvRfR8fkQdz2jmn2n"/>
+<span class="ev-badge absolute bottom-1 right-1 bg-surface-container-lowest/80 text-on-surface-variant font-mono-data text-label-sm px-1 rounded">+1.2 EV</span>
+</div>
+<div class="flex justify-between items-center mt-1 px-0.5">
+<span class="font-mono-data text-label-sm text-outline truncate">DSC09243.ARW</span>
+<span class="material-symbols-outlined text-xs text-outline status-icon">check</span>
+</div>
+</div>
+<!-- Thumbnail 4 -->
+<div class="raw-thumb relative bg-surface-container p-1 rounded-lg opacity-75 hover:opacity-100 transition-all cursor-pointer hover:scale-[1.02]" data-ev="+0.3 EV" data-filename="DSC09244.ARW" data-img-after="https://lh3.googleusercontent.com/aida-public/AB6AXuBGxkEMoxroBq8_RF4jdPGWmYFVU2JJpWcblx7TWTQI_4r8bXtjD44cmZHk0CVPBe7p-O3qcvSK_pj6n0ceqClvO6hStgNkolv9OxKR_5_O07KStjxm1lvdC7WHwWN55IfvhgX048bTxm6BLEWnCmIpAJ6uCOBLMZFuMReWeqg7Guxv-04zHbscHv33FzJrU389kMKNwXmT9za24yMKQi5ss0iuUfBCM5RmY0UEaXWhIorst4x9tWP1" data-img-before="https://lh3.googleusercontent.com/aida-public/AB6AXuBGxkEMoxroBq8_RF4jdPGWmYFVU2JJpWcblx7TWTQI_4r8bXtjD44cmZHk0CVPBe7p-O3qcvSK_pj6n0ceqClvO6hStgNkolv9OxKR_5_O07KStjxm1lvdC7WHwWN55IfvhgX048bTxm6BLEWnCmIpAJ6uCOBLMZFuMReWeqg7Guxv-04zHbscHv33FzJrU389kMKNwXmT9za24yMKQi5ss0iuUfBCM5RmY0UEaXWhIorst4x9tWP1">
+<div class="relative h-20 w-full rounded overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Cinematic architectural scene with brutalist angles and glowing ambient lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGxkEMoxroBq8_RF4jdPGWmYFVU2JJpWcblx7TWTQI_4r8bXtjD44cmZHk0CVPBe7p-O3qcvSK_pj6n0ceqClvO6hStgNkolv9OxKR_5_O07KStjxm1lvdC7WHwWN55IfvhgX048bTxm6BLEWnCmIpAJ6uCOBLMZFuMReWeqg7Guxv-04zHbscHv33FzJrU389kMKNwXmT9za24yMKQi5ss0iuUfBCM5RmY0UEaXWhIorst4x9tWP1"/>
+<span class="ev-badge absolute bottom-1 right-1 bg-surface-container-lowest/80 text-on-surface-variant font-mono-data text-label-sm px-1 rounded">+0.3 EV</span>
+</div>
+<div class="flex justify-between items-center mt-1 px-0.5">
+<span class="font-mono-data text-label-sm text-outline truncate">DSC09244.ARW</span>
+<span class="material-symbols-outlined text-xs text-outline status-icon">check</span>
+</div>
+</div>
+</div>
+</div>
+<!-- History Snapshots Tree -->
+<div class="flex flex-col gap-space-xs mt-space-sm bg-surface-container p-space-sm rounded-xl border border-outline-variant/30">
+<div class="flex items-center justify-between pb-space-xs border-b border-surface-variant/40">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Processing History</span>
+<span class="material-symbols-outlined text-sm text-outline hover:text-primary-container cursor-pointer transition-colors" id="btn-reset-history" title="Revert to base RAW state">history</span>
+</div>
+<div class="flex flex-col gap-1 font-body-sm text-body-sm" id="history-list">
+<!-- Step 1 -->
+<div class="history-item flex items-center gap-space-xs p-1.5 rounded hover:bg-surface-container-high cursor-pointer transition-all" data-step="1">
+<span class="history-checkbox material-symbols-outlined text-sm text-primary-container">check_box</span>
+<div class="flex flex-col">
+<span class="text-on-surface-variant step-title">Initial Import</span>
+<span class="font-mono-data text-label-sm text-outline">Linear 14-bit CFA data</span>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="history-item flex items-center gap-space-xs p-1.5 rounded hover:bg-surface-container-high cursor-pointer transition-all" data-step="2">
+<span class="history-checkbox material-symbols-outlined text-sm text-primary-container">check_box</span>
+<div class="flex flex-col">
+<span class="text-on-surface-variant step-title">Lens Profile Correction</span>
+<span class="font-mono-data text-label-sm text-outline">Sony FE 50mm F1.2 GM</span>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="history-item flex items-center gap-space-xs p-1.5 rounded hover:bg-surface-container-high cursor-pointer transition-all" data-step="3">
+<span class="history-checkbox material-symbols-outlined text-sm text-primary-container">check_box</span>
+<div class="flex flex-col">
+<span class="text-on-surface-variant step-title">Shadows &amp; Highlight Rolloff</span>
+<span class="font-mono-data text-label-sm text-outline">+42 Shd / -38 Hgl</span>
+</div>
+</div>
+<!-- Step 4 - Active -->
+<div class="history-item flex items-center gap-space-xs p-1.5 rounded bg-surface-container-high shadow-sm cursor-pointer border-l-2 border-primary-container" data-step="4">
+<span class="history-checkbox material-symbols-outlined text-sm text-primary-container">check_circle</span>
+<div class="flex flex-col">
+<span class="font-semibold text-primary-container step-title">Spectral Cyan/Violet Curve</span>
+<span class="font-mono-data text-label-sm text-on-surface-variant">Active Grading Node</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Zero-Copy Clipboard Interop Notice -->
+<div class="mt-auto p-space-sm rounded-xl bg-surface-container-lowest flex items-start gap-space-xs border border-outline-variant/30">
+<span class="material-symbols-outlined text-sm text-primary-container mt-0.5 animate-pulse">sync_alt</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-medium">Shared Zero-Copy Buffer</span>
+<span class="font-body-sm text-body-sm text-outline">Linked to PhotoCraft engine via unified Metal memory.</span>
+</div>
+</div>
+</aside>
+<!-- CENTER VIEWPORT: RAW Viewport + Interactive A/B Split Wipe (6 or 7 Cols) -->
+<main class="col-span-12 lg:col-span-5 xl:col-span-6 relative flex flex-col items-center justify-center p-space-sm bg-surface-container-lowest overflow-hidden">
+<!-- Viewport Tool Overlay HUD -->
+<div class="absolute top-space-md left-space-md z-20 flex items-center gap-space-sm bg-surface-container-low/90 backdrop-blur-md px-space-md py-1.5 rounded-xl shadow-xl border border-outline-variant/30">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-error animate-ping"></span>
+<span class="font-mono-data text-label-sm text-error" id="hud-clipping-readout">Clipping: +3.2 EV Highlight</span>
+</div>
+<span class="text-outline">|</span>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary-container shadow-[0_0_6px_#00f0ff]"></span>
+<span class="font-mono-data text-label-sm text-primary-container" id="hud-shadows-readout">Shadows: Nominal</span>
+</div>
+</div>
+<!-- Real-Time Pipette Probe HUD (dynamically tracks cursor on viewport) -->
+<div class="absolute top-space-md right-space-md z-20 hidden md:flex items-center gap-space-xs bg-surface-container-low/90 backdrop-blur-md px-space-sm py-1.5 rounded-xl shadow-xl font-mono-data text-mono-data border border-outline-variant/30 transition-all" id="pixel-probe-hud">
+<span class="material-symbols-outlined text-xs text-secondary animate-spin">colorize</span>
+<span class="text-on-surface" id="probe-rgb-val">RGB(18, 240, 255)</span>
+<span class="text-outline">|</span>
+<span class="text-secondary" id="probe-rec-val">Rec.2020 [0.07, 0.94, 1.00]</span>
+<span class="text-outline">|</span>
+<span class="text-primary-container text-xs" id="probe-lux-val">842 Lux</span>
+</div>
+<!-- Viewport Container with A/B Split Wipe Slider -->
+<div class="relative w-full h-[620px] rounded-xl overflow-hidden shadow-2xl bg-surface-dim select-none cursor-crosshair group border border-outline-variant/40" id="split-container">
+<!-- Background Layer: AFTER (Right / Colored HDR Grade) -->
+<div class="absolute inset-0 w-full h-full overflow-hidden" id="viewport-after-wrapper">
+<img alt="Graded ACES HDR cybernetic metropolis" class="w-full h-full object-cover transition-transform duration-200" id="main-view-after" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5qVI1i_LVp0cftjccDauquQFqEFb6vtQGgJUggwgfwOtrJHG97honhMeYnL_owxmuZqjxxustBlaJHDwcVU392XFwO7MBpDerj_QvVN28-_ma-drKHkrr7jdr_d0nqndzuNTCjEsnkQ5vrOcKHKcXK1qQtR15t1QIJWBfj0POeYncBhsbr-41kvU8DNbeKv9ZiTa09LYe3GXFdPzjABVSnPRBA9iG8kq7QdxxJ_eT6TsRdlWbaNlr"/>
+<!-- Live scanline & Specular Shimmer -->
+<div class="absolute inset-0 scanline-grid pointer-events-none opacity-40"></div>
+<div class="specular-beam"></div>
+<!-- HDR Highlights Scrim Tag -->
+<div class="absolute bottom-4 right-4 bg-surface-container-low/85 backdrop-blur-md px-space-sm py-1 rounded text-primary-container font-mono-data text-label-sm tracking-wider border border-primary-container/30 shadow-[0_0_8px_rgba(0,240,255,0.2)]">
+            AFTER: SPECTRAL HDR (ACEScg)
+          </div>
+</div>
+<!-- Foreground Layer: BEFORE (Left / Flat Camera Sensor RAW) -->
+<div class="absolute inset-y-0 left-0 overflow-hidden" id="split-before-layer" style="width: 50%;">
+<div class="w-full h-full relative" id="split-before-inner" style="min-width: 100%;">
+<!-- Simulated flat, desaturated RAW data -->
+<img alt="Raw camera uncorrected flat sensor image" class="w-full h-full object-cover filter contrast-75 brightness-90 saturate-50 transition-transform duration-200" id="main-view-before" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPprJgqW39We5_jSziauKhA99DZR1j_2njzvAlemHphBLja9vc8MhCmVU8gibieJaXpgOh2rOUcmllhfZEBwlTHIcm-052meKTPNo-84FotAfUQpRATJQ0FY6d9uLpM7oz1dK9fdpuTZCBlXg6SvcKMEr6W5kLvoxb685C4pVlQpEF_WlyfN3KdUQzY_hS0adlATxImMOkOKDQYkQ3V8fSryJ8OueDjGvm2ZxTKL5fGjNb6sqXD4nH"/>
+<!-- Flat RAW Notice Tag -->
+<div class="absolute bottom-4 left-4 bg-surface-container-low/85 backdrop-blur-md px-space-sm py-1 rounded text-outline font-mono-data text-label-sm tracking-wider border border-outline-variant/30">
+              BEFORE: UNPROCESSED RAW 14-BIT
+            </div>
+</div>
+</div>
+<!-- Wipe Divider Line & Interactive Handle -->
+<div class="absolute inset-y-0 cursor-ew-resize z-20 group" id="split-handle" style="left: 50%;">
+<div class="w-0.5 h-full bg-primary-container shadow-[0_0_12px_#00f0ff] relative group-hover:w-1 transition-all">
+<div class="absolute top-1/2 -translate-y-1/2 -left-3.5 w-7 h-7 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-[0_0_12px_#00f0ff] cursor-ew-resize hover:scale-125 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-xs select-none">unfold_more</span>
+</div>
+</div>
+</div>
+<!-- Canvas Inspection Coordinates Floating Box -->
+<div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 pointer-events-none bg-surface-container-low/90 backdrop-blur-md px-space-sm py-1 rounded-full font-mono-data text-label-sm text-outline flex items-center gap-space-xs border border-outline-variant/30 shadow-lg">
+<span>X: <span class="text-on-surface" id="probe-coord-x">4210</span></span>
+<span>Y: <span class="text-on-surface" id="probe-coord-y">2890</span></span>
+<span>•</span>
+<span class="text-primary-container font-medium">64-bit Floating-point Precision</span>
+</div>
+</div>
+<!-- Viewport Bottom Controls -->
+<div class="w-full flex items-center justify-between px-space-md pt-space-xs font-mono-data text-mono-data text-outline">
+<div class="flex items-center gap-space-md" id="viewport-scale-pills">
+<button class="scale-btn hover:text-primary-container cursor-pointer transition-colors px-1 py-0.5 rounded text-on-surface font-semibold bg-surface-container-high" data-zoom="1.0" type="button">FIT (54%)</button>
+<button class="scale-btn hover:text-primary-container cursor-pointer transition-colors px-1 py-0.5 rounded" data-zoom="1.4" type="button">100% 1:1</button>
+<button class="scale-btn hover:text-primary-container cursor-pointer transition-colors px-1 py-0.5 rounded" data-zoom="2.0" type="button">200% PIXEL PEEP</button>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse shadow-[0_0_6px_#ddb7ff]"></span>
+<span id="gpu-frame-telemetry">GPU Pipeline: 4.2ms / frame</span>
+</div>
+</div>
+</main>
+<!-- RIGHT PANEL: Precision Color Grading & Tonal Curves Inspector (4 Cols) -->
+<aside class="col-span-12 lg:col-span-4 xl:col-span-4 bg-surface-container-low/95 p-space-md flex flex-col gap-space-md overflow-y-auto max-h-[calc(100vh-80px)] border-l border-surface-variant/30">
+<!-- Scopes Header & Graphic Scopes Parade -->
+<div class="flex flex-col gap-space-xs bg-surface-container p-space-sm rounded-xl border border-outline-variant/30">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline" id="scopes-heading">RGB Parade &amp; Vectorscope</span>
+<div class="flex items-center gap-1" id="scope-mode-tabs">
+<button class="scope-tab-btn font-mono-data text-label-sm bg-primary-container text-on-primary-container font-semibold px-1.5 py-0.5 rounded transition-all shadow-[0_0_6px_rgba(0,240,255,0.4)]" data-mode="hdr">HDR PARADE</button>
+<button class="scope-tab-btn font-mono-data text-label-sm text-outline hover:text-on-surface px-1.5 py-0.5 rounded transition-all" data-mode="rgb">RGB PARADE</button>
+<button class="scope-tab-btn font-mono-data text-label-sm text-outline hover:text-on-surface px-1.5 py-0.5 rounded transition-all" data-mode="vscope">V-SCOPE</button>
+</div>
+</div>
+<!-- Inline Animated Waveform Visualization Canvas/SVG -->
+<div class="w-full h-24 bg-surface-container-lowest rounded-lg p-1.5 flex items-center justify-center relative overflow-hidden border border-outline-variant/20" id="scopes-canvas-wrap">
+<svg class="w-full h-full stroke-current" id="scopes-svg" preserveaspectratio="none" viewbox="0 0 400 90">
+<!-- Gridlines -->
+<line class="stroke-surface-variant" stroke-dasharray="2,2" stroke-width="0.5" x1="0" x2="400" y1="15" y2="15"></line>
+<line class="stroke-surface-variant" stroke-dasharray="2,2" stroke-width="0.5" x1="0" x2="400" y1="45" y2="45"></line>
+<line class="stroke-surface-variant" stroke-dasharray="2,2" stroke-width="0.5" x1="0" x2="400" y1="75" y2="75"></line>
+<!-- Red Channel Parade Wave -->
+<path d="M 0,60 Q 20,40 40,55 T 80,30 T 120,65 T 140,50" fill="none" id="scope-wave-red" opacity="0.85" stroke="#ff4d6d" stroke-width="1.3"></path>
+<!-- Green Channel Parade Wave -->
+<path d="M 130,55 Q 160,25 180,45 T 220,20 T 250,58 T 270,40" fill="none" id="scope-wave-green" opacity="0.85" stroke="#00f5d4" stroke-width="1.3"></path>
+<!-- Blue Channel Parade Wave (Spike at cyan highlights) -->
+<path d="M 260,70 Q 290,20 310,18 T 350,15 T 380,35 T 400,20" fill="none" id="scope-wave-blue" opacity="0.95" stroke="#7df4ff" stroke-width="1.6"></path>
+<!-- Luma Density Overlay -->
+<path d="M 0,75 C 50,70 80,40 130,50 C 180,60 210,25 260,35 C 310,45 350,10 400,15" fill="none" id="scope-wave-luma" opacity="0.3" stroke="#ffffff" stroke-width="0.8"></path>
+</svg>
+<span class="absolute right-2 top-1 font-mono-data text-label-sm text-outline pointer-events-none">100 IRE (HDR 1000nits)</span>
+<span class="absolute right-2 bottom-1 font-mono-data text-label-sm text-outline pointer-events-none">0 IRE (Black Floor)</span>
+</div>
+</div>
+<!-- Tone Curves Section -->
+<div class="flex flex-col gap-space-xs bg-surface-container p-space-sm rounded-xl border border-outline-variant/30" id="tone-curves-container">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Parametric Tone Curve</span>
+<div class="flex items-center gap-1 bg-surface-container-lowest p-0.5 rounded border border-outline-variant/20" id="curve-channel-tabs">
+<button class="channel-btn px-1.5 py-0.5 font-label-sm text-label-sm bg-surface-bright text-primary-container font-semibold rounded transition-all shadow-[0_0_6px_rgba(0,240,255,0.3)]" data-channel="rgb" type="button">RGB</button>
+<button class="channel-btn px-1.5 py-0.5 font-label-sm text-label-sm text-error hover:bg-surface-container-high rounded transition-all" data-channel="r" type="button">R</button>
+<button class="channel-btn px-1.5 py-0.5 font-label-sm text-label-sm text-primary-fixed-dim hover:bg-surface-container-high rounded transition-all" data-channel="g" type="button">G</button>
+<button class="channel-btn px-1.5 py-0.5 font-label-sm text-label-sm text-secondary hover:bg-surface-container-high rounded transition-all" data-channel="b" type="button">B</button>
+</div>
+</div>
+<!-- Tone Curve Grid Graphic with Interactive SVG Bézier Curve & Draggable Control Points -->
+<div class="relative w-full h-36 bg-surface-container-lowest rounded-lg p-2 flex items-center justify-center border border-outline-variant/20 overflow-hidden cursor-crosshair" id="curve-svg-wrapper">
+<svg class="w-full h-full select-none" id="tone-curve-svg" style="touch-action: none;" viewbox="0 0 200 120">
+<!-- Grid Lines -->
+<line stroke="#33353b" stroke-width="0.5" x1="50" x2="50" y1="0" y2="120"></line>
+<line stroke="#33353b" stroke-width="0.5" x1="100" x2="100" y1="0" y2="120"></line>
+<line stroke="#33353b" stroke-width="0.5" x1="150" x2="150" y1="0" y2="120"></line>
+<line stroke="#33353b" stroke-width="0.5" x1="0" x2="200" y1="30" y2="30"></line>
+<line stroke="#33353b" stroke-width="0.5" x1="0" x2="200" y1="60" y2="60"></line>
+<line stroke="#33353b" stroke-width="0.5" x1="0" x2="200" y1="90" y2="90"></line>
+<!-- Linear Guide -->
+<line stroke="#475569" stroke-dasharray="2,2" stroke-width="0.5" x1="0" x2="200" y1="120" y2="0"></line>
+<!-- Active Curve Path -->
+<path d="M 0,118 C 55,98 100,58 155,20 C 175,10 190,7 200,6" fill="none" id="curve-path" stroke="#00f0ff" stroke-linecap="round" stroke-width="2.2" style="filter: drop-shadow(0 0 5px rgba(0,240,255,0.5)); transition: stroke 0.3s ease;"></path>
+<!-- Inflection Points (Interactive Draggable Handles) -->
+<!-- P1: Shadows -->
+<circle class="curve-handle cursor-grab" cx="55" cy="98" data-point="p1" fill="#0c0e14" id="handle-p1" r="5" stroke="#00f0ff" stroke-width="2"></circle>
+<!-- P2: Midtones -->
+<circle class="curve-handle cursor-grab" cx="100" cy="58" data-point="p2" fill="#00f0ff" id="handle-p2" r="5" stroke="#dbfcff" stroke-width="1.5"></circle>
+<!-- P3: Highlights / Specular Knee -->
+<circle class="curve-handle cursor-grab" cx="155" cy="20" data-point="p3" fill="#0c0e14" id="handle-p3" r="5" stroke="#00f0ff" stroke-width="2"></circle>
+</svg>
+<!-- Live Floating Point Value Tooltip -->
+<div class="absolute top-1 left-2 pointer-events-none bg-surface-container/90 backdrop-blur-sm px-1.5 py-0.5 rounded text-[10px] font-mono-data text-primary-container border border-outline-variant/30" id="curve-tooltip">IN: 50% | OUT: 52%</div>
+<span class="absolute bottom-1 left-2 font-mono-data text-label-sm text-outline pointer-events-none">Shadows (Compressed)</span>
+<span class="absolute top-1 right-2 font-mono-data text-label-sm text-primary-container pointer-events-none" id="curve-knee-label">Specular Knee</span>
+</div>
+</div>
+<!-- 3-Way Color Wheels (Lift, Gamma, Gain) with Draggable Color Pucks -->
+<div class="flex flex-col gap-space-xs bg-surface-container p-space-sm rounded-xl border border-outline-variant/30">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">3-Way Color Wheels</span>
+<span class="font-mono-data text-label-sm text-secondary">ACES ColorSpace</span>
+</div>
+<div class="grid grid-cols-3 gap-space-xs py-1 text-center">
+<!-- Lift (Shadows) -->
+<div class="flex flex-col items-center gap-1 group">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Lift (Shadows)</span>
+<div class="wheel-disc relative w-16 h-16 rounded-full bg-gradient-to-tr from-[#00363a] via-[#111319] to-[#490080] flex items-center justify-center p-1 shadow-inner cursor-grab active:cursor-grabbing border border-outline-variant/30 transition-shadow hover:shadow-[0_0_12px_rgba(0,240,255,0.3)]" data-wheel="lift" id="wheel-lift">
+<div class="w-full h-full rounded-full border border-outline-variant/40 flex items-center justify-center relative pointer-events-none">
+<!-- Crosshair lines -->
+<div class="w-full h-[1px] bg-outline-variant/30 absolute"></div>
+<div class="h-full w-[1px] bg-outline-variant/30 absolute"></div>
+<!-- Marker / Puck -->
+<div class="wheel-puck w-2.5 h-2.5 rounded-full bg-primary-container absolute shadow-[0_0_8px_#00f0ff] pointer-events-auto cursor-grab transition-transform" id="puck-lift" style="transform: translate(-4px, 4px);"></div>
+</div>
+</div>
+<span class="font-mono-data text-label-sm text-primary-container" id="wheel-readout-lift">+0.02 B</span>
+</div>
+<!-- Gamma (Midtones) -->
+<div class="flex flex-col items-center gap-1 group">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Gamma (Mids)</span>
+<div class="wheel-disc relative w-16 h-16 rounded-full bg-gradient-to-tr from-[#004f54] via-[#1d1f26] to-[#6f00be] flex items-center justify-center p-1 shadow-inner cursor-grab active:cursor-grabbing border border-outline-variant/30 transition-shadow hover:shadow-[0_0_12px_rgba(221,183,255,0.3)]" data-wheel="gamma" id="wheel-gamma">
+<div class="w-full h-full rounded-full border border-outline-variant/40 flex items-center justify-center relative pointer-events-none">
+<!-- Crosshair lines -->
+<div class="w-full h-[1px] bg-outline-variant/30 absolute"></div>
+<div class="h-full w-[1px] bg-outline-variant/30 absolute"></div>
+<!-- Center Marker -->
+<div class="wheel-puck w-2.5 h-2.5 rounded-full bg-secondary absolute shadow-[0_0_8px_#ddb7ff] pointer-events-auto cursor-grab transition-transform" id="puck-gamma" style="transform: translate(6px, -4px);"></div>
+</div>
+</div>
+<span class="font-mono-data text-label-sm text-secondary" id="wheel-readout-gamma">+0.04 V</span>
+</div>
+<!-- Gain (Highlights) -->
+<div class="flex flex-col items-center gap-1 group">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Gain (Hgl)</span>
+<div class="wheel-disc relative w-16 h-16 rounded-full bg-gradient-to-tr from-[#00f0ff]/30 via-[#1d1f26] to-[#fdf3ff]/30 flex items-center justify-center p-1 shadow-inner cursor-grab active:cursor-grabbing border border-outline-variant/30 transition-shadow hover:shadow-[0_0_12px_rgba(125,244,255,0.4)]" data-wheel="gain" id="wheel-gain">
+<div class="w-full h-full rounded-full border border-outline-variant/40 flex items-center justify-center relative pointer-events-none">
+<!-- Crosshair lines -->
+<div class="w-full h-[1px] bg-outline-variant/30 absolute"></div>
+<div class="h-full w-[1px] bg-outline-variant/30 absolute"></div>
+<!-- Highlight Marker -->
+<div class="wheel-puck w-2.5 h-2.5 rounded-full bg-primary absolute shadow-[0_0_8px_#7df4ff] pointer-events-auto cursor-grab transition-transform" id="puck-gain" style="transform: translate(-8px, -8px);"></div>
+</div>
+</div>
+<span class="font-mono-data text-label-sm text-primary" id="wheel-readout-gain">+0.09 C</span>
+</div>
+</div>
+</div>
+<!-- Scrubbable Precision Exposure & Balance Sliders -->
+<div class="flex flex-col gap-space-xs bg-surface-container p-space-sm rounded-xl border border-outline-variant/30">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline mb-1">Raw Tone &amp; Exposure Telemetry</span>
+<!-- Exposure Slider -->
+<div class="flex flex-col gap-0.5">
+<div class="flex justify-between items-center font-mono-data text-label-sm">
+<span class="text-on-surface-variant">Exposure</span>
+<span class="text-primary-container font-semibold" id="val-exposure">+0.65 EV</span>
+</div>
+<div class="relative w-full flex items-center">
+<input class="w-full h-1.5" id="slider-exposure" max="300" min="-300" type="range" value="65"/>
+</div>
+</div>
+<!-- Contrast Slider -->
+<div class="flex flex-col gap-0.5">
+<div class="flex justify-between items-center font-mono-data text-label-sm">
+<span class="text-on-surface-variant">Contrast</span>
+<span class="text-on-surface font-semibold" id="val-contrast">+24</span>
+</div>
+<div class="relative w-full flex items-center">
+<input class="w-full h-1.5" id="slider-contrast" max="100" min="-100" type="range" value="24"/>
+</div>
+</div>
+<!-- Highlights Slider -->
+<div class="flex flex-col gap-0.5">
+<div class="flex justify-between items-center font-mono-data text-label-sm">
+<span class="text-on-surface-variant">Highlights</span>
+<span class="text-secondary font-semibold" id="val-highlights">-38</span>
+</div>
+<div class="relative w-full flex items-center">
+<input class="w-full h-1.5" id="slider-highlights" max="100" min="-100" type="range" value="-38"/>
+</div>
+</div>
+<!-- Shadows Slider -->
+<div class="flex flex-col gap-0.5">
+<div class="flex justify-between items-center font-mono-data text-label-sm">
+<span class="text-on-surface-variant">Shadows</span>
+<span class="text-primary-container font-semibold" id="val-shadows">+42</span>
+</div>
+<div class="relative w-full flex items-center">
+<input class="w-full h-1.5" id="slider-shadows" max="100" min="-100" type="range" value="42"/>
+</div>
+</div>
+<!-- Whites & Blacks Dual Track -->
+<div class="grid grid-cols-2 gap-space-sm pt-1">
+<div class="flex flex-col gap-0.5">
+<div class="flex justify-between items-center font-mono-data text-label-sm">
+<span class="text-outline">Whites</span>
+<span class="text-on-surface" id="val-whites">+15</span>
+</div>
+<input class="w-full h-1" id="slider-whites" max="50" min="-50" type="range" value="15"/>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex justify-between items-center font-mono-data text-label-sm">
+<span class="text-outline">Blacks</span>
+<span class="text-on-surface" id="val-blacks">-12</span>
+</div>
+<input class="w-full h-1" id="slider-blacks" max="50" min="-50" type="range" value="-12"/>
+</div>
+</div>
+<!-- Kelvin Temperature & Tint -->
+<div class="grid grid-cols-2 gap-space-sm pt-1.5">
+<div class="flex flex-col gap-0.5">
+<div class="flex justify-between items-center font-mono-data text-label-sm">
+<span class="text-outline">Kelvin</span>
+<span class="text-primary font-semibold" id="val-kelvin">6200 K</span>
+</div>
+<input class="w-full h-1.5" id="slider-kelvin" max="9000" min="2500" step="50" type="range" value="6200"/>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex justify-between items-center font-mono-data text-label-sm">
+<span class="text-outline">Tint</span>
+<span class="text-secondary font-semibold" id="val-tint">+4</span>
+</div>
+<input class="w-full h-1.5" id="slider-tint" max="50" min="-50" type="range" value="4"/>
+</div>
+</div>
+</div>
+<!-- Spectral HSL Matrix -->
+<div class="flex flex-col gap-space-xs bg-surface-container p-space-sm rounded-xl mb-space-md border border-outline-variant/30">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Spectral 8-Band HSL</span>
+<span class="font-mono-data text-label-sm text-primary-container font-semibold" id="hsl-band-title">CYAN BOOST: +28%</span>
+</div>
+<!-- 8 Color Indicator Chips -->
+<div class="flex items-center justify-between px-1.5 py-1.5 bg-surface-container-lowest rounded-lg border border-outline-variant/20" id="hsl-dots-bar">
+<span class="hsl-dot w-3.5 h-3.5 rounded-full bg-[#ff4d4d] cursor-pointer ring-1 ring-white/10 hover:scale-125 transition-all" data-color="Red" data-hue="+2°" data-lum="+5%" data-sat="+12%"></span>
+<span class="hsl-dot w-3.5 h-3.5 rounded-full bg-[#ff9900] cursor-pointer ring-1 ring-white/10 hover:scale-125 transition-all" data-color="Orange" data-hue="-1°" data-lum="+8%" data-sat="+18%"></span>
+<span class="hsl-dot w-3.5 h-3.5 rounded-full bg-[#ffe600] cursor-pointer ring-1 ring-white/10 hover:scale-125 transition-all" data-color="Yellow" data-hue="+4°" data-lum="-2%" data-sat="+6%"></span>
+<span class="hsl-dot w-3.5 h-3.5 rounded-full bg-[#33ff77] cursor-pointer ring-1 ring-white/10 hover:scale-125 transition-all" data-color="Green" data-hue="+8°" data-lum="+10%" data-sat="+20%"></span>
+<span class="hsl-dot w-4 h-4 rounded-full bg-[#00f0ff] cursor-pointer ring-2 ring-primary-container shadow-[0_0_10px_#00f0ff] scale-125 transition-all" data-color="Cyan" data-hue="+6°" data-lum="+18%" data-sat="+34%"></span>
+<span class="hsl-dot w-3.5 h-3.5 rounded-full bg-[#3366ff] cursor-pointer ring-1 ring-white/10 hover:scale-125 transition-all" data-color="Blue" data-hue="-4°" data-lum="+14%" data-sat="+22%"></span>
+<span class="hsl-dot w-3.5 h-3.5 rounded-full bg-[#a855f7] cursor-pointer ring-1 ring-white/10 hover:scale-125 transition-all" data-color="Purple" data-hue="+12°" data-lum="+6%" data-sat="+30%"></span>
+<span class="hsl-dot w-3.5 h-3.5 rounded-full bg-[#ff00a0] cursor-pointer ring-1 ring-white/10 hover:scale-125 transition-all" data-color="Magenta" data-hue="+0°" data-lum="-5%" data-sat="+15%"></span>
+</div>
+<!-- Active Cyan Color Bands -->
+<div class="flex flex-col gap-1 pt-1 font-mono-data text-label-sm">
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant">Hue Shift</span>
+<span class="text-primary-container" id="hsl-val-hue">+6°</span>
+</div>
+<div class="h-1 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="bg-primary-container h-full transition-all duration-300" id="hsl-bar-hue" style="width: 58%;"></div>
+</div>
+<div class="flex justify-between items-center pt-0.5">
+<span class="text-on-surface-variant">Saturation</span>
+<span class="text-primary-container" id="hsl-val-sat">+34%</span>
+</div>
+<div class="h-1 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="bg-primary-container h-full transition-all duration-300" id="hsl-bar-sat" style="width: 76%;"></div>
+</div>
+<div class="flex justify-between items-center pt-0.5">
+<span class="text-on-surface-variant">Luminance</span>
+<span class="text-primary-container" id="hsl-val-lum">+18%</span>
+</div>
+<div class="h-1 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="bg-primary-container h-full transition-all duration-300" id="hsl-bar-lum" style="width: 62%;"></div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</div>
+<!-- Interactive Script Suite -->
+<script>
+  (function initLightCraftEngine() {
+    // 1. Draggable A/B Wipe Split View with Touch & Pixel Probe HUD Tracking
+    const container = document.getElementById('split-container');
+    const beforeLayer = document.getElementById('split-before-layer');
+    const handle = document.getElementById('split-handle');
+    const toggleBtn = document.getElementById('toggle-split-btn');
+    const wipeBtnText = document.getElementById('wipe-btn-text');
+
+    const probeX = document.getElementById('probe-coord-x');
+    const probeY = document.getElementById('probe-coord-y');
+    const probeRGB = document.getElementById('probe-rgb-val');
+    const probeRec = document.getElementById('probe-rec-val');
+    const probeLux = document.getElementById('probe-lux-val');
+
+    let isWipeDragging = false;
+    let wipeActive = true;
+    let currentSplitPercent = 50;
+
+    function applySplit(percent) {
+      if (percent < 2) percent = 2;
+      if (percent > 98) percent = 98;
+      currentSplitPercent = percent;
+      beforeLayer.style.width = percent + '%';
+      handle.style.left = percent + '%';
+    }
+
+    function onPointerMove(e) {
+      const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+      const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+      const rect = container.getBoundingClientRect();
+
+      if (isWipeDragging && clientX !== undefined) {
+        let percent = ((clientX - rect.left) / rect.width) * 100;
+        applySplit(percent);
+      }
+
+      // Live HUD Coordinates & Simulated Sensor Pipette
+      if (clientX !== undefined && clientY !== undefined) {
+        const normX = Math.max(0, Math.min(rect.width, clientX - rect.left));
+        const normY = Math.max(0, Math.min(rect.height, clientY - rect.top));
+
+        // Coordinate scaling to 61MP sensor (9504 x 6336)
+        const sensorX = Math.round((normX / rect.width) * 9504);
+        const sensorY = Math.round((normY / rect.height) * 6336);
+
+        if (probeX) probeX.textContent = sensorX;
+        if (probeY) probeY.textContent = sensorY;
+
+        // Dynamic spectral color simulation based on cursor position
+        const r = Math.round(15 + (normX / rect.width) * 60);
+        const g = Math.round(180 + (normY / rect.height) * 70);
+        const b = 255;
+        if (probeRGB) probeRGB.textContent = `RGB(${r}, ${g}, ${b})`;
+        if (probeRec) probeRec.textContent = `Rec.2020 [${(r/255).toFixed(2)}, ${(g/255).toFixed(2)}, 1.00]`;
+        if (probeLux) probeLux.textContent = `${Math.round(400 + (normX / rect.width) * 800)} Lux`;
+      }
+    }
+
+    container.addEventListener('mousedown', (e) => {
+      isWipeDragging = true;
+      const rect = container.getBoundingClientRect();
+      applySplit(((e.clientX - rect.left) / rect.width) * 100);
+    });
+
+    container.addEventListener('touchstart', (e) => {
+      isWipeDragging = true;
+      const rect = container.getBoundingClientRect();
+      if (e.touches && e.touches[0]) {
+        applySplit(((e.touches[0].clientX - rect.left) / rect.width) * 100);
+      }
+    }, { passive: true });
+
+    window.addEventListener('mousemove', onPointerMove);
+    window.addEventListener('touchmove', onPointerMove, { passive: true });
+
+    window.addEventListener('mouseup', () => { isWipeDragging = false; });
+    window.addEventListener('touchend', () => { isWipeDragging = false; });
+
+    // A/B Wipe Toggle
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        wipeActive = !wipeActive;
+        if (!wipeActive) {
+          beforeLayer.style.width = '0%';
+          handle.style.display = 'none';
+          toggleBtn.classList.remove('bg-primary-container/20', 'text-primary-container', 'border-primary-container/40');
+          toggleBtn.classList.add('text-on-surface-variant');
+          wipeBtnText.textContent = 'Single View';
+        } else {
+          beforeLayer.style.width = `${currentSplitPercent}%`;
+          handle.style.left = `${currentSplitPercent}%`;
+          handle.style.display = 'block';
+          toggleBtn.classList.add('bg-primary-container/20', 'text-primary-container', 'border-primary-container/40');
+          toggleBtn.classList.remove('text-on-surface-variant');
+          wipeBtnText.textContent = 'A/B Wipe';
+        }
+      });
+    }
+
+    // Viewport Zoom Modes (FIT, 1:1, 200%)
+    const zoomPills = document.querySelectorAll('.scale-btn');
+    const viewAfterImg = document.getElementById('main-view-after');
+    const viewBeforeImg = document.getElementById('main-view-before');
+    const headerZoomLabel = document.getElementById('header-zoom-label');
+
+    zoomPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        zoomPills.forEach(p => {
+          p.classList.remove('text-on-surface', 'font-semibold', 'bg-surface-container-high');
+          p.classList.add('text-outline');
+        });
+        pill.classList.remove('text-outline');
+        pill.classList.add('text-on-surface', 'font-semibold', 'bg-surface-container-high');
+
+        const zoomScale = parseFloat(pill.dataset.zoom) || 1.0;
+        if (viewAfterImg) viewAfterImg.style.transform = `scale(${zoomScale})`;
+        if (viewBeforeImg) viewBeforeImg.style.transform = `scale(${zoomScale})`;
+        if (headerZoomLabel) {
+          headerZoomLabel.textContent = `${Math.round(zoomScale * 100)}%`;
+        }
+      });
+    });
+
+    // 2. Animated Real-time RGB Parade & Vectorscope Waves with dynamic jitter
+    const waveRed = document.getElementById('scope-wave-red');
+    const waveGreen = document.getElementById('scope-wave-green');
+    const waveBlue = document.getElementById('scope-wave-blue');
+    const waveLuma = document.getElementById('scope-wave-luma');
+    let scopeTick = 0;
+
+    function animateScopes() {
+      scopeTick += 0.05;
+      const j1 = Math.sin(scopeTick * 1.5) * 4;
+      const j2 = Math.cos(scopeTick * 2.0) * 5;
+      const j3 = Math.sin(scopeTick * 2.5) * 6;
+
+      if (waveRed) {
+        waveRed.setAttribute('d', `M 0,${60 + j1} Q 20,${40 - j2} 40,${55 + j1} T 80,${30 + j2} T 120,${65 - j1} T 140,${50 + j2}`);
+      }
+      if (waveGreen) {
+        waveGreen.setAttribute('d', `M 130,${55 - j2} Q 160,${25 + j1} 180,${45 - j3} T 220,${20 + j2} T 250,${58 - j1} T 270,${40 + j3}`);
+      }
+      if (waveBlue) {
+        waveBlue.setAttribute('d', `M 260,${70 + j3} Q 290,${20 - j1} 310,${18 + j2} T 350,${15 - j3} T 380,${35 + j1} T 400,${20 - j2}`);
+      }
+      if (waveLuma) {
+        waveLuma.setAttribute('d', `M 0,${75 + j2} C 50,${70 - j1} 80,${40 + j3} 130,${50 - j2} C 180,${60 + j1} 210,${25 - j2} 260,${35 + j1} C 310,${45 - j3} 350,${10 + j2} 400,${15 - j1}`);
+      }
+      requestAnimationFrame(animateScopes);
+    }
+    animateScopes();
+
+    // Scope Tabs Switcher (HDR PARADE / RGB PARADE / V-SCOPE)
+    const scopeTabs = document.querySelectorAll('.scope-tab-btn');
+    const scopesHeading = document.getElementById('scopes-heading');
+    scopeTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        scopeTabs.forEach(t => {
+          t.className = 'scope-tab-btn font-mono-data text-label-sm text-outline hover:text-on-surface px-1.5 py-0.5 rounded transition-all';
+        });
+        tab.className = 'scope-tab-btn font-mono-data text-label-sm bg-primary-container text-on-primary-container font-semibold px-1.5 py-0.5 rounded transition-all shadow-[0_0_6px_rgba(0,240,255,0.4)]';
+        const mode = tab.dataset.mode;
+        if (mode === 'vscope') {
+          scopesHeading.textContent = 'Vectorscope UV Chroma';
+          if (waveRed) waveRed.style.opacity = '0.2';
+          if (waveBlue) waveBlue.style.opacity = '0.9';
+        } else if (mode === 'rgb') {
+          scopesHeading.textContent = 'RGB Channel Parade (12-bit)';
+          if (waveRed) waveRed.style.opacity = '0.85';
+          if (waveBlue) waveBlue.style.opacity = '0.85';
+        } else {
+          scopesHeading.textContent = 'HDR Parade & Vectorscope';
+          if (waveRed) waveRed.style.opacity = '0.85';
+          if (waveBlue) waveBlue.style.opacity = '0.95';
+        }
+      });
+    });
+
+    // 3. Interactive Parametric Tone Curve (Draggable Bézier Control Handles)
+    const curveSvg = document.getElementById('tone-curve-svg');
+    const curvePath = document.getElementById('curve-path');
+    const handleP1 = document.getElementById('handle-p1');
+    const handleP2 = document.getElementById('handle-p2');
+    const handleP3 = document.getElementById('handle-p3');
+    const curveTooltip = document.getElementById('curve-tooltip');
+
+    let activeCurveHandle = null;
+    const curvePoints = {
+      p1: { x: 55, y: 98 },
+      p2: { x: 100, y: 58 },
+      p3: { x: 155, y: 20 }
+    };
+
+    function updateCurvePath() {
+      // Dynamic Bézier curve constructed from the 3 control nodes
+      const d = `M 0,118 C ${curvePoints.p1.x},${curvePoints.p1.y} ${curvePoints.p2.x},${curvePoints.p2.y} ${curvePoints.p3.x},${curvePoints.p3.y} C 180,10 195,7 200,6`;
+      curvePath.setAttribute('d', d);
+    }
+
+    [handleP1, handleP2, handleP3].forEach(handleEl => {
+      handleEl.addEventListener('pointerdown', (e) => {
+        activeCurveHandle = handleEl.dataset.point;
+        handleEl.setPointerCapture(e.pointerId);
+      });
+      handleEl.addEventListener('pointermove', (e) => {
+        if (activeCurveHandle === handleEl.dataset.point) {
+          const rect = curveSvg.getBoundingClientRect();
+          const svgX = ((e.clientX - rect.left) / rect.width) * 200;
+          const svgY = ((e.clientY - rect.top) / rect.height) * 120;
+
+          const clampedX = Math.max(10, Math.min(190, svgX));
+          const clampedY = Math.max(5, Math.min(115, svgY));
+
+          curvePoints[activeCurveHandle].x = Math.round(clampedX);
+          curvePoints[activeCurveHandle].y = Math.round(clampedY);
+
+          handleEl.setAttribute('cx', clampedX);
+          handleEl.setAttribute('cy', clampedY);
+          updateCurvePath();
+
+          const inPct = Math.round((clampedX / 200) * 100);
+          const outPct = Math.round(((120 - clampedY) / 120) * 100);
+          if (curveTooltip) {
+            curveTooltip.textContent = `NODE: ${activeCurveHandle.toUpperCase()} | IN: ${inPct}% | OUT: ${outPct}%`;
+          }
+        }
+      });
+      handleEl.addEventListener('pointerup', (e) => {
+        if (activeCurveHandle === handleEl.dataset.point) {
+          handleEl.releasePointerCapture(e.pointerId);
+          activeCurveHandle = null;
+        }
+      });
+    });
+
+    // Tone Curve Channel Switcher (RGB, R, G, B)
+    const channelBtns = document.querySelectorAll('.channel-btn');
+    const channelColors = {
+      rgb: '#00f0ff',
+      r: '#ff4d6d',
+      g: '#00f5d4',
+      b: '#ddb7ff'
+    };
+    channelBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        channelBtns.forEach(b => {
+          b.className = 'channel-btn px-1.5 py-0.5 font-label-sm text-label-sm text-outline hover:bg-surface-container-high rounded transition-all';
+        });
+        const ch = btn.dataset.channel;
+        btn.className = `channel-btn px-1.5 py-0.5 font-label-sm text-label-sm bg-surface-bright text-on-surface font-semibold rounded transition-all shadow-[0_0_6px_${channelColors[ch]}]`;
+        curvePath.style.stroke = channelColors[ch];
+        handleP1.style.stroke = channelColors[ch];
+        handleP2.style.fill = channelColors[ch];
+        handleP3.style.stroke = channelColors[ch];
+      });
+    });
+
+    // 4. 3-Way Color Wheels with Draggable Dynamic Pucks
+    const wheels = [
+      { id: 'lift', disc: document.getElementById('wheel-lift'), puck: document.getElementById('puck-lift'), readout: document.getElementById('wheel-readout-lift'), label: 'B' },
+      { id: 'gamma', disc: document.getElementById('wheel-gamma'), puck: document.getElementById('puck-gamma'), readout: document.getElementById('wheel-readout-gamma'), label: 'V' },
+      { id: 'gain', disc: document.getElementById('wheel-gain'), puck: document.getElementById('puck-gain'), readout: document.getElementById('wheel-readout-gain'), label: 'C' }
+    ];
+
+    wheels.forEach(wheel => {
+      if (!wheel.disc || !wheel.puck) return;
+      let isDraggingWheel = false;
+
+      function updatePuckPosition(clientX, clientY) {
+        const rect = wheel.disc.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        let deltaX = clientX - centerX;
+        let deltaY = clientY - centerY;
+        const radius = rect.width / 2 - 6;
+        const dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+        if (dist > radius) {
+          deltaX = (deltaX / dist) * radius;
+          deltaY = (deltaY / dist) * radius;
+        }
+
+        wheel.puck.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+        const normDist = (dist / radius).toFixed(2);
+        const sign = deltaY > 0 ? '-' : '+';
+        wheel.readout.textContent = `${sign}0.${Math.round(normDist * 9).toString().padStart(2, '0')} ${wheel.label}`;
+      }
+
+      wheel.disc.addEventListener('pointerdown', (e) => {
+        isDraggingWheel = true;
+        wheel.disc.setPointerCapture(e.pointerId);
+        updatePuckPosition(e.clientX, e.clientY);
+      });
+
+      wheel.disc.addEventListener('pointermove', (e) => {
+        if (!isDraggingWheel) return;
+        updatePuckPosition(e.clientX, e.clientY);
+      });
+
+      wheel.disc.addEventListener('pointerup', (e) => {
+        if (isDraggingWheel) {
+          wheel.disc.releasePointerCapture(e.pointerId);
+          isDraggingWheel = false;
+        }
+      });
+    });
+
+    // 5. RAW Batch Stream Thumbnail Selection
+    const rawThumbs = document.querySelectorAll('.raw-thumb');
+    const headerFilename = document.getElementById('header-filename');
+    const metaEvTag = document.getElementById('meta-ev-tag');
+
+    rawThumbs.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        rawThumbs.forEach(t => {
+          t.classList.remove('ring-2', 'ring-primary-container', 'shadow-[0_0_10px_rgba(0,240,255,0.3)]');
+          t.classList.add('opacity-75');
+          const badge = t.querySelector('.active-badge');
+          if (badge) badge.remove();
+          const icon = t.querySelector('.status-icon');
+          if (icon) {
+            icon.textContent = 'check';
+            icon.className = 'material-symbols-outlined text-xs text-outline status-icon';
+          }
+        });
+
+        thumb.classList.remove('opacity-75');
+        thumb.classList.add('ring-2', 'ring-primary-container', 'shadow-[0_0_10px_rgba(0,240,255,0.3)]');
+
+        // Add Active badge
+        const imgWrap = thumb.querySelector('.relative.h-20');
+        if (imgWrap && !imgWrap.querySelector('.active-badge')) {
+          const newBadge = document.createElement('span');
+          newBadge.className = 'active-badge absolute top-1 left-1 bg-primary-container text-on-primary-container font-label-sm text-label-sm px-1 rounded font-bold shadow-[0_0_6px_rgba(0,240,255,0.6)]';
+          newBadge.textContent = 'ACTIVE';
+          imgWrap.appendChild(newBadge);
+        }
+
+        const icon = thumb.querySelector('.status-icon');
+        if (icon) {
+          icon.textContent = 'done_all';
+          icon.className = 'material-symbols-outlined text-xs text-primary-container status-icon';
+        }
+
+        const fn = thumb.dataset.filename;
+        const ev = thumb.dataset.ev;
+        const afterSrc = thumb.dataset.imgAfter;
+        const beforeSrc = thumb.dataset.imgBefore;
+
+        if (headerFilename && fn) headerFilename.textContent = fn;
+        if (metaEvTag && ev) metaEvTag.textContent = `ISO 100 • ${ev}`;
+        if (viewAfterImg && afterSrc) viewAfterImg.src = afterSrc;
+        if (viewBeforeImg && beforeSrc) viewBeforeImg.src = beforeSrc;
+      });
+    });
+
+    // 6. Interactive Sliders with Real-Time Numerical HUD Updates
+    const sliderMap = [
+      { id: 'exposure', el: document.getElementById('slider-exposure'), readout: document.getElementById('val-exposure'), format: (v) => `${v >= 0 ? '+' : ''}${(v / 100).toFixed(2)} EV` },
+      { id: 'contrast', el: document.getElementById('slider-contrast'), readout: document.getElementById('val-contrast'), format: (v) => `${v >= 0 ? '+' : ''}${v}` },
+      { id: 'highlights', el: document.getElementById('slider-highlights'), readout: document.getElementById('val-highlights'), format: (v) => `${v >= 0 ? '+' : ''}${v}` },
+      { id: 'shadows', el: document.getElementById('slider-shadows'), readout: document.getElementById('val-shadows'), format: (v) => `${v >= 0 ? '+' : ''}${v}` },
+      { id: 'whites', el: document.getElementById('slider-whites'), readout: document.getElementById('val-whites'), format: (v) => `${v >= 0 ? '+' : ''}${v}` },
+      { id: 'blacks', el: document.getElementById('slider-blacks'), readout: document.getElementById('val-blacks'), format: (v) => `${v >= 0 ? '+' : ''}${v}` },
+      { id: 'kelvin', el: document.getElementById('slider-kelvin'), readout: document.getElementById('val-kelvin'), format: (v) => `${v} K` },
+      { id: 'tint', el: document.getElementById('slider-tint'), readout: document.getElementById('val-tint'), format: (v) => `${v >= 0 ? '+' : ''}${v}` }
+    ];
+
+    sliderMap.forEach(item => {
+      if (!item.el || !item.readout) return;
+      item.el.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value, 10);
+        item.readout.textContent = item.format(val);
+
+        // Dynamic slight filter tweak to main viewport for immediate feedback
+        if (item.id === 'exposure') {
+          const expVal = 1 + val / 200;
+          if (viewAfterImg) viewAfterImg.style.filter = `brightness(${expVal})`;
+        }
+      });
+    });
+
+    // Spectral 8-Band HSL Dots
+    const hslDots = document.querySelectorAll('.hsl-dot');
+    const hslTitle = document.getElementById('hsl-band-title');
+    const hslHue = document.getElementById('hsl-val-hue');
+    const hslSat = document.getElementById('hsl-val-sat');
+    const hslLum = document.getElementById('hsl-val-lum');
+    const barHue = document.getElementById('hsl-bar-hue');
+    const barSat = document.getElementById('hsl-bar-sat');
+    const barLum = document.getElementById('hsl-bar-lum');
+
+    hslDots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        hslDots.forEach(d => {
+          d.classList.remove('w-4', 'h-4', 'ring-2', 'ring-primary-container', 'shadow-[0_0_10px_#00f0ff]', 'scale-125');
+          d.classList.add('w-3.5', 'h-3.5', 'ring-1', 'ring-white/10');
+        });
+
+        dot.classList.remove('w-3.5', 'h-3.5', 'ring-1', 'ring-white/10');
+        dot.classList.add('w-4', 'h-4', 'ring-2', 'ring-primary-container', 'shadow-[0_0_10px_#00f0ff]', 'scale-125');
+
+        const color = dot.dataset.color.toUpperCase();
+        const hue = dot.dataset.hue;
+        const sat = dot.dataset.sat;
+        const lum = dot.dataset.lum;
+
+        if (hslTitle) hslTitle.textContent = `${color} BOOST: ${sat}`;
+        if (hslHue) hslHue.textContent = hue;
+        if (hslSat) hslSat.textContent = sat;
+        if (hslLum) hslLum.textContent = lum;
+
+        // Dynamic bar widths
+        const satPct = Math.min(100, Math.max(20, parseInt(sat) + 50));
+        const lumPct = Math.min(100, Math.max(20, parseInt(lum) + 50));
+        if (barSat) barSat.style.width = `${satPct}%`;
+        if (barLum) barLum.style.width = `${lumPct}%`;
+      });
+    });
+
+    // History Snapshots Checkbox Toggling
+    const historyItems = document.querySelectorAll('.history-item');
+    historyItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        const checkbox = item.querySelector('.history-checkbox');
+        const isChecked = checkbox.textContent === 'check_box' || checkbox.textContent === 'check_circle';
+        if (isChecked) {
+          checkbox.textContent = 'check_box_outline_blank';
+          checkbox.className = 'history-checkbox material-symbols-outlined text-sm text-outline';
+          item.classList.add('opacity-40');
+        } else {
+          checkbox.textContent = 'check_box';
+          checkbox.className = 'history-checkbox material-symbols-outlined text-sm text-primary-container';
+          item.classList.remove('opacity-40');
+        }
+      });
+    });
+
+    // Reset History Button
+    const btnResetHistory = document.getElementById('btn-reset-history');
+    if (btnResetHistory) {
+      btnResetHistory.addEventListener('click', () => {
+        historyItems.forEach(item => {
+          const cb = item.querySelector('.history-checkbox');
+          cb.textContent = 'check_box';
+          cb.className = 'history-checkbox material-symbols-outlined text-sm text-primary-container';
+          item.classList.remove('opacity-40');
+        });
+      });
+    }
+
+    // Top Toolbar Quick Action Pills Interactive Glow States
+    const toolBtns = document.querySelectorAll('.tool-btn');
+    toolBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const isActive = btn.classList.contains('bg-surface-container-high');
+        toolBtns.forEach(b => b.classList.remove('bg-surface-container-high', 'text-primary-container', 'shadow-[0_0_8px_rgba(0,240,255,0.2)]'));
+        if (!isActive) {
+          btn.classList.add('bg-surface-container-high', 'text-primary-container', 'shadow-[0_0_8px_rgba(0,240,255,0.2)]');
+        }
+      });
+    });
+
+    // Export DNG / ACEScg micro-animation
+    const btnExport = document.getElementById('btn-export');
+    const exportLabel = document.getElementById('export-label');
+    if (btnExport && exportLabel) {
+      btnExport.addEventListener('click', () => {
+        exportLabel.textContent = 'Rendering ACEScg...';
+        btnExport.classList.add('animate-pulse');
+        setTimeout(() => {
+          exportLabel.textContent = 'DNG Exported (64b)';
+          btnExport.classList.remove('animate-pulse');
+          setTimeout(() => {
+            exportLabel.textContent = 'Export DNG / ACEScg';
+          }, 2000);
+        }, 1200);
+      });
+    }
+  })();
+</script></main></div>
+</body></html>

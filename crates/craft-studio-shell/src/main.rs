@@ -1,6 +1,6 @@
-use craft_libs::{ClipboardItem, ModuleRegistry, SharedState, ModuleAction};
+use craft_libs::{ClipboardItem, ModuleAction, ModuleRegistry, SharedState};
 use serde_json::Value;
-use tauri::{AppHandle, Emitter, Manager, State};
+use tauri::{AppHandle, Emitter, State};
 
 #[tauri::command]
 fn invoke_module_action(
@@ -19,25 +19,37 @@ fn get_module_capabilities(
     registry: State<'_, ModuleRegistry>,
     module_id: String,
 ) -> Result<Vec<ModuleAction>, String> {
-    Ok(registry.get(&module_id).ok_or("Module not found")?.capabilities())
+    Ok(registry
+        .get(&module_id)
+        .ok_or("Module not found")?
+        .capabilities())
 }
 
 #[tauri::command]
-async fn set_clipboard(app: AppHandle, state: State<'_, SharedState>, item: ClipboardItem) -> Result<(), String> {
+async fn set_clipboard(
+    app: AppHandle,
+    state: State<'_, SharedState>,
+    item: ClipboardItem,
+) -> Result<(), String> {
     let mut clip = state.global_clipboard.write().map_err(|e| e.to_string())?;
     *clip = Some(item.clone());
-    app.emit("clipboard-updated", &item).map_err(|e| e.to_string())?;
+    app.emit("clipboard-updated", &item)
+        .map_err(|e| e.to_string())?;
     Ok(())
 }
 
 #[tauri::command]
 fn get_clipboard(state: State<'_, SharedState>) -> Result<Option<ClipboardItem>, String> {
-    Ok(state.global_clipboard.read().map_err(|e| e.to_string())?.clone())
+    Ok(state
+        .global_clipboard
+        .read()
+        .map_err(|e| e.to_string())?
+        .clone())
 }
 
 fn main() {
     let mut registry = ModuleRegistry::new();
-    
+
     // Register the entire 10-app ArtCraft Suite
     registry.register(photocraft::PhotoCraftModule);
     registry.register(vectorcraft::VectorCraftModule);

@@ -12,10 +12,10 @@ check:
 
 # Run the exact same checks as the GitHub Actions CI pipeline locally
 ci:
+    cd crates/craft-studio-shell/ui && npm ci && npm run build
     cargo fmt --all -- --check
     cargo clippy --workspace --all-targets -- -D warnings
     cargo test --workspace
-    cd crates/craft-studio-shell/ui && npm ci && npm run build
     cargo build --release --workspace
 
 # Format code

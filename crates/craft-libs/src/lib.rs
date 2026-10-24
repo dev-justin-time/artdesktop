@@ -34,7 +34,8 @@ pub trait CraftModule: Send + Sync {
     fn id(&self) -> &str;
     fn name(&self) -> &str;
     fn capabilities(&self) -> Vec<ModuleAction>;
-    fn handle_action(&self, app: &AppHandle, action: &str, payload: Value) -> Result<Value, String>;
+    fn handle_action(&self, app: &AppHandle, action: &str, payload: Value)
+        -> Result<Value, String>;
 }
 
 // ==========================================
@@ -45,14 +46,24 @@ pub struct ModuleRegistry {
 }
 
 impl ModuleRegistry {
-    pub fn new() -> Self { Self { modules: HashMap::new() } }
-    
-    pub fn register<M: CraftModule + 'static>(&mut self, module: M) {
-        self.modules.insert(module.id().to_string(), Box::new(module));
+    pub fn new() -> Self {
+        Self {
+            modules: HashMap::new(),
+        }
     }
-    
+
+    pub fn register<M: CraftModule + 'static>(&mut self, module: M) {
+        self.modules
+            .insert(module.id().to_string(), Box::new(module));
+    }
+
     pub fn get(&self, id: &str) -> Option<&dyn CraftModule> {
         self.modules.get(id).map(|m| m.as_ref())
     }
 }
 
+impl Default for ModuleRegistry {
+    fn default() -> Self {
+        Self::new()
+    }
+}

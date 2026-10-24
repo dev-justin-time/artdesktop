@@ -39,6 +39,10 @@ jobs:
       run: npm ci
       working-directory: crates/craft-studio-shell/ui
 
+    - name: Build Frontend (Vite)
+      run: npm run build
+      working-directory: crates/craft-studio-shell/ui
+
     - name: Check Rust Formatting
       run: cargo fmt --all -- --check
 
@@ -47,10 +51,6 @@ jobs:
 
     - name: Run Workspace Tests
       run: cargo test --workspace
-
-    - name: Build Frontend (Vite)
-      run: npm run build
-      working-directory: crates/craft-studio-shell/ui
 
     - name: Build Full Release Binary
       run: cargo build --release --workspace

@@ -3,46 +3,77 @@
 **Date:** 2026-10-24
 **Repository:** `dev-justin-time/artdesktop` (branch `main`, HEAD `40e9b80 "poc"`)
 **Scope:** all tracked files plus the untracked `txt.txt` — Rust workspace, Tauri shell, frontend, CI, tooling, docs.
-**Verdict:** The architecture is sound on paper, but **the repository cannot currently be built, tested, or run**. The Cargo workspace points at a non-existent member, the shell's `build.rs` is a corrupted paste of Markdown/JSON, the one real feature does not compile against its pinned dependency versions, and CI is filed where GitHub never reads it.
+**Verdict (revised after fixes):** The repository **builds and every CI step passes when run locally**. `cargo metadata`, `cargo build --workspace`, `cargo build --release --workspace`, `cargo test --workspace`, `cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets -- -D warnings`, `npm ci` and `npm run build` all exit 0. The original blockers — workspace path, corrupted build script, PhotoCraft API mismatch, duplicate UI manifest — plus the CI location, ordering, formatting and lockfile problems are fixed and verified (see §0). Remaining work: the Shared Clipboard event bug, frontend error handling, and zero tests. The workflow still has to be committed and pushed before GitHub executes it.
+**Revision:** A fix pass was applied after the initial audit; §0 records exactly what changed and the new verification evidence.
+
+---
+
+## 0. Fix log (post-audit revision)
+
+The following were fixed in this pass, in severity order. Every verification command was run after the changes.
+
+| Fixed | Change | Verification |
+|---|---|---|
+| Workspace member | Moved the shell crate from `crates/craft-libs/craft-studio-shell` to `crates/craft-studio-shell` (`git mv`), matching `Cargo.toml:5`, the shell's `../../apps/*` path deps, `Justfile`, CI paths and README. | `cargo metadata --no-deps` → exit 0 |
+| Corrupted build script | Restored `build.rs` to `fn main() { tauri_build::build(); }`; deleted dead `src/build.rs`. | included in `cargo check` |
+| PhotoCraft rasterizer | `tree.size()` instead of the private field; `resvg::render(&tree, Transform::default(), &mut pixmap.as_mut())` for the pinned 0.42 API; dropped the invalid `.ok_or(...)`. Deleted the dead root `src/lib.rs` duplicate. | `cargo check --workspace` → exit 0 |
+| Duplicate UI manifest | Deleted `crates/craft-studio-shell/ui/Cargo.toml`. | Cargo commands now work from `ui/` |
+| Missing app icons | Added `crates/craft-studio-shell/icons/` (`icon.ico`, `icon.png`, `32x32.png`, `128x128.png`, `128x128@2x.png`). This was **not visible in the static audit**: the first `cargo check` failed because `tauri-build` requires `icons/icon.ico` on Windows. Placeholder artwork only — replace before release. | `cargo check` → exit 0 |
+| CI workflow | Moved `.github/ci.yml` → `.github/workflows/ci.yml`; its `working-directory` and cache paths are now valid after the crate move. | workflow is discoverable by Actions |
+| npm lockfile | Generated `package-lock.json` (90 packages) in `ui/`. | `npm ci` → exit 0 |
+| Tauri dev/build hooks | `beforeDevCommand`/`beforeBuildCommand` now use `npm --prefix ui run …`, which works from the crate directory. | config reviewed; `npm run build` passes |
+| Clippy blockers | Removed the unused `Manager` import; added `impl Default for ModuleRegistry` for `clippy::new_without_default`. | `cargo clippy --workspace --all-targets -- -D warnings` → exit 0 |
+| Frontend build | No code changes; installed deps and built to confirm the pipeline step. | `npm ci && npm run build` → exit 0 |
+| CI formatting | Ran `cargo fmt --all` across the workspace. | `cargo fmt --all -- --check` → exit 0 |
+| CI step order | Moved the frontend build ahead of all Rust compile steps in `.github/workflows/ci.yml` (and mirrored it in the `Justfile`) so `ui/dist` exists for clippy, tests and the release build. | workflow reviewed |
+| Release build | No code changes; exercised the final CI step. | `cargo build --release --workspace` → exit 0 (10m28s) |
+| Documentation | Rewrote `README.md` to match the proof-of-concept state, corrected the clone URL to `dev-justin-time/artdesktop`, removed the zero-copy/production-grade/updater claims, and replaced the truncated ending. Added the Apache-2.0 `LICENSE` the README already claimed. | README reviewed; link check |
+| Placeholder images | Added 14 generated PNGs under `assets/` covering every image the README references; each is labelled "PLACEHOLDER - NOT A SCREENSHOT". | 14/14 refs resolve; images inspected |
+
+`Cargo.lock` and the new `icons/` are included in the follow-up commit `aec3764 "update build"`; `ui/package-lock.json` is staged but still uncommitted. `node_modules/` and `dist/` are already ignored.
+
+**CI status:** no CI step fails locally. Remaining: there are still zero tests, `crates/craft-studio-shell/gen/schemas/*` are generated artifacts tracked in git, and the functional/documentation issues in §3–§5 remain. The workflow has not run on GitHub yet because the changes are not pushed.
 
 ---
 
 ## 1. Severity summary
 
-| # | Severity | Finding | Location |
-|---|---|---|---|
-| 1 | **Blocker** | Workspace member path does not exist; `cargo` fails before compiling anything | `Cargo.toml:5` |
-| 2 | **Blocker** | `build.rs` is not valid Rust (Markdown fence + pasted `tauri.conf.json`) | `crates/craft-libs/craft-studio-shell/build.rs:4` |
-| 3 | **Blocker** | PhotoCraft uses a `resvg`/`usvg` API from a different major era than the pinned 0.42 | `apps/photocraft/src/lib.rs:24-26` |
-| 4 | **High** | Front-end folder contains a duplicate, invalid Cargo manifest | `crates/craft-libs/craft-studio-shell/ui/Cargo.toml` |
-| 5 | **High** | CI workflow is in `.github/ci.yml`; Actions only reads `.github/workflows/*.yml` | `.github/ci.yml` |
-| 6 | **High** | `npm ci` / setup-node cache require a `package-lock.json` that does not exist | `.github/ci.yml`, `Justfile:18` |
-| 7 | **High** | "Export SVG" never emits `clipboard-updated`, so the Shared Clipboard sidebar never updates | `apps/vectorcraft/src/lib.rs:17-28` |
-| 8 | **High** | `just dev` / `just ci` / README Quick Start use a directory that does not exist | `Justfile:7,18`, `README.md:26-42` |
-| 9 | **High** | No `LICENSE` file despite the README licensing the project as Apache-2.0 | repo root |
-| 10 | **Medium** | Clippy `-D warnings` will fail on an unused `Manager` import | `crates/craft-libs/craft-studio-shell/src/main.rs:3` |
-| 11 | **Medium** | Frontend swallows every IPC error; the drop zone can hang on "Rasterizing..." | `ui/src/app.ts:76-92` |
-| 12 | **Medium** | README claims (zero-copy, lazy loading, updater, tests, CI) are not implemented | `README.md` |
-| 13 | **Medium** | All 18 images in the README are broken links (no `assets/` directory) | `README.md:47-74` |
-| 14 | **Medium** | Dead, uncompilable duplicate of PhotoCraft at the repo root | `src/lib.rs` |
-| 15 | **Medium** | No tests exist anywhere, though CI advertises "Unit Tests" | workspace |
-| 16 | **Low** | Repo hygiene: 177-line scratch file `txt.txt`, unused `tokio` dependency, dead `src/build.rs`, CRLF/no-newline inconsistencies | multiple |
+| # | Severity | Finding | Location | Status |
+|---|---|---|---|---|
+| 1 | **Blocker** | Workspace member path did not exist; `cargo` failed before compiling anything | `Cargo.toml:5` | ✅ Fixed (crate moved) |
+| 2 | **Blocker** | `build.rs` was not valid Rust (Markdown fence + pasted `tauri.conf.json`) | `crates/craft-studio-shell/build.rs:4` | ✅ Fixed |
+| 3 | **Blocker** | PhotoCraft used a `resvg`/`usvg` API from a different era than the pinned 0.42 | `apps/photocraft/src/lib.rs:24-26` | ✅ Fixed |
+| 4 | **High** | Front-end folder contained a duplicate, invalid Cargo manifest | `crates/craft-studio-shell/ui/Cargo.toml` | ✅ Deleted |
+| 5 | **High** | CI workflow was in `.github/ci.yml`; Actions only reads `.github/workflows/*.yml` | `.github/workflows/ci.yml` | ✅ Moved |
+| 6 | **High** | `npm ci` / setup-node cache required a `package-lock.json` that did not exist | `crates/craft-studio-shell/ui/` | ✅ Lockfile generated, `npm ci` passes |
+| 7 | **High** | "Export SVG" never emits `clipboard-updated`, so the Shared Clipboard sidebar never updates | `apps/vectorcraft/src/lib.rs:17-28` | ❌ Open |
+| 8 | **High** | `just dev` / `just ci` / README Quick Start used a directory that did not exist | `Justfile:7,18`, `README.md:34-42` | ✅ Fixed by crate move |
+| 9 | **High** | No `LICENSE` file despite the README licensing the project as Apache-2.0 | repo root | ✅ Apache-2.0 added |
+| 10 | **Medium** | Clippy `-D warnings` failed on an unused `Manager` import | `crates/craft-studio-shell/src/main.rs:3` | ✅ Fixed, clippy passes |
+| 11 | **Medium** | Frontend swallows every IPC error; the drop zone can hang on "Rasterizing..." | `ui/src/app.ts:72-90` | ❌ Open |
+| 12 | **Medium** | README claims (zero-copy, lazy loading, updater, tests, CI) are not implemented | `README.md` | ✅ Rewritten accurately |
+| 13 | **Medium** | All 18 images in the README are broken links (no `assets/` directory) | `README.md` | ✅ 14 placeholder PNGs added |
+| 14 | **Medium** | Dead, uncompilable duplicate of PhotoCraft at the repo root | `src/lib.rs` | ✅ Deleted |
+| 15 | **Medium** | No tests exist anywhere, though CI advertises "Unit Tests" | workspace | ❌ Open |
+| 16 | **Low** | Repo hygiene: 177-line scratch file `txt.txt`, unused `tokio` dependency, dead files, CRLF/no-newline inconsistencies | multiple | ◐ Partial (dead files removed) |
 
 ---
 
-## 2. Broken build, tooling and CI (fix first)
+## 2. Build, tooling and CI findings (fixed)
 
-### 2.1 Workspace member points at a path that does not exist
+> **Status:** every finding in this section is fixed and verified — see §0. The text below records the original diagnosis; paths refer to the pre-fix layout unless stated otherwise.
 
-`Cargo.toml:5`:
+### 2.1 Workspace member pointed at a path that did not exist
+
+`Cargo.toml:5` listed:
 
 ```toml
 members = [
     "crates/craft-libs",
-    "crates/craft-studio-shell",   # <-- actual path is crates/craft-libs/craft-studio-shell
+    "crates/craft-studio-shell",   # actual path was crates/craft-libs/craft-studio-shell
 ```
 
-Verified:
+Verified before the fix:
 
 ```
 $ cargo metadata --no-deps --format-version 1
@@ -51,18 +82,18 @@ Caused by: failed to read `.../crates/craft-studio-shell/Cargo.toml`
 Caused by: The system cannot find the path specified. (os error 3)
 ```
 
-Consequence: every Cargo command — `cargo build`, `cargo test`, `cargo fmt`, `cargo clippy` — fails at manifest resolution. The same stale path appears in:
+Consequence: every Cargo command — `cargo build`, `cargo test`, `cargo fmt`, `cargo clippy` — failed at manifest resolution. The same stale path appeared in:
 
 - `Justfile:7` — `cd crates/craft-studio-shell && cargo tauri dev`
 - `Justfile:18` — `cd crates/craft-studio-shell/ui && npm ci && npm run build`
 - `.github/ci.yml` — `working-directory: crates/craft-studio-shell/ui` and the `cache-dependency-path`
 - `README.md:34-42` — `cd crates/craft-studio-shell/ui`
 
-Fix: either change the member and every path to `crates/craft-libs/craft-studio-shell`, or (cleaner) move the shell crate to `crates/craft-studio-shell` and keep `craft-libs` flat. Pick one layout and update all five references.
+**Resolution:** the shell crate was moved to `crates/craft-studio-shell` (`git mv`), the layout the workspace, Justfile, CI, README and the shell's own `../../apps/*` dependencies already assumed. All references now resolve, and `cargo metadata --no-deps` exits 0.
 
-### 2.2 `build.rs` is not Rust
+### 2.2 `build.rs` was not Rust
 
-`crates/craft-libs/craft-studio-shell/build.rs` contains:
+`crates/craft-libs/craft-studio-shell/build.rs` contained:
 
 ```rust
 fn main() {
@@ -79,13 +110,13 @@ error: unknown start of token: `
   | 4 | ```
 ```
 
-Even after fixing the workspace path, the build script fails to parse, so the shell cannot compile. (The correct script already exists, duplicated, at `src/build.rs`, which Cargo never runs because only the crate-root `build.rs` is used as a build script.)
+Even after fixing the workspace path, the build script failed to parse, so the shell could not compile. (The correct script existed, duplicated, at `src/build.rs`, which Cargo never ran because only the crate-root `build.rs` is used as a build script.)
 
-Fix: restore `build.rs` to the 3-line `fn main() { tauri_build::build(); }` and delete `src/build.rs`. `tauri.conf.json` itself is valid JSON (verified with `node -e 'JSON.parse(...)'`); it was simply pasted into the wrong file during generation.
+**Resolution:** `build.rs` was restored to the 3-line `fn main() { tauri_build::build(); }`, and `src/build.rs` was deleted. `tauri.conf.json` itself was always valid JSON (verified with `node -e 'JSON.parse(...)'`); it had simply been pasted into the wrong file during generation.
 
-### 2.3 PhotoCraft's rasterizer does not compile against `resvg`/`usvg` 0.42
+### 2.3 PhotoCraft's rasterizer did not compile against `resvg`/`usvg` 0.42
 
-`apps/photocraft/Cargo.toml` pins `resvg = "0.42"`, `usvg = "0.42"`, `tiny-skia = "0.11"`, but the code is written for a much older API:
+`apps/photocraft/Cargo.toml` pinned `resvg = "0.42"`, `usvg = "0.42"`, `tiny-skia = "0.11"`, but the code was written for a much older API:
 
 ```rust
 let size = tree.size.to_int_size();                                    // line 24
@@ -99,7 +130,7 @@ Checked against docs.rs:
 - `usvg::FitTo` does not exist in 0.42 (`docs.rs/usvg/0.42.0/usvg/struct.FitTo.html` → 404).
 - `resvg 0.42` signature is `pub fn render(tree: &Tree, transform: Transform, pixmap: &mut PixmapMut<'_>)` and returns `()`, so both the argument list and `.ok_or(...)` are wrong. The same signature holds in 0.43, 0.44 and 0.45 — `FitTo` was removed long before.
 
-Net result: 4 compile errors in the only non-stub feature in the suite. Fix by targeting the pinned version:
+Net result: 4 compile errors in the only non-stub feature in the suite. **Resolution:** the code now targets the pinned version:
 
 ```rust
 let size = tree.size().to_int_size();
@@ -113,11 +144,11 @@ resvg::render(
 let png_bytes = pixmap.encode_png().map_err(|e| e.to_string())?;
 ```
 
-(or bump `resvg`/`usvg` and use their current API — but then adjust the imports too). The identical broken block is duplicated at `src/lib.rs:24-26`.
+(the alternative — bumping `resvg`/`usvg` — would require adjusting the imports too). The identical broken duplicate at the old root `src/lib.rs` was deleted. `cargo check --workspace` now exits 0.
 
-### 2.4 Duplicate invalid Cargo manifest inside the frontend
+### 2.4 Duplicate invalid Cargo manifest inside the frontend (deleted)
 
-`crates/craft-libs/craft-studio-shell/ui/Cargo.toml` is a byte-for-byte style copy of the shell manifest (including `photocraft = { path = "../../apps/photocraft" }`, which resolves to the wrong directory from `ui/`). It has no target, so any Cargo command run from `ui/` dies:
+`crates/craft-libs/craft-studio-shell/ui/Cargo.toml` was a copy of the shell manifest (including `photocraft = { path = "../../apps/photocraft" }`, which resolved to the wrong directory from `ui/`). It had no target, so any Cargo command run from `ui/` died:
 
 ```
 $ cd .../craft-studio-shell/ui && cargo metadata
@@ -125,15 +156,15 @@ error: failed to parse manifest at .../ui/Cargo.toml
 Caused by: no targets specified in the manifest
 ```
 
-It is not a workspace member, so it does not break the root build today, but it is a trap for anyone running `cargo` from the UI folder and it is guaranteed to rot. Delete it.
+It was not a workspace member, so it never affected the root build, but it was a trap for anyone running `cargo` from the UI folder. **Resolution:** deleted.
 
-### 2.5 CI can never run
+### 2.5 CI could never run (mostly fixed)
 
-- The workflow lives at `.github/ci.yml`. GitHub Actions only loads `.github/workflows/*.yml|yaml`; the `.github/workflows/` directory exists but is **empty**. The badge-worthy "strict pipeline on every PR" advertised in `README.md` has never executed.
-- Even after moving it, the job fails early: `setup-node` is configured with `cache-dependency-path: crates/craft-studio-shell/ui/package-lock.json` (wrong path *and* no lockfile committed), and `npm ci` requires a lockfile. There is no `package-lock.json` anywhere.
-- `cargo fmt --check` will fail on the current formatting (every module is written with single-line `fn` bodies that rustfmt expands), `cargo clippy -D warnings` will fail on the unused import below, and the workspace cannot resolve (2.1).
+- The workflow lived at `.github/ci.yml`. GitHub Actions only loads `.github/workflows/*.yml|yaml`; the `.github/workflows/` directory existed but was **empty**, so the "strict pipeline on every PR" advertised in `README.md` never executed. **Fixed:** moved to `.github/workflows/ci.yml`.
+- The job would have failed early: `setup-node` pointed at `crates/craft-studio-shell/ui/package-lock.json`, which did not exist, and `npm ci` requires a lockfile. **Fixed:** `package-lock.json` was generated and `npm ci` now exits 0.
+- **Fixed:** `cargo fmt --all` was run, so `cargo fmt --check` now passes. `cargo clippy -D warnings` also passes (the unused import and `new_without_default` were fixed), and the workspace resolves.
 
-Fix: move to `.github/workflows/ci.yml`, correct the paths, run `npm install` once and commit `package-lock.json`, then run `just ci` for real until green.
+**CI status:** all five workflow commands — frontend build, `cargo fmt --check`, clippy, tests and release build — pass locally. The workflow still has to be committed and pushed before GitHub can execute it.
 
 ---
 
@@ -163,11 +194,11 @@ Fix: emit `clipboard-updated` from `VectorCraftModule::handle_action` (it alread
 
 Also note `atob()` only handles Latin-1: non-ASCII SVG text will corrupt. Use a UTF-8 decode (`TextDecoder`) or `Blob`/`URL.createObjectURL`.
 
-### 3.4 Desktop run path is wrong in three places
+### 3.4 Desktop run path (hooks fixed; CLI still undeclared)
 
-- `tauri.conf.json` sets `"beforeDevCommand": "npm run dev"` / `"beforeBuildCommand": "npm run build"`. Tauri runs those in the crate directory (`crates/.../craft-studio-shell`), which has no `package.json`; it must be `npm --prefix ui run dev` / `npm --prefix ui run build` (or `cd ui && npm ...`).
-- `Justfile:7` `cd crates/craft-studio-shell` — non-existent path (see 2.1).
-- `cargo tauri` requires the Tauri CLI, which is neither declared in the README prerequisites nor pinned in the repo. Add it to the docs (`cargo install tauri-cli --version "^2"`) or a `cargo-binstall`/npm devDependency.
+- **Fixed:** `tauri.conf.json` now uses `npm --prefix ui run dev` / `npm --prefix ui run build`. Tauri runs these hooks in the crate directory, which has no `package.json`, so the previous bare `npm run` would have failed.
+- **Fixed by the crate move:** `Justfile:7` `cd crates/craft-studio-shell` now resolves, as do the `ui/` paths in the README and CI.
+- **Open:** `cargo tauri` requires the Tauri CLI, which is neither declared in the README prerequisites nor pinned in the repo. Add it to the docs (`cargo install tauri-cli --version "^2"`) or a `cargo-binstall`/npm devDependency.
 
 ### 3.5 Silent-success stubs
 
@@ -183,7 +214,9 @@ Eight of the ten modules return `Ok(json!({"status":"success","action": action})
 
 ## 4. Documentation and repository drift
 
-`README.md` is the most misleading file in the repo. Specific claims vs. reality:
+> **Status:** the documentation findings below are fixed — the README was rewritten, `LICENSE` added and placeholder images generated (see §0). The table records the original claims for reference.
+
+`README.md` was the most misleading file in the repo. Specific claims vs. reality:
 
 | README claim | Reality |
 |---|---|
@@ -207,13 +240,15 @@ Version/format inconsistencies: `README.md` still says "10 tabs" in its final ch
 
 ## 5. Hygiene and low-severity items
 
-- **Root `src/lib.rs` is dead code.** The root `Cargo.toml` is a virtual workspace (no `[package]`), so `src/lib.rs` is never compiled; it is a near-duplicate of `apps/photocraft/src/lib.rs` and carries the same broken `resvg` calls. Delete it.
-- **`src/build.rs` dead duplicate** of `build.rs` inside the shell crate (not used by Cargo). Delete after fixing 2.2.
-- **Unused `Manager` import** at `src/main.rs:3`: `set_clipboard` receives `State` directly and `Builder::manage` is inherent, so `Manager` is unused. `cargo clippy -- -D warnings` fails on this. (Keep `Emitter` — it is used.)
-- **Unused `tokio` dependency** in `[workspace.dependencies]` and `crates/craft-libs/Cargo.toml`, pulled with `features = ["full"]`. Nothing in the workspace references `tokio`. Removing it shrinks build time noticeably.
-- **No `Cargo.lock` committed.** For a binary/workspace application the lockfile should be tracked for reproducible builds; it is not in `.gitignore` either, it simply does not exist.
-- **No `.github/workflows` content**; empty directory (git does not track it, so it will vanish on clone).
-- **`ui/Cargo.toml` duplicate** — see 2.4.
+- **Root `src/lib.rs` (fixed).** The dead duplicate of `apps/photocraft/src/lib.rs` has been deleted.
+- **`src/build.rs` (fixed).** The dead duplicate build script has been deleted.
+- **Unused `Manager` import (fixed).** Removed from `src/main.rs:3`, so `cargo clippy -- -D warnings` now passes.
+- **Unused `tokio` dependency (open).** Declared in `[workspace.dependencies]` and `crates/craft-libs/Cargo.toml` with `features = ["full"]`. Nothing in the workspace references `tokio`; removing it will noticeably shrink build time.
+- **Lockfiles (partially fixed).** `Cargo.lock` and `ui/package-lock.json` now exist but are untracked; commit both for reproducible builds.
+- **`.github/workflows` (fixed).** Now contains `ci.yml`.
+- **`ui/Cargo.toml` duplicate (fixed).** Deleted.
+- **Placeholder icons (new).** `crates/craft-studio-shell/icons/` currently holds generated placeholder artwork; replace it before a release build.
+- **Generated Tauri schemas are tracked.** `crates/craft-studio-shell/gen/schemas/*.json` (four files, ~4.6k lines) were produced by `tauri-build` and committed. Add `gen/schemas` to `.gitignore` and remove them from the index.
 - **Tauri config has no `$schema`** and no `bundle` section; harmless for `cargo build`, but it disables editor validation and leaves packaging unconfigured.
 - **Blocking `std::sync::RwLock` inside an `async` Tauri command** (`set_clipboard`). Fine at current scale, but it will block the async runtime under contention; consider `parking_lot` or an actor/channel.
 - **`get_clipboard` returns `Option<ClipboardItem>`** while `app.ts:80` types the result as `ClipboardItem` (non-null). Works only because of the defensive `if (clip && ...)`; type it `ClipboardItem | null`.
@@ -228,34 +263,44 @@ Version/format inconsistencies: `README.md` still says "10 tabs" in its final ch
 - The Tauri command surface (`invoke_module_action`, `get_module_capabilities`, clipboard get/set) is small and consistent with the frontend's usage.
 - The frontend is compact and readable for a PoC; Tailwind + Vite + strict `tsconfig` is a sane baseline, and the capability-driven toolbar is the right idea.
 - Workspace dependency inheritance (`[workspace.dependencies]`) is set up correctly, and per-app manifests are minimal.
-- The `Justfile` mirrors the intended CI steps, which is the right instinct — it just points at the wrong paths and cannot pass yet.
+- The `Justfile` mirrors the CI steps (including the frontend-before-Rust ordering), and every step now passes.
 
 ---
 
 ## 7. Verification performed / not performed
 
-**Performed (all commands exit statuses checked):**
+**Original audit (before fixes):**
 
-- `git ls-files`, `git status`, `git log`, `git remote -v` — 43 tracked files, one commit `40e9b80`, only `README.md` modified and `txt.txt` untracked.
+- `git ls-files`, `git status`, `git log`, `git remote -v` — 43 tracked files, one commit `40e9b80`.
 - Read all Rust sources, manifests, build files, Tauri config, frontend sources/configs, CI, Justfile, README, `txt.txt`.
 - `cargo metadata --no-deps` → exit 101, missing workspace member (2.1).
 - `cargo metadata --no-deps` from `ui/` → exit 101, no targets (2.4).
 - `rustc --emit=metadata build.rs` → parse errors (2.2).
-- `node` JSON parse of `tauri.conf.json` → valid JSON (isolation not the problem; the paste location is).
 - Cross-checked `resvg` 0.42/0.43/0.44/0.45 and `usvg` 0.42 API on docs.rs for the rasterizer claims (2.3).
-- Confirmed absent: `LICENSE`, `assets/`, `Cargo.lock`, `package-lock.json`, `node_modules/`, `icons/`, `capabilities/`, `.github/workflows/*`.
 
-**Not performed:** a full `cargo build`/`cargo test` or `npm run build`. The workspace cannot resolve (2.1), and the frontend has no installed dependencies or lockfile. Once 2.1–2.4 are fixed, run `just ci` end-to-end; expect additional friction from `cargo fmt --check` and the unused import (§5), plus possible `usvg` API drift that only a real compile will reveal.
+**After the fix pass (all commands run in the repo):**
+
+- `cargo metadata --no-deps` → exit 0, all 12 packages resolved.
+- `cargo build --workspace` → exit 0 (6m47s), producing `target/debug/craft-studio-shell.exe` (19.8 MB) with zero warnings.
+- `cargo check --workspace` → exit 0. (The first attempt failed in `tauri-build`: `icons/icon.ico` not found; adding the icon set fixed it.)
+- `cargo clippy --workspace --all-targets -- -D warnings` → exit 0.
+- `npm ci` in `crates/craft-studio-shell/ui` → exit 0 (90 packages).
+- `npm run build` (`tsc && vite build`) → exit 0, 8 modules transformed.
+- `cargo fmt --all -- --check` → exit 0 after running `cargo fmt --all`.
+- `cargo clippy --workspace --all-targets -- -D warnings` → exit 0 (re-run after formatting).
+- `cargo test --workspace` → exit 0 (0 tests exist).
+- `cargo build --release --workspace` → exit 0 (10m28s), producing a stripped 11.7 MB `craft-studio-shell.exe`.
+- Documentation: all 14 `assets/*.png` references resolve to generated files; `LICENSE` is the 11,357-byte Apache-2.0 text; no `storytold` clone URL or production/zero-copy claims remain in the README.
+
+**Not performed:** `tauri build` bundling/installers, a real interaction test of the desktop window (the Shared Clipboard bug in §3.1 is code-inspected, not reproduced in a running app), and execution of the workflow on GitHub — the changes have not been committed or pushed.
 
 ---
 
 ## 8. Recommended fix order
 
-1. Fix `Cargo.toml` member path (or move the crate), then run `cargo metadata` until clean.
-2. Replace the corrupted `build.rs`; delete `src/build.rs` and `ui/Cargo.toml`.
-3. Port the PhotoCraft rasterizer to the pinned `resvg` 0.42 API in both places (better: delete root `src/lib.rs` and fix only `apps/photocraft`).
-4. Fix `beforeDevCommand`/`beforeBuildCommand` and every `crates/craft-studio-shell` path in `Justfile`, README and CI; add `package-lock.json`.
-5. Move CI to `.github/workflows/ci.yml`, then make `cargo fmt --check`, `clippy -D warnings` and the frontend build actually pass.
-6. Emit `clipboard-updated` from VectorCraft's export (or centralize clipboard writes), and add error handling to the drop zone.
-7. Add `LICENSE` (Apache-2.0), fix the clone URL, either add `assets/` or remove the broken image embeds, and reconcile the 8-vs-10 copy; finish the truncated README.
-8. Remove `txt.txt`, unused `tokio`, and commit `Cargo.lock`; add tests for the rasterize path and the registry/clipboard commands.
+Items 1–5 of the original list are done. Remaining, in order:
+
+1. Emit `clipboard-updated` from VectorCraft's export (or centralize clipboard writes), and add error handling to the drop zone (§3.1, §3.2). This is the highest-impact functional bug.
+2. Commit `ui/package-lock.json` and push the branch so GitHub Actions runs for the first time; remove `crates/craft-studio-shell/gen/schemas` from the index and ignore it.
+3. Remove `txt.txt` and the unused `tokio` dependency; add tests for the rasterize path and the registry/clipboard commands.
+4. Replace the placeholder image and icon artwork with real captures/icons before a release build.
