@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "identifier": "com.storytold.artcraft",
   "build": {
-    "beforeDevCommand": "npm --prefix ui run dev",
-    "beforeBuildCommand": "npm --prefix ui run build",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
     "frontendDist": "ui/dist",
     "devUrl": "http://localhost:1420"
   },
@@ -20,6 +20,27 @@
     ],
     "security": {
       "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "msi"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ],
+    "publisher": "ArtCraft Studio",
+    "copyright": "Copyright 2026 ArtCraft Studio",
+    "shortDescription": "A ten-module creative suite built with Rust and Tauri.",
+    "longDescription": "ArtCraft Studio is an open-source creative suite with ten modules for photography, vector art, film, writing, decks, design, effects, lighting, grids and PDFs, connected by a shared Rust clipboard.",
+    "category": "GraphicsAndDesign",
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "displayLanguageSelector": false
+      }
     }
   }
 }

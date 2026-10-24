@@ -3,6 +3,9 @@ name = "craft-studio-shell"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+
 [dependencies]
 tauri = { workspace = true }
 serde = { workspace = true }

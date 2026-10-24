@@ -6,6 +6,10 @@ build:
 dev:
     cd crates/craft-studio-shell && cargo tauri dev
 
+# Build signed Windows installers using an installed code-signing certificate
+signed-bundle:
+    powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-windows-signed.ps1
+
 # Check all modules for errors
 check:
     cargo check --workspace --all-targets

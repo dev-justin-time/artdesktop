@@ -3,4 +3,7 @@
 *.pdb
 crates/craft-studio-shell/ui/node_modules/
 crates/craft-studio-shell/ui/dist/
+crates/craft-studio-shell/ui/public/apps/
 .DS_Store
+*.pfx
+*.p12

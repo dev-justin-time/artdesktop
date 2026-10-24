@@ -1,10 +1,10 @@
 # 🎨 ArtCraft Studio
 
-**A unified desktop shell for ten creative modules**
+**A unified desktop shell for the ten Storytold Craft apps**
 
-ArtCraft Studio is a Rust + Tauri 2.0 monorepo that registers ten creative modules behind a shared `CraftModule` trait and hosts them in one desktop process. It is an early-stage proof of concept: the shell, module registry, shared clipboard and two asset pipelines are implemented, and all ten modules embed completed interactive mockup pages from `assets/pages`. PhotoCraft's and VectorCraft's pages wire their buttons to the working pipelines; the other modules' Rust actions are still stubs.
+ArtCraft Studio is a Rust + Tauri 2.0 shell that runs the official browser builds of PhotoCraft, VectorCraft, FilmCraft, WordCraft, DeckCraft, DesignCraft, EffectCraft, LightCraft, GridCraft and PdfCraft from [github.com/storytold](https://github.com/storytold) inside one window. Each app is downloaded from its GitHub release at build time, checksum-verified, and embedded as a pinned web build.
 
-> **Status:** proof of concept. PhotoCraft's SVG → PNG rasterizer and VectorCraft's SVG export to the shared clipboard work. All ten modules embed completed interactive mockup pages from `assets/pages`; only PhotoCraft and VectorCraft currently call real Rust actions from those pages. See [audit.md](audit.md) for the current known issues.
+> **Status:** proof of concept. All ten tabs load the real upstream apps offline from bundled assets, with WebGL2 forced for WebView2 compatibility. The apps run independently: the shell's earlier mockup pages, Rust action stubs and shared-clipboard panel are not connected to the upstream apps. See [audit.md](audit.md) for the remaining issues.
 
 <p align="center">
   <img src="assets/marketing/display-banner.png" alt="ArtCraft Studio — one workspace, ten creative modules" width="100%" />
@@ -19,37 +19,37 @@ ArtCraft Studio is a Rust + Tauri 2.0 monorepo that registers ten creative modul
 
 [▶ Watch the 5-second intro film](assets/video/intro.mp4) · *Concept film, not a screen recording.*
 
-## 🌟 The ten modules
+## 🌟 The ten apps
 
-| Module | Domain | Current state |
+| Module | Domain | Embedded upstream build |
 | :--- | :--- | :--- |
-| **PhotoCraft** | Raster editing | **Completed mockup UI + implemented:** the page's **Rasterize SVG** button sends the shared clipboard SVG to `rasterize_svg`, which renders it to PNG with `usvg` + `tiny-skia` + `resvg` |
-| **VectorCraft** | Vector graphics | **Completed mockup UI + implemented:** the page's **Export SVG** button serializes its artboard into the shared clipboard through `export_svg` |
-| **FilmCraft** | Video editing | **Completed mockup UI** embedded from `assets/pages/filmcraft`; `add_clip`, `split_clip`, `render_timeline` are stubs |
-| **WordCraft** | Word processing | **Completed mockup UI** embedded from `assets/pages/wordcraft`; `insert_text`, `apply_style`, `export_pdf` are stubs |
-| **DeckCraft** | Presentations | **Completed mockup UI** embedded from `assets/pages/deckcraft`; `add_slide`, `apply_theme`, `start_presentation` are stubs |
-| **DesignCraft** | Page layout | **Completed mockup UI** embedded from `assets/pages/designcraft`; `create_grid`, `place_text_frame`, `export_print_ready` are stubs |
-| **EffectCraft** | Motion graphics | **Completed mockup UI** embedded from `assets/pages/effectcraft`; `add_compositor_node`, `set_keyframe`, `render_frame` are stubs |
-| **LightCraft** | RAW editing | **Completed mockup UI** embedded from `assets/pages/lightcraft`; `adjust_white_balance`, `apply_tone_curve`, `sync_edits` are stubs |
-| **GridCraft** | Spreadsheets | **Completed mockup UI** embedded from `assets/pages/gridcraft`; `add_row`, `apply_formula`, `export_csv` are stubs |
-| **PDFCraft** | PDF tools | **Completed mockup UI** embedded from `assets/pages/pdfcraft`; `merge_pdfs`, `split_pdf`, `add_watermark` are stubs |
+| **PhotoCraft** | Raster editing | [v0.15.1](https://github.com/storytold/photocraft/releases/tag/v0.15.1) |
+| **VectorCraft** | Vector graphics | [v0.16.0](https://github.com/storytold/vectorcraft/releases/tag/v0.16.0) |
+| **FilmCraft** | Video editing | [v0.12.0](https://github.com/storytold/filmcraft/releases/tag/v0.12.0) |
+| **WordCraft** | Word processing | [v0.10.0](https://github.com/storytold/wordcraft/releases/tag/v0.10.0) |
+| **DeckCraft** | Presentations | [v0.10.0](https://github.com/storytold/deckcraft/releases/tag/v0.10.0) |
+| **DesignCraft** | Page layout | [v0.12.0](https://github.com/storytold/designcraft/releases/tag/v0.12.0) |
+| **EffectCraft** | Motion graphics | [v0.16.0](https://github.com/storytold/effectcraft/releases/tag/v0.16.0) |
+| **LightCraft** | RAW editing | [v0.13.0](https://github.com/storytold/lightcraft/releases/tag/v0.13.0) |
+| **GridCraft** | Spreadsheets | [v0.11.1](https://github.com/storytold/gridcraft/releases/tag/v0.11.1) |
+| **PDFCraft** | PDF tools | [v0.13.0](https://github.com/storytold/pdfcraft/releases/tag/v0.13.0) |
 
 ## ✅ What works today
 
-- **One process, ten modules.** Modules implement the `CraftModule` trait and are registered in a `ModuleRegistry`; the shell invokes their actions through Tauri commands.
-- **Capability-driven toolbar.** Each module declares its actions, and the frontend renders the toolbar from that list.
-- **Completed module pages.** All ten modules embed their completed page from `ui/public/pages` inside the canvas; the three extracted pages have duplicate shell chrome hidden so they fit the studio. Each page injects a compact module nav bar; clicking it switches the studio's active tab, including back to the dashboard.
-- **Shared clipboard state.** A `SharedState` clipboard holds a Base64 payload with its source module and MIME type, exposed through `get_clipboard` / `set_clipboard`.
-- **SVG → PNG pipeline.** VectorCraft's **Export SVG** writes the artboard to the shared clipboard; PhotoCraft's **Rasterize SVG** button rasterizes that clipboard SVG and opens the PNG preview.
-- **Ten module tabs** — every module embeds its completed mockup page; PhotoCraft and VectorCraft additionally connect page buttons to their working Rust pipelines.
+- **Ten real apps, one window.** Each tab mounts the corresponding official web build inside the canvas; the app owns its own menus, tools, canvas and dialogs.
+- **Pinned, verified assets.** `ui/web-apps.json` pins each release tag, web-build filename and SHA-256 hash. `ui/scripts/fetch-web-apps.mjs` downloads the zips, verifies the hash, rejects unsafe archive paths and extracts them into `ui/public/apps/<id>`.
+- **Offline runtime.** The apps are bundled into the installer; no app assets are fetched at runtime. The shell does not need network access after it is built.
+- **WebGL2 first.** Iframes load with `?webgl` so the apps use the WebGL2 backend instead of waiting on an unavailable WebGPU adapter in WebView2 or headless browsers.
+- **Fast rebuilds.** Extracted apps are cached by version; `npm run build` only downloads an app when its pinned version is not present (or when run with `--force`).
+- **Shell chrome.** The ten tabs, per-app status line and clipboard sidebar remain around the embedded apps.
 
-The clipboard is an in-process `RwLock<Option<ClipboardItem>>`; payloads are Base64-encoded and copied across Tauri IPC. It is not shared memory and it is not zero-copy. Both the `set_clipboard` command and VectorCraft's export write through `SharedState::set_clipboard`, which emits `clipboard-updated` so the sidebar refreshes.
+The old local mockups remain under `ui/public/pages` and the Rust `CraftModule` implementations remain in `apps/*`, but neither is wired into the new app tabs. The shared clipboard is therefore not yet shared with the upstream apps.
 
-The embedded mockups are fully offline: the Tailwind runtime is vendored at `ui/public/vendor/tailwind.js`, Google Fonts are mirrored under `ui/public/vendor/fonts`, and the photographic artwork is downloaded into `ui/public/vendor/images`. No external network requests are made at runtime.
+All ten apps share the shell's browser origin, so their `localStorage`, IndexedDB and OPFS data live under one origin. Each upstream app is designed to keep its own data, but there is no isolation between apps yet; do not store irreplaceable work only in the embedded builds.
 
 ## 🚀 Quick start
 
-Requires **Rust stable**, **Node.js 20+**, and the **Tauri 2 CLI**. `just` is optional.
+Requires **Rust stable**, **Node.js 20+**, network access for the first build, and the **Tauri 2 CLI**. `just` is optional. The first frontend build downloads about 205 MB of app archives (about 457 MB after extraction); later builds reuse them.
 
 ```bash
 # 1. Clone the repository
@@ -73,33 +73,64 @@ cd crates/craft-studio-shell
 cargo tauri dev
 ```
 
-Build the release workspace (the frontend must be built first):
+Build the Windows installer (Tauri runs the frontend build first):
 
 ```bash
-cd crates/craft-studio-shell/ui && npm run build && cd ../../..
-cargo build --release --workspace
+cd crates/craft-studio-shell
+cargo tauri build
 ```
 
-No installer/bundler configuration exists yet; the release build produces the binary but not packaged installers.
+Both installers are written under `target/release/bundle/`:
+
+- `nsis/ArtCraft Studio_0.1.0_x64-setup.exe` — per-user NSIS installer, no administrator prompt required.
+- `msi/ArtCraft Studio_0.1.0_x64_en-US.msi` — per-machine WiX MSI, prompts for elevation.
+
+The frontend build runs `node scripts/fetch-web-apps.mjs` first. The ten app archives total about 205 MB (about 457 MB extracted), so the installers are substantially larger than the bare shell. Use `node scripts/fetch-web-apps.mjs --force` to re-download the pinned versions.
+
+### Code signing
+
+Builds are unsigned unless a code-signing certificate is available. To sign the app and both installers with a certificate installed in `Cert:\CurrentUser\My`:
+
+```powershell
+# Find the certificate thumbprint
+Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Select-Object Subject, Thumbprint, NotAfter
+
+# Set it for this shell, then build
+$env:WINDOWS_CERT_THUMBPRINT = "YOUR_CERTIFICATE_THUMBPRINT"
+just signed-bundle
+```
+
+Without `just`:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-windows-signed.ps1
+```
+
+The script merges a temporary `certificateThumbprint`, SHA-256 digest and DigiCert timestamp settings into the Tauri config, builds the installers, and verifies each signature with `signtool`. The overlay is written under the ignored `target/` directory and deleted afterwards; the thumbprint does not need to be committed. Use `-TimestampUrl` or `WINDOWS_TIMESTAMP_URL` to use a different RFC 3161 timestamp service.
+
+Signing identifies the publisher, but SmartScreen reputation is separate: a new certificate can still trigger a warning until Microsoft accumulates reputation for it. Sign every release with the same certificate to build that reputation.
 
 ## 🏗️ Architecture
 
-- **`crates/craft-libs`** — the `CraftModule` trait, `ModuleAction` capabilities, `ModuleRegistry`, and `SharedState` (clipboard).
 - **`crates/craft-studio-shell`** — the Tauri 2 application, its commands, `tauri.conf.json`, and the Vite + TypeScript frontend in `ui/`.
-- **`apps/*`** — one crate per creative module, each implementing `CraftModule`.
-- **`crates/craft-studio-shell/ui/public/pages`** — the completed module mockups embedded by the frontend (source copies live in `assets/pages`).
+- **`crates/craft-studio-shell/ui/src/app.ts`** — the tab shell that mounts each upstream web app.
+- **`crates/craft-studio-shell/ui/web-apps.json`** — pinned app versions, release assets and SHA-256 hashes.
+- **`crates/craft-studio-shell/ui/scripts/fetch-web-apps.mjs`** — downloads, verifies and extracts the web builds into `ui/public/apps` before dev/build.
+- **`crates/craft-libs`** and **`apps/*`** — the original `CraftModule` trait, registry, clipboard and module crates, retained for future native integration.
+- **`crates/craft-studio-shell/ui/public/pages`** — the retired local mockups, kept for reference.
 
 ## 🛡️ CI
 
 `.github/workflows/ci.yml` runs on every push and pull request to `main`:
 
-- `npm ci` and `npm run build` (frontend)
+- `npm ci` and `npm run build` (frontend, including the app download and checksum verification)
 - `cargo fmt --all -- --check`
 - `cargo clippy --workspace --all-targets -- -D warnings`
 - `cargo test --workspace` (unit tests for the SVG rasterizer and clipboard state)
 - `cargo build --release --workspace`
+- a Windows job builds the NSIS installer and uploads it as the `artcraft-studio-nsis` workflow artifact (unsigned unless code signing is configured)
 
-The same sequence is available locally through `just ci`.
+The Linux checks are available locally through `just ci`.
 
 ## 🖼️ Concept gallery
 

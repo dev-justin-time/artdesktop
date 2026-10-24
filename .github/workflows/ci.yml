@@ -29,6 +29,12 @@ jobs:
         cache: 'npm'
         cache-dependency-path: crates/craft-studio-shell/ui/package-lock.json
 
+    - name: Cache Embedded Apps
+      uses: actions/cache@v4
+      with:
+        path: crates/craft-studio-shell/ui/public/apps
+        key: web-apps-${{ hashFiles('crates/craft-studio-shell/ui/web-apps.json') }}
+
     - name: Install Tauri System Dependencies (Linux)
       run: |
         sudo apt-get update
@@ -54,3 +60,43 @@ jobs:
 
     - name: Build Full Release Binary
       run: cargo build --release --workspace
+
+  build-windows-installer:
+    name: Build Windows NSIS Installer
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Install Rust Toolchain
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: crates/craft-studio-shell/ui/package-lock.json
+
+    - name: Cache Embedded Apps
+      uses: actions/cache@v4
+      with:
+        path: crates/craft-studio-shell/ui/public/apps
+        key: web-apps-${{ hashFiles('crates/craft-studio-shell/ui/web-apps.json') }}
+
+    - name: Install Frontend Dependencies
+      run: npm ci
+      working-directory: crates/craft-studio-shell/ui
+
+    - name: Build NSIS Installer
+      run: npx --yes "@tauri-apps/cli@^2" build --bundles nsis
+      working-directory: crates/craft-studio-shell
+
+    - name: Upload NSIS Installer
+      uses: actions/upload-artifact@v4
+      with:
+        name: artcraft-studio-nsis
+        path: target/release/bundle/nsis/*.exe
+        if-no-files-found: error
+        retention-days: 14
