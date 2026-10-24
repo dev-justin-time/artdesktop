@@ -3,7 +3,7 @@
 **Date:** 2026-10-24
 **Repository:** `dev-justin-time/artdesktop` (branch `main`, HEAD `40e9b80 "poc"`)
 **Scope:** all tracked files plus the untracked `txt.txt` — Rust workspace, Tauri shell, frontend, CI, tooling, docs.
-**Verdict (revised after fixes):** The repository **builds and every CI step passes when run locally**. `cargo metadata`, `cargo build --workspace`, `cargo build --release --workspace`, `cargo test --workspace`, `cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets -- -D warnings`, `npm ci` and `npm run build` all exit 0. The original blockers — workspace path, corrupted build script, PhotoCraft API mismatch, duplicate UI manifest — plus the CI location, ordering, formatting and lockfile problems are fixed and verified (see §0). Remaining work: frontend error handling and zero tests. The workflow still has to be committed and pushed before GitHub executes it.
+**Verdict (revised after fixes):** The repository **builds and every CI step passes when run locally**. `cargo metadata`, `cargo build --workspace`, `cargo build --release --workspace`, `cargo test --workspace`, `cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets -- -D warnings`, `npm ci` and `npm run build` all exit 0. The original blockers — workspace path, corrupted build script, PhotoCraft API mismatch, duplicate UI manifest — plus the CI location, ordering, formatting and lockfile problems are fixed and verified (see §0). Remaining work: frontend error handling. The workflow still has to be committed and pushed before GitHub executes it.
 **Revision:** A fix pass was applied after the initial audit; §0 records exactly what changed and the new verification evidence.
 
 ---
@@ -30,10 +30,11 @@ The following were fixed in this pass, in severity order. Every verification com
 | Documentation | Rewrote `README.md` to match the proof-of-concept state, corrected the clone URL to `dev-justin-time/artdesktop`, removed the zero-copy/production-grade/updater claims, and replaced the truncated ending. Added the Apache-2.0 `LICENSE` the README already claimed. | README reviewed; link check |
 | Placeholder images | Added 14 generated PNGs under `assets/` covering every image the README references; each is labelled "PLACEHOLDER - NOT A SCREENSHOT". | 14/14 refs resolve; images inspected |
 | Clipboard refresh | Clipboard writes now go through `SharedState::set_clipboard`, which stores the item, drops the lock and emits `clipboard-updated`. Both the `set_clipboard` command and VectorCraft's `export_svg` use it, so the sidebar refreshes. | `cargo build`/check/clippy/test/fmt pass; event path code-reviewed |
+| Test coverage | Added 4 rasterizer tests (PNG signature/dimensions, Base64 path, invalid Base64, invalid SVG) and 4 clipboard tests (empty default, store+notify, notification error propagation, frontend JSON shape). | `cargo test --workspace` → 8 passed, 0 failed |
 
 `Cargo.lock` and the new `icons/` are included in the follow-up commit `aec3764 "update build"`; `ui/package-lock.json` is staged but still uncommitted. `node_modules/` and `dist/` are already ignored.
 
-**CI status:** no CI step fails locally. Remaining: there are still zero tests, `crates/craft-studio-shell/gen/schemas/*` are generated artifacts tracked in git, and the functional/documentation issues in §3–§5 remain. The workflow has not run on GitHub yet because the changes are not pushed.
+**CI status:** no CI step fails locally, and `cargo test --workspace` now runs 8 real tests. Remaining: `crates/craft-studio-shell/gen/schemas/*` are generated artifacts tracked in git, frontend error handling is still missing, and the workflow has not run on GitHub yet because the changes are not pushed.
 
 ---
 
@@ -55,7 +56,7 @@ The following were fixed in this pass, in severity order. Every verification com
 | 12 | **Medium** | README claims (zero-copy, lazy loading, updater, tests, CI) are not implemented | `README.md` | ✅ Rewritten accurately |
 | 13 | **Medium** | All 18 images in the README are broken links (no `assets/` directory) | `README.md` | ✅ 14 placeholder PNGs added |
 | 14 | **Medium** | Dead, uncompilable duplicate of PhotoCraft at the repo root | `src/lib.rs` | ✅ Deleted |
-| 15 | **Medium** | No tests exist anywhere, though CI advertises "Unit Tests" | workspace | ❌ Open |
+| 15 | **Medium** | No tests exist anywhere, though CI advertises "Unit Tests" | workspace | ✅ 8 unit tests added |
 | 16 | **Low** | Repo hygiene: 177-line scratch file `txt.txt`, unused `tokio` dependency, dead files, CRLF/no-newline inconsistencies | multiple | ◐ Partial (dead files removed) |
 
 ---
@@ -289,7 +290,7 @@ Version/format inconsistencies: `README.md` still says "10 tabs" in its final ch
 - `npm run build` (`tsc && vite build`) → exit 0, 8 modules transformed.
 - `cargo fmt --all -- --check` → exit 0 after running `cargo fmt --all`.
 - `cargo clippy --workspace --all-targets -- -D warnings` → exit 0 (re-run after formatting).
-- `cargo test --workspace` → exit 0 (0 tests exist).
+- `cargo test --workspace` → exit 0, 8 tests passed (4 rasterizer, 4 clipboard).
 - After the clipboard fix: `cargo build --workspace`, `cargo check`, `cargo clippy -D warnings`, `cargo test` and `cargo fmt --check` all exit 0.
 - `cargo build --release --workspace` → exit 0 (10m28s), producing a stripped 11.7 MB `craft-studio-shell.exe`.
 - Documentation: all 14 `assets/*.png` references resolve to generated files; `LICENSE` is the 11,357-byte Apache-2.0 text; no `storytold` clone URL or production/zero-copy claims remain in the README.
@@ -304,5 +305,5 @@ Items 1–5 of the original list are done. Remaining, in order:
 
 1. Add error handling to the PhotoCraft drop zone (§3.2) so failed rasterizations recover instead of hanging on "Rasterizing...".
 2. Commit `ui/package-lock.json` and push the branch so GitHub Actions runs for the first time; remove `crates/craft-studio-shell/gen/schemas` from the index and ignore it.
-3. Remove `txt.txt` and the unused `tokio` dependency; add tests for the rasterize path and clipboard behavior.
+3. Remove `txt.txt` and the unused `tokio` dependency.
 4. Replace the placeholder image and icon artwork with real captures/icons before a release build.

@@ -79,7 +79,7 @@ No installer/bundler configuration exists yet; the release build produces the bi
 - `npm ci` and `npm run build` (frontend)
 - `cargo fmt --all -- --check`
 - `cargo clippy --workspace --all-targets -- -D warnings`
-- `cargo test --workspace` (there are currently no test cases)
+- `cargo test --workspace` (unit tests for the SVG rasterizer and clipboard state)
 - `cargo build --release --workspace`
 
 The same sequence is available locally through `just ci`.
