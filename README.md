@@ -41,7 +41,39 @@ This monorepo is protected by a strict GitHub Actions pipeline that runs on ever
 - ✅ `cargo test` (Unit Tests)
 - ✅ `npm run build` (Frontend Compilation)
 - ✅ `cargo build --release` (Full 10-App Workspace Compilation)
+## 🖼️ A Suite, Not Eight Apps
 
+<p align="center">
+  <img src="assets/hero-banner.png" alt="ArtCraft Studio unified workspace" width="100%" />
+</p>
+
+| Unified Shell | Shared Memory | Live Pipeline |
+|:---:|:---:|:---:|
+| ![Dashboard](assets/03-dashboard.png) | ![Clipboard](assets/07-clipboard-svg.png) | ![Rasterize](assets/13-success.png) |
+| Eight modules, one process | Zero-copy asset transfer | SVG → PNG in pure Rust |
+
+| Vector → Photo | Film → Deck | Modular Updates |
+|:---:|:---:|:---:|
+| ![Workflow](assets/31-workflow.png) | ![Storyboard](assets/32-film-deck.png) | ![Updater](assets/28-updater.png) |
+
+<details>
+<summary>🎛️ Every state, every module (expand)</summary>
+
+| Module / State | Preview |
+|---|---|
+| PhotoCraft | ![](assets/15-photocraft.png) |
+| VectorCraft | ![](assets/16-vectorcraft.png) |
+| FilmCraft | ![](assets/17-filmcraft.png) |
+| WordCraft | ![](assets/18-wordcraft.png) |
+| DeckCraft | ![](assets/19-deckcraft.png) |
+| EffectCraft | ![](assets/20-effectcraft.png) |
+| LightCraft | ![](assets/21-lightcraft.png) |
+| DesignCraft | ![](assets/22-designcraft.png) |
+| Drag over target | ![](assets/11-dropzone.png) |
+| Error & recovery | ![](assets/14-drop-error.png) |
+| High contrast mode | ![](assets/26-accessibility.png) |
+
+</details>
 ## 📜 License
 
 Apache-2.0. Part of the [Storytold](https://github.com/storytold) ArtCraft initiative.
