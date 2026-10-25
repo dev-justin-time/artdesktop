@@ -1,5 +1,5 @@
 use craft_libs::{CraftModule, ModuleAction};
-use serde_json::{json, Value};
+use serde_json::Value;
 use tauri::AppHandle;
 
 pub struct DesignCraftModule;
@@ -38,6 +38,6 @@ impl CraftModule for DesignCraftModule {
         action: &str,
         _payload: Value,
     ) -> Result<Value, String> {
-        Ok(json!({ "status": "success", "action": action }))
+        craft_libs::dispatch_delegated(self.id(), action, &["create_grid", "place_text_frame", "export_print_ready"])
     }
 }

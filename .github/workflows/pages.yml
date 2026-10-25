@@ -45,9 +45,10 @@ jobs:
           mkdir -p _site
           cp -R assets _site/assets
           # Keep one copy of the vendored fonts, images and Tailwind runtime:
-          # it is generated from ui/public/vendor rather than committed twice.
+          # it is generated from the repository-level `vendor/` tree, which the
+          # desktop app does not bundle, rather than committed twice.
           rm -rf _site/assets/pages/vendor
-          cp -R crates/craft-studio-shell/ui/public/vendor _site/assets/pages/vendor
+          cp -R vendor _site/assets/pages/vendor
           # Serve the tree as-is; no Jekyll processing.
           touch _site/.nojekyll
 

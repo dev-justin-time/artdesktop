@@ -41,7 +41,9 @@ impl CraftModule for PhotoCraftModule {
                     json!({ "status": "success", "payload": general_purpose::STANDARD.encode(&png_bytes) }),
                 )
             }
-            _ => Ok(json!({ "status": "success", "action": action })),
+            // Declared, but the filter stack lives in the embedded PhotoCraft build.
+            "apply_filter" => Err(craft_libs::delegated_action(self.id(), action)),
+            other => Err(craft_libs::unsupported_action(other)),
         }
     }
 }

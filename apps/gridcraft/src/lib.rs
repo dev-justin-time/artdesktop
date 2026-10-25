@@ -1,5 +1,5 @@
 use craft_libs::{CraftModule, ModuleAction};
-use serde_json::{json, Value};
+use serde_json::Value;
 use tauri::AppHandle;
 
 pub struct GridCraftModule;
@@ -38,6 +38,6 @@ impl CraftModule for GridCraftModule {
         action: &str,
         _payload: Value,
     ) -> Result<Value, String> {
-        Ok(json!({ "status": "success", "action": action }))
+        craft_libs::dispatch_delegated(self.id(), action, &["add_row", "apply_formula", "export_csv"])
     }
 }

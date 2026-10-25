@@ -31,7 +31,7 @@ ArtCraft Studio is a Rust and Tauri desktop shell that runs the official browser
 
 ## Agent integration
 - [A2A Agent Card](https://dev-justin-time.github.io/artdesktop/assets/pages/.well-known/agent-card.json): discovery document listing every app as a skill. Discovery only; the suite does not accept remote A2A tasks yet.
-- MCP server: run `node scripts/mcp-server.mjs` from https://github.com/dev-justin-time/artdesktop. Tools: list_apps, search_apps, get_app_guide, recommend_app, get_agent_notifications.
+- MCP server: run `node scripts/mcp-server.mjs` from https://github.com/dev-justin-time/artdesktop. Tools: list_apps, search_apps, get_app_guide, recommend_app, get_agent_notifications, get_suite_manifest.
 - [Notification log](https://github.com/dev-justin-time/artdesktop/blob/main/README.md#documentation-search-and-agent-discovery): the shell appends module and clipboard events to a local JSONL file that agents can tail.
 - [Sitemap](https://dev-justin-time.github.io/artdesktop/assets/pages/sitemap.xml)
 

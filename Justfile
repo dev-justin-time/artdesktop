@@ -16,7 +16,8 @@ check:
 
 # Run the exact same checks as the GitHub Actions CI pipeline locally
 ci:
-    cd crates/craft-studio-shell/ui && npm ci && npm run build
+    cd crates/craft-studio-shell/ui && npm ci && npm run build && npm run test:expert
+    node scripts/check-mcp.mjs
     cargo fmt --all -- --check
     cargo clippy --workspace --all-targets -- -D warnings
     cargo test --workspace

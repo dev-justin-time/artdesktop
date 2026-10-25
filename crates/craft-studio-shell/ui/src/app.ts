@@ -36,49 +36,111 @@ async function notifyAgents(kind: string, module: string, message: string, paylo
   }
 }
 
+interface FrameHandle {
+  wrapper: HTMLDivElement;
+  frame: HTMLIFrameElement;
+}
+
+// One live frame per visited module. Replacing the iframe on every tab click threw
+// away whatever the app had in memory, so tabs now hide and show a persisted frame
+// and "Reload" is the explicit way to discard one.
+const frames = new Map<string, FrameHandle>();
+let activeModuleId: string | null = null;
+
 function renderTabs() {
   document.getElementById("module-tabs")!.innerHTML = MODULES.map(m => `
-    <button onclick="window.activateModule('${m.id}')" class="px-3 py-1.5 rounded hover:bg-gray-800 text-sm font-medium flex items-center gap-2">
-      <span>${m.icon}</span> ${m.name}
+    <button id="tab-${m.id}" type="button" aria-pressed="false" onclick="window.activateModule('${m.id}')" class="px-3 py-1.5 rounded hover:bg-gray-800 text-sm font-medium flex items-center gap-2">
+      <span aria-hidden="true">${m.icon}</span> ${m.name}
     </button>
   `).join("");
+}
+
+function createFrame(module: Module): FrameHandle {
+  const label = `${module.name}Craft`;
+  const wrapper = document.createElement("div");
+  wrapper.className = "absolute inset-0 hidden";
+  wrapper.dataset.module = module.id;
+
+  const loading = document.createElement("div");
+  loading.className = "absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-[#0b0d12] text-gray-400";
+  const starting = document.createElement("span");
+  starting.className = "text-sm";
+  starting.textContent = `Starting ${label}…`;
+  const source = document.createElement("span");
+  source.className = "text-xs text-gray-600";
+  source.textContent = `Loading the official web build from storytold/${module.id}`;
+  loading.append(starting, source);
+
+  const frame = document.createElement("iframe");
+  frame.className = "absolute inset-0 w-full h-full border-0 bg-[#0b0d12]";
+  frame.title = label;
+  frame.referrerPolicy = "no-referrer";
+  frame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms allow-downloads allow-popups allow-pointer-lock");
+  frame.setAttribute("allow", "clipboard-read; clipboard-write; fullscreen; autoplay");
+  frame.src = `apps/${module.id}/index.html?webgl`;
+  frame.addEventListener("load", () => {
+    loading.remove();
+    // The expert panel stays usable even when an app fails to boot.
+    if (activeModuleId === module.id) setStatus(`${label} ready.`);
+  }, { once: true });
+
+  wrapper.append(loading, frame);
+  return { wrapper, frame };
+}
+
+function renderToolbar(module: Module) {
+  const toolbar = document.getElementById("dynamic-toolbar")!;
+  toolbar.replaceChildren();
+
+  const title = document.createElement("span");
+  title.className = "text-gray-300 text-xs font-medium";
+  title.textContent = `${module.icon} ${module.name}Craft`;
+
+  const provenance = document.createElement("span");
+  provenance.className = "text-gray-600 text-xs";
+  provenance.textContent = `official web build · storytold/${module.id}`;
+
+  const reload = document.createElement("button");
+  reload.type = "button";
+  reload.className = "text-[11px] px-2 py-1 rounded border border-gray-700 text-gray-400 hover:bg-gray-800";
+  reload.textContent = "⟳ Reload";
+  reload.title = "Discard this app's in-memory state and load it again";
+  reload.addEventListener("click", () => {
+    if (!activeModuleId) return;
+    frames.get(activeModuleId)?.wrapper.remove();
+    frames.delete(activeModuleId);
+    activateModule(activeModuleId);
+  });
+
+  toolbar.append(title, provenance, reload);
 }
 
 async function activateModule(moduleId: string) {
   const module = MODULES.find(m => m.id === moduleId);
   if (!module) return;
 
-  const canvas = document.getElementById("canvas-workspace")!;
-  const label = `${module.name}Craft`;
-  canvas.innerHTML = `
-    <div class="relative w-full h-full">
-      <div id="app-loading" class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-[#0b0d12] text-gray-400">
-        <span class="text-sm">Starting ${label}…</span>
-        <span class="text-xs text-gray-600">Loading the official web build from storytold/${moduleId}</span>
-      </div>
-      <iframe
-        id="app-frame"
-        class="absolute inset-0 w-full h-full border-0 bg-[#0b0d12]"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-downloads allow-popups allow-pointer-lock"
-        referrerpolicy="no-referrer"
-        src="apps/${moduleId}/index.html?webgl"
-        title="${label}"
-        allow="clipboard-read; clipboard-write; fullscreen; autoplay"
-      ></iframe>
-    </div>
-  `;
+  let handle = frames.get(moduleId);
+  if (!handle) {
+    const canvas = document.getElementById("canvas-workspace")!;
+    canvas.querySelector("h2")?.remove();
+    handle = createFrame(module);
+    frames.set(moduleId, handle);
+    canvas.append(handle.wrapper);
+  }
 
-  const frame = canvas.querySelector<HTMLIFrameElement>("#app-frame")!;
-  frame.addEventListener("load", () => {
-    canvas.querySelector("#app-loading")?.remove();
-  }, { once: true });
+  for (const [id, entry] of frames) entry.wrapper.classList.toggle("hidden", id !== moduleId);
+  activeModuleId = moduleId;
 
-  document.getElementById("dynamic-toolbar")!.innerHTML = `
-    <span class="text-gray-300 text-xs font-medium">${module.icon} ${label}</span>
-    <span class="text-gray-600 text-xs">official web build · storytold/${moduleId}</span>
-  `;
+  for (const candidate of MODULES) {
+    const tab = document.getElementById(`tab-${candidate.id}`);
+    if (!tab) continue;
+    const active = candidate.id === moduleId;
+    tab.setAttribute("aria-pressed", String(active));
+    tab.classList.toggle("bg-gray-800", active);
+  }
 
-  void notifyAgents("module.activated", moduleId, `${label} opened`, { app: moduleId });
+  renderToolbar(module);
+  void notifyAgents("module.activated", moduleId, `${module.name}Craft opened`, { app: moduleId });
 }
 
 function setupClipboardListener() {

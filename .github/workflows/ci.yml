@@ -61,11 +61,23 @@ jobs:
     - name: Test MCP Server
       run: node scripts/check-mcp.mjs
 
+    - name: Test Suite Expert Ranking
+      run: npm run test:expert
+      working-directory: crates/craft-studio-shell/ui
+
     - name: Check Rust Formatting
       run: cargo fmt --all -- --check
 
     - name: Run Clippy (Linting)
       run: cargo clippy --workspace --all-targets -- -D warnings
+
+    - name: Install cargo-audit
+      uses: taiki-e/install-action@v2
+      with:
+        tool: cargo-audit
+
+    - name: Audit Rust Dependencies
+      run: cargo audit
 
     - name: Run Workspace Tests
       run: cargo test --workspace

@@ -63,13 +63,14 @@ const STOP_WORDS = new Set(
   ),
 );
 
-function stem(word: string): string {
+export function stem(word: string): string {
   if (word.length <= 4) return word;
   if (word.endsWith("ies")) return `${word.slice(0, -3)}y`;
-  if (word.endsWith("ing")) return word.slice(0, -3);
-  if (word.endsWith("ed")) return word.slice(0, -2);
-  if (word.endsWith("es")) return word.slice(0, -2);
-  if (word.endsWith("s")) return word.slice(0, -1);
+  if (word.endsWith("ing") && word.length > 5) return word.slice(0, -3);
+  if (word.endsWith("ed") && word.length > 4) return word.slice(0, -2);
+  // Only sibilant plurals drop "es": "classes" -> "class", but "features" -> "feature".
+  if (/(?:ch|sh|ss|x|z)es$/.test(word)) return word.slice(0, -2);
+  if (word.endsWith("s") && !word.endsWith("ss")) return word.slice(0, -1);
   return word;
 }
 
@@ -102,15 +103,30 @@ const appText = new Map(
   ]),
 );
 
+const tokenWeights = new Map<string, number>();
+
+// Rare words are the ones that identify an app: "raw" appears in one catalogue
+// entry, "photo" in several, so "raw" has to count for more.
+function tokenWeight(token: string): number {
+  const cached = tokenWeights.get(token);
+  if (cached !== undefined) return cached;
+  const matching = apps.filter((app) => (appText.get(app.id) ?? "").includes(token)).length;
+  const weight = 1 + Math.log(apps.length / Math.max(1, matching));
+  tokenWeights.set(token, weight);
+  return weight;
+}
+
 function scoreApp(app: SuiteApp, queryTokens: string[]): number {
   let score = 0;
   const haystack = appText.get(app.id) ?? "";
   for (const token of queryTokens) {
-    if (app.name.toLowerCase().includes(token)) score += 12;
-    if (app.id.includes(token)) score += 8;
-    if (app.category.toLowerCase().includes(token)) score += 5;
-    if (app.keywords.some((keyword) => keyword.toLowerCase().includes(token))) score += 4;
-    if (haystack.includes(token)) score += 2;
+    const weight = tokenWeight(token);
+    if (app.name.toLowerCase().includes(token)) score += 12 * weight;
+    if (app.id.includes(token)) score += 8 * weight;
+    if (app.category.toLowerCase().includes(token)) score += 6 * weight;
+    if (app.features.some((feature) => feature.name.toLowerCase().includes(token))) score += 6 * weight;
+    if (app.keywords.some((keyword) => keyword.toLowerCase().includes(token))) score += 4 * weight;
+    if (haystack.includes(token)) score += 2 * weight;
   }
   return score;
 }
@@ -273,7 +289,7 @@ function listAnswer(): Answer {
   };
 }
 
-async function answer(question: string): Promise<Answer> {
+export async function answer(question: string): Promise<Answer> {
   const query = question.trim();
   const queryTokens = tokens(query);
   if (!queryTokens.length) return fallback();

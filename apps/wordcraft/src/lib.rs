@@ -1,5 +1,5 @@
 use craft_libs::{CraftModule, ModuleAction};
-use serde_json::{json, Value};
+use serde_json::Value;
 use tauri::AppHandle;
 
 pub struct WordCraftModule;
@@ -38,6 +38,6 @@ impl CraftModule for WordCraftModule {
         action: &str,
         _payload: Value,
     ) -> Result<Value, String> {
-        Ok(json!({ "status": "success", "action": action }))
+        craft_libs::dispatch_delegated(self.id(), action, &["insert_text", "apply_style", "export_pdf"])
     }
 }

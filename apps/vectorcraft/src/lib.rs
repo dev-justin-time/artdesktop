@@ -27,7 +27,9 @@ impl CraftModule for VectorCraftModule {
     ) -> Result<Value, String> {
         match action {
             "export_svg" => {
-                let svg_data = payload["svg_data"].as_str().unwrap_or("<svg></svg>");
+                let svg_data = payload["svg_data"]
+                    .as_str()
+                    .ok_or("Missing svg_data")?;
                 let encoded_svg = general_purpose::STANDARD.encode(svg_data.as_bytes());
                 let state = app.state::<SharedState>();
                 state.set_clipboard(
@@ -40,7 +42,7 @@ impl CraftModule for VectorCraftModule {
                 )?;
                 Ok(json!({ "status": "success" }))
             }
-            _ => Ok(json!({ "status": "success", "action": action })),
+            other => Err(craft_libs::unsupported_action(other)),
         }
     }
 }

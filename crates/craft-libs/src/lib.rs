@@ -61,6 +61,33 @@ pub trait CraftModule: Send + Sync {
         -> Result<Value, String>;
 }
 
+/// Error for an action id the module never declared in [`CraftModule::capabilities`].
+///
+/// Answering unknown actions with a success object hides typos and stale callers.
+pub fn unsupported_action(action: &str) -> String {
+    format!("Unsupported action: {action}")
+}
+
+/// Error for a declared action whose implementation lives in the upstream web build
+/// rather than in the Rust module.
+pub fn delegated_action(module: &str, action: &str) -> String {
+    format!("{module} delegates '{action}' to the embedded web build; the Rust module does not implement it")
+}
+
+/// Rejects an action the module does not declare, and otherwise reports that the
+/// action belongs to the embedded web build.
+pub fn dispatch_delegated<R>(
+    module: &str,
+    action: &str,
+    declared: &[&str],
+) -> Result<R, String> {
+    if declared.contains(&action) {
+        Err(delegated_action(module, action))
+    } else {
+        Err(unsupported_action(action))
+    }
+}
+
 // ==========================================
 // 3. MODULE REGISTRY
 // ==========================================
@@ -146,6 +173,21 @@ mod tests {
         assert_eq!(error, "emit failed");
         // The item is still stored so the backend state matches what the UI saw before the error.
         assert!(state.global_clipboard.read().unwrap().is_some());
+    }
+
+    #[test]
+    fn unknown_actions_are_rejected() {
+        let error = dispatch_delegated::<Value>("filmcraft", "explode", &["add_clip"])
+            .expect_err("unknown actions must fail");
+        assert_eq!(error, "Unsupported action: explode");
+    }
+
+    #[test]
+    fn declared_actions_report_where_they_are_implemented() {
+        let error = dispatch_delegated::<Value>("filmcraft", "add_clip", &["add_clip"])
+            .expect_err("delegated actions must fail");
+        assert!(error.contains("filmcraft"), "error should name the module: {error}");
+        assert!(error.contains("embedded web build"), "error should say where the action lives: {error}");
     }
 
     #[test]

@@ -71,6 +71,17 @@ async function marketingPages() {
 <meta name="description" content="${escapeHtml(site.description)}">
 <meta name="robots" content="noindex, follow">
 <link rel="canonical" href="${escapeHtml(suiteUrl)}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="${escapeHtml(site.name)}">
+<meta property="og:title" content="${escapeHtml(site.name)}">
+<meta property="og:description" content="${escapeHtml(site.description)}">
+<meta property="og:url" content="${escapeHtml(suiteUrl)}">
+<meta property="og:image" content="${escapeHtml(ogImageUrl)}">
+<meta property="og:image:alt" content="${escapeHtml(`${site.name} social card`)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escapeHtml(site.name)}">
+<meta name="twitter:description" content="${escapeHtml(site.description)}">
+<meta name="twitter:image" content="${escapeHtml(ogImageUrl)}">
 <meta http-equiv="refresh" content="0; url=suite/">
 <script type="application/ld+json">
 ${jsonLd([organizationNode(), websiteNode()])}
@@ -131,7 +142,7 @@ function llms() {
     "",
     "## Agent integration",
     `- [A2A Agent Card](${baseUrl}${site.pagesPath.replace(/\/+$/, "")}/.well-known/agent-card.json): discovery document listing every app as a skill. Discovery only; the suite does not accept remote A2A tasks yet.`,
-    `- MCP server: run \`node scripts/mcp-server.mjs\` from ${site.repository}. Tools: list_apps, search_apps, get_app_guide, recommend_app, get_agent_notifications.`,
+    `- MCP server: run \`node scripts/mcp-server.mjs\` from ${site.repository}. Tools: list_apps, search_apps, get_app_guide, recommend_app, get_agent_notifications, get_suite_manifest.`,
     `- [Notification log](${site.repository}/blob/main/README.md#documentation-search-and-agent-discovery): the shell appends module and clipboard events to a local JSONL file that agents can tail.`,
     `- [Sitemap](${baseUrl}${site.pagesPath.replace(/\/+$/, "")}/sitemap.xml)`,
     "",

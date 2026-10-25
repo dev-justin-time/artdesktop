@@ -1,3 +1,5 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 mod notifications;
 
 use craft_libs::{ClipboardItem, ModuleAction, ModuleRegistry, SharedState};
@@ -77,5 +79,8 @@ fn main() {
             get_agent_notification_log_path,
         ])
         .run(tauri::generate_context!())
-        .expect("Failed to start ArtCraft Studio");
+        .unwrap_or_else(|error| {
+            eprintln!("Failed to start ArtCraft Studio: {error}");
+            std::process::exit(1);
+        });
 }
