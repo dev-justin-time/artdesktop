@@ -27,9 +27,7 @@ impl CraftModule for VectorCraftModule {
     ) -> Result<Value, String> {
         match action {
             "export_svg" => {
-                let svg_data = payload["svg_data"]
-                    .as_str()
-                    .ok_or("Missing svg_data")?;
+                let svg_data = payload["svg_data"].as_str().ok_or("Missing svg_data")?;
                 let encoded_svg = general_purpose::STANDARD.encode(svg_data.as_bytes());
                 let state = app.state::<SharedState>();
                 state.set_clipboard(

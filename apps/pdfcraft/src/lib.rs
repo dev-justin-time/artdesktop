@@ -38,6 +38,10 @@ impl CraftModule for PDFCraftModule {
         action: &str,
         _payload: Value,
     ) -> Result<Value, String> {
-        craft_libs::dispatch_delegated(self.id(), action, &["merge_pdfs", "split_pdf", "add_watermark"])
+        craft_libs::dispatch_delegated(
+            self.id(),
+            action,
+            &["merge_pdfs", "split_pdf", "add_watermark"],
+        )
     }
 }

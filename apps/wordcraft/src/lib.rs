@@ -38,6 +38,10 @@ impl CraftModule for WordCraftModule {
         action: &str,
         _payload: Value,
     ) -> Result<Value, String> {
-        craft_libs::dispatch_delegated(self.id(), action, &["insert_text", "apply_style", "export_pdf"])
+        craft_libs::dispatch_delegated(
+            self.id(),
+            action,
+            &["insert_text", "apply_style", "export_pdf"],
+        )
     }
 }

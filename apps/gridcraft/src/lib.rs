@@ -38,6 +38,10 @@ impl CraftModule for GridCraftModule {
         action: &str,
         _payload: Value,
     ) -> Result<Value, String> {
-        craft_libs::dispatch_delegated(self.id(), action, &["add_row", "apply_formula", "export_csv"])
+        craft_libs::dispatch_delegated(
+            self.id(),
+            action,
+            &["add_row", "apply_formula", "export_csv"],
+        )
     }
 }

@@ -100,9 +100,9 @@ fn sanitize(
         .filter(|value| !value.is_empty());
     if let Some(module) = &module {
         let valid = module.len() <= MAX_MODULE_CHARS
-            && module
-                .chars()
-                .all(|character| character.is_ascii_alphanumeric() || character == '-' || character == '_');
+            && module.chars().all(|character| {
+                character.is_ascii_alphanumeric() || character == '-' || character == '_'
+            });
         if !valid {
             return Err(format!("Invalid module id: '{module}'"));
         }
@@ -293,7 +293,12 @@ mod tests {
     fn memory_buffer_keeps_the_newest_entries() {
         let mut inner = Inner::default();
         for index in 0..(MAX_ENTRIES + 25) {
-            push(&mut inner, "module.activated", &format!("opened {index}"), 5_000);
+            push(
+                &mut inner,
+                "module.activated",
+                &format!("opened {index}"),
+                5_000,
+            );
         }
         assert_eq!(inner.entries.len(), MAX_ENTRIES);
         assert_eq!(
@@ -328,7 +333,12 @@ mod tests {
     #[test]
     fn invalid_module_ids_are_rejected() {
         assert!(sanitize("module.activated", Some("../etc".into()), "hi").is_err());
-        assert!(sanitize("module.activated", Some("x".repeat(MAX_MODULE_CHARS + 1)), "hi").is_err());
+        assert!(sanitize(
+            "module.activated",
+            Some("x".repeat(MAX_MODULE_CHARS + 1)),
+            "hi"
+        )
+        .is_err());
         assert!(sanitize("module.activated", Some("pdfcraft".into()), "hi").is_ok());
         assert!(sanitize("module.activated", Some("  ".into()), "hi")
             .expect("empty module is allowed")
@@ -341,7 +351,10 @@ mod tests {
         let (_, _, cleaned) = sanitize(
             "clipboard.updated",
             None,
-            &format!("line one\nline two\u{7}{}", "x".repeat(MAX_MESSAGE_CHARS * 2)),
+            &format!(
+                "line one\nline two\u{7}{}",
+                "x".repeat(MAX_MESSAGE_CHARS * 2)
+            ),
         )
         .expect("message should validate");
         assert!(!cleaned.contains('\n'));

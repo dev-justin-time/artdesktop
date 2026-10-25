@@ -38,6 +38,10 @@ impl CraftModule for DeckCraftModule {
         action: &str,
         _payload: Value,
     ) -> Result<Value, String> {
-        craft_libs::dispatch_delegated(self.id(), action, &["add_slide", "apply_theme", "start_presentation"])
+        craft_libs::dispatch_delegated(
+            self.id(),
+            action,
+            &["add_slide", "apply_theme", "start_presentation"],
+        )
     }
 }

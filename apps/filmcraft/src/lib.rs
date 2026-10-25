@@ -38,6 +38,10 @@ impl CraftModule for FilmCraftModule {
         action: &str,
         _payload: Value,
     ) -> Result<Value, String> {
-        craft_libs::dispatch_delegated(self.id(), action, &["add_clip", "split_clip", "render_timeline"])
+        craft_libs::dispatch_delegated(
+            self.id(),
+            action,
+            &["add_clip", "split_clip", "render_timeline"],
+        )
     }
 }

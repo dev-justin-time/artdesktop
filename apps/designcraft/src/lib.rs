@@ -38,6 +38,10 @@ impl CraftModule for DesignCraftModule {
         action: &str,
         _payload: Value,
     ) -> Result<Value, String> {
-        craft_libs::dispatch_delegated(self.id(), action, &["create_grid", "place_text_frame", "export_print_ready"])
+        craft_libs::dispatch_delegated(
+            self.id(),
+            action,
+            &["create_grid", "place_text_frame", "export_print_ready"],
+        )
     }
 }

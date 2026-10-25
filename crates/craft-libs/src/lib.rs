@@ -76,11 +76,7 @@ pub fn delegated_action(module: &str, action: &str) -> String {
 
 /// Rejects an action the module does not declare, and otherwise reports that the
 /// action belongs to the embedded web build.
-pub fn dispatch_delegated<R>(
-    module: &str,
-    action: &str,
-    declared: &[&str],
-) -> Result<R, String> {
+pub fn dispatch_delegated<R>(module: &str, action: &str, declared: &[&str]) -> Result<R, String> {
     if declared.contains(&action) {
         Err(delegated_action(module, action))
     } else {
@@ -186,8 +182,14 @@ mod tests {
     fn declared_actions_report_where_they_are_implemented() {
         let error = dispatch_delegated::<Value>("filmcraft", "add_clip", &["add_clip"])
             .expect_err("delegated actions must fail");
-        assert!(error.contains("filmcraft"), "error should name the module: {error}");
-        assert!(error.contains("embedded web build"), "error should say where the action lives: {error}");
+        assert!(
+            error.contains("filmcraft"),
+            "error should name the module: {error}"
+        );
+        assert!(
+            error.contains("embedded web build"),
+            "error should say where the action lives: {error}"
+        );
     }
 
     #[test]
