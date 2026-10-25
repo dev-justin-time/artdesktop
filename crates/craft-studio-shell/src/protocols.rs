@@ -8,9 +8,11 @@
 //!
 //! That is what makes the sandbox honest: a frame keeps `allow-same-origin` so the
 //! app's own `localStorage`, IndexedDB and OPFS work, but "same origin" now means
-//! that one app. It cannot read the shell's storage, cannot read another app's
-//! storage, and does not receive `window.__TAURI_INTERNALS__` (Tauri does not
-//! expose its IPC bridge to foreign origins), so it cannot call shell commands.
+//! that one app. It cannot read the shell's storage and cannot read another app's
+//! storage. The bridge object Tauri injects may still be present in the frame, but
+//! the app policy below has no `ipc:` in `connect-src`, and an `invoke` from an app
+//! origin gets no response, so a call does not reach a shell command. Check the call,
+//! not the object: `scripts/check-tauri-window.mjs` asserts it cannot succeed.
 //!
 //! Each response carries its own policy: the configured CSP is written for the
 //! shell document and includes the shell's `connect-src`/`ipc:` allowances, which
@@ -24,6 +26,13 @@ use tauri::{AppHandle, Runtime};
 const MAX_MODULE_ID_CHARS: usize = 32;
 const INDEX: &str = "index.html";
 const QUERY: &str = "?webgl";
+
+/// EffectCraft's build registers a PWA service worker from `sw.js`. WebView2 does
+/// not route a service-worker script fetch through a custom-scheme handler, so the
+/// registration 404s even though a normal `fetch` of the same file succeeds. The
+/// build has its own `nosw` switch for exactly this case; the shell embeds the app,
+/// so the offline cache the worker would install is redundant here.
+const EFFECTCRAFT_QUERY: &str = "?webgl&nosw";
 
 /// Policy for documents and assets served from an app origin.
 ///
@@ -61,10 +70,15 @@ fn dev_root() -> PathBuf {
 /// WKWebView keep `<scheme>://localhost`, so the same scheme name yields a distinct
 /// origin on every platform.
 pub fn frame_url(module: &str) -> String {
-    if cfg!(windows) {
-        format!("http://{module}.localhost/{INDEX}{QUERY}")
+    let query = if module == "effectcraft" {
+        EFFECTCRAFT_QUERY
     } else {
-        format!("{module}://localhost/{INDEX}{QUERY}")
+        QUERY
+    };
+    if cfg!(windows) {
+        format!("http://{module}.localhost/{INDEX}{query}")
+    } else {
+        format!("{module}://localhost/{INDEX}{query}")
     }
 }
 
@@ -285,6 +299,12 @@ mod tests {
         } else {
             assert_eq!(photocraft, "photocraft://localhost/index.html?webgl");
         }
+    }
+
+    #[test]
+    fn effectcraft_disables_its_unservable_service_worker() {
+        assert!(frame_url("effectcraft").ends_with("/index.html?webgl&nosw"));
+        assert!(frame_url("photocraft").ends_with("/index.html?webgl"));
     }
 
     #[test]
