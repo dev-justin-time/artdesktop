@@ -1,0 +1,8 @@
+# RUSTSEC-2024-0429: unsound VariantStrIter in glib < 0.20.
+#
+# Tauri 2.12.5 depends on gtk 0.18, which requires glib ^0.18; the fixed
+# glib 0.20 cannot be selected without a Tauri/GTK upgrade. The advisory is
+# Linux-only. Remove this exception when scripts/check-glib-advisory.mjs
+# reports that no vulnerable glib remains in Cargo.lock.
+[advisories]
+ignore = ["RUSTSEC-2024-0429"]

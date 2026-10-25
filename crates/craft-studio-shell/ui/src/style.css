@@ -3,3 +3,53 @@
 @source "./**/*.{ts,js}";
 
 body { margin: 0; font-family: sans-serif; }
+
+#expert-panel { display: flex; }
+#expert-panel.hidden { display: none; }
+
+.expert-message {
+  border: 1px solid #1f2937;
+  background: #0b0f17;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.expert-message-user {
+  margin-left: 24px;
+  background: #0e2a33;
+  border-color: #155e6b;
+}
+.expert-message-expert { margin-right: 24px; }
+.expert-role {
+  margin-bottom: 4px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+.expert-text {
+  margin: 0;
+  white-space: pre-line;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #d1d5db;
+}
+.expert-message-user .expert-text { color: #e5e7eb; }
+.expert-thinking .expert-text { color: #6b7280; font-style: italic; }
+.expert-sources { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.expert-source {
+  font-size: 11px;
+  color: #67e8f9;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.expert-suggestion {
+  border: 1px solid #1f2937;
+  background: #111827;
+  color: #c7d2fe;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: left;
+}
+.expert-suggestion:hover { border-color: #22d3ee; color: #a5f3fc; }

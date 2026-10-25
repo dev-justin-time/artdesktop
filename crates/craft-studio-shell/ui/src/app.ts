@@ -1,25 +1,26 @@
+import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
+import { initExpert } from "./expert";
+import suite from "./suite.json";
 
 interface ClipboardItem { source_module: string; data_type: string; payload: string; }
 interface Module { id: string; name: string; icon: string; }
 
-const MODULES: Module[] = [
-  { id: "photocraft", name: "Photo", icon: "📷" },
-  { id: "vectorcraft", name: "Vector", icon: "✒️" },
-  { id: "filmcraft", name: "Film", icon: "🎬" },
-  { id: "wordcraft", name: "Word", icon: "📝" },
-  { id: "deckcraft", name: "Deck", icon: "📊" },
-  { id: "designcraft", name: "Design", icon: "🎨" },
-  { id: "effectcraft", name: "Effect", icon: "✨" },
-  { id: "lightcraft", name: "Light", icon: "💡" },
-  { id: "gridcraft", name: "Grid", icon: "📈" },
-  { id: "pdfcraft", name: "PDF", icon: "📄" },
-];
+const MODULES: Module[] = suite.apps.map((app) => ({ id: app.id, name: app.tab, icon: app.icon }));
 
 export async function initApp() {
   renderTabs();
   setupClipboardListener();
+  initExpert();
   (window as any).activateModule = activateModule;
+}
+
+async function notifyAgents(kind: string, module: string, message: string, payload: Record<string, unknown> = {}) {
+  try {
+    await invoke("notify_agents", { kind, module, message, payload });
+  } catch (error) {
+    console.debug("agent notifications are only available in the desktop shell", error);
+  }
 }
 
 function renderTabs() {
@@ -61,17 +62,23 @@ async function activateModule(moduleId: string) {
     <span class="text-gray-300 text-xs font-medium">${module.icon} ${label}</span>
     <span class="text-gray-600 text-xs">official web build · storytold/${moduleId}</span>
   `;
+
+  void notifyAgents("module.activated", moduleId, `${label} opened`, { app: moduleId });
 }
 
 function setupClipboardListener() {
   listen<ClipboardItem>("clipboard-updated", (event) => {
     const item = event.payload;
     const preview = document.getElementById("clipboard-preview")!;
+    void notifyAgents("clipboard.updated", item.source_module, `Clipboard updated by ${item.source_module}`, { dataType: item.data_type });
+
     if (item.data_type === "image/svg+xml") {
       const svgString = atob(item.payload);
       preview.innerHTML = `<div class="text-xs text-gray-400 mb-2">From: ${item.source_module}</div><div class="bg-black p-2 rounded w-full flex items-center justify-center">${svgString}</div>`;
     } else {
       preview.innerHTML = `<div class="text-xs text-gray-400 mb-2">From: ${item.source_module}</div><div class="text-gray-300 text-sm">${item.data_type}</div>`;
     }
+  }).catch((error) => {
+    console.debug("clipboard events are only available in the desktop shell", error);
   });
 }

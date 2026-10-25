@@ -1,0 +1,41 @@
+# ArtCraft Studio
+
+> One desktop workspace for ten Rust creative apps: photo, vector, video, writing, decks, layout, effects, RAW, spreadsheets and PDF.
+
+ArtCraft Studio is a Rust and Tauri desktop shell that runs the official browser builds of ten Storytold creative apps in one window. Each app build is pinned to a release tag, checksum-verified and bundled for offline use. The shell is Apache-2.0; the apps are open-source projects by Storytold.
+
+## Apps
+- [PhotoCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/photocraft/): PhotoCraft is an open-source image editor with layers, masks, adjustment layers, layer styles, type, vectors and brushes, and it opens and saves real PSD files. (v0.15.1)
+- [VectorCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/vectorcraft/): VectorCraft is an open-source vector art application for Bezier illustration, shape building and clean, scalable artwork, with agent and command-line access. (v0.16.0)
+- [FilmCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/filmcraft/): FilmCraft is an open-source non-linear video editor with multi-track editing, color grading, effects, motion, audio tools, titles, captions and broad codec support. (v0.12.0)
+- [WordCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/wordcraft/): WordCraft is an open-source word processor for writing, page layout and document design, with command-line and MCP access for automated and agent-driven work. (v0.10.0)
+- [DeckCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/deckcraft/): DeckCraft is an open-source presentation designer for building slide decks and slide shows, with CLI and MCP integration for scripted and agent-driven decks. (v0.10.0)
+- [DesignCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/designcraft/): DesignCraft is an open-source desktop publishing studio for multi-page layout, typography and print-oriented page design, built in pure Rust. (v0.12.0)
+- [EffectCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/effectcraft/): EffectCraft is an open-source motion graphics and visual effects studio with animation, effects, 3D and export tools, plus agent and MCP integration. (v0.16.0)
+- [LightCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/lightcraft/): LightCraft is a fast, private RAW photo editor with light, color, tone curve, masking, presets and black-and-white tools for cinematic color grading. (v0.13.0)
+- [GridCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/gridcraft/): GridCraft is an open-source spreadsheet application for data, formulas and high-performance grids, with a CLI, control channel and MCP server for agents. (v0.11.1)
+- [PdfCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/pdfcraft/): PdfCraft is an open-source PDF workbench for reading, searching, organizing, merging, splitting and annotating documents, including protected files. (v0.13.0)
+
+## Documentation
+- [Documentation index](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/): feature-by-feature guides for all ten apps.
+- [PhotoCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/photocraft/): 7 documented features, FAQ and agent access.
+- [VectorCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/vectorcraft/): 6 documented features, FAQ and agent access.
+- [FilmCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/filmcraft/): 8 documented features, FAQ and agent access.
+- [WordCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/wordcraft/): 6 documented features, FAQ and agent access.
+- [DeckCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/deckcraft/): 6 documented features, FAQ and agent access.
+- [DesignCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/designcraft/): 5 documented features, FAQ and agent access.
+- [EffectCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/effectcraft/): 5 documented features, FAQ and agent access.
+- [LightCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/lightcraft/): 9 documented features, FAQ and agent access.
+- [GridCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/gridcraft/): 5 documented features, FAQ and agent access.
+- [PdfCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/pdfcraft/): 8 documented features, FAQ and agent access.
+
+## Agent integration
+- [A2A Agent Card](https://dev-justin-time.github.io/artdesktop/assets/pages/.well-known/agent-card.json): discovery document listing every app as a skill. Discovery only; the suite does not accept remote A2A tasks yet.
+- MCP server: run `node scripts/mcp-server.mjs` from https://github.com/dev-justin-time/artdesktop. Tools: list_apps, search_apps, get_app_guide, recommend_app, get_agent_notifications.
+- [Notification log](https://github.com/dev-justin-time/artdesktop/blob/main/README.md#documentation-search-and-agent-discovery): the shell appends module and clipboard events to a local JSONL file that agents can tail.
+- [Sitemap](https://dev-justin-time.github.io/artdesktop/assets/pages/sitemap.xml)
+
+## Optional
+- [GitHub repository](https://github.com/dev-justin-time/artdesktop)
+- [License](https://github.com/dev-justin-time/artdesktop/blob/main/LICENSE): Apache-2.0.
+- [Issues](https://github.com/dev-justin-time/artdesktop/issues)

@@ -53,6 +53,14 @@ jobs:
       run: npm run build
       working-directory: crates/craft-studio-shell/ui
 
+    - name: Check Documentation and Discovery Artifacts
+      run: |
+        node scripts/generate-docs.mjs --check
+        node scripts/generate-seo.mjs --check
+
+    - name: Test MCP Server
+      run: node scripts/check-mcp.mjs
+
     - name: Check Rust Formatting
       run: cargo fmt --all -- --check
 
@@ -61,6 +69,9 @@ jobs:
 
     - name: Run Workspace Tests
       run: cargo test --workspace
+
+    - name: Track glib Advisory Exception
+      run: node scripts/check-glib-advisory.mjs
 
     - name: Build Full Release Binary
       run: cargo build --release --workspace

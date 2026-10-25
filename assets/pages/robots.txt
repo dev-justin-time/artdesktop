@@ -1,0 +1,5 @@
+# ArtCraft Studio
+User-agent: *
+Allow: /
+
+Sitemap: https://dev-justin-time.github.io/artdesktop/assets/pages/sitemap.xml

@@ -1,4 +1,9 @@
+mod notifications;
+
 use craft_libs::{ClipboardItem, ModuleAction, ModuleRegistry, SharedState};
+use notifications::{
+    get_agent_notification_log_path, get_agent_notifications, notify_agents, AgentNotifier,
+};
 use serde_json::Value;
 use tauri::{AppHandle, State};
 
@@ -61,11 +66,15 @@ fn main() {
     tauri::Builder::default()
         .manage(registry)
         .manage(SharedState::default())
+        .manage(AgentNotifier::default())
         .invoke_handler(tauri::generate_handler![
             invoke_module_action,
             get_module_capabilities,
             set_clipboard,
             get_clipboard,
+            notify_agents,
+            get_agent_notifications,
+            get_agent_notification_log_path,
         ])
         .run(tauri::generate_context!())
         .expect("Failed to start ArtCraft Studio");

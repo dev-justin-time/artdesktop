@@ -114,9 +114,53 @@ Signing identifies the publisher, but SmartScreen reputation is separate: a new 
 
 `npm audit` is clean after the Vite 7, Tailwind 4 and adm-zip 0.6.1 upgrades. One Rust advisory remains: `glib 0.18.5` ([RUSTSEC-2024-0429](https://rustsec.org/advisories/RUSTSEC-2024-0429.html)) is pulled in by Tauri 2's GTK 0.18 stack on Linux. It is fixed only in glib 0.20, which `gtk 0.18` does not accept; it cannot be resolved until Tauri moves to a newer GTK binding. It does not affect the Windows build.
 
+## 🧭 Documentation, search and agent discovery
+
+One catalogue drives everything: `crates/craft-studio-shell/ui/src/suite.json` holds each app's name, category, description, keywords, 65 documented features, FAQ and release metadata. After editing it, regenerate the artifacts:
+
+```bash
+node scripts/generate-docs.mjs
+node scripts/generate-seo.mjs
+```
+
+Both scripts accept `--check`, and CI runs them, so changing the catalogue without regenerating the pages fails the build. `node scripts/check-mcp.mjs` smoke-tests the agent server.
+
+**App documentation.** `assets/pages/docs/` contains a documentation hub and a feature-by-feature page for every app, with a shared header, sidebar, footer, breadcrumb trail, table of contents, FAQ and previous/next navigation. The pages are static HTML with one shared stylesheet, relative links, no JavaScript and no external font or CDN requests.
+
+**Google-format rich data.** Each marketing page and documentation page carries JSON-LD using schema.org types Google supports: `Organization`, `WebSite`, `SoftwareApplication` (category, free offer, feature list, pinned version), `BreadcrumbList`, `FAQPage`, and `TechArticle` or `CollectionPage`. The same pages get canonical URLs, descriptions, Open Graph and Twitter metadata. The generator also writes `sitemap.xml` (22 URLs), `robots.txt` and `llms.txt`.
+
+> **Before publishing:** set `site.url` (and `site.pagesPath` if the pages are served from the domain root) in `suite.json`. Canonicals, the sitemap, Open Graph URLs and the A2A card all derive from those two fields. The current default points at GitHub Pages for this repository.
+
+**A2A discovery.** `assets/pages/.well-known/agent-card.json` (with an `agent.json` alias) publishes an A2A 0.3.0 Agent Card listing all ten apps as skills, with tags, examples and documentation links. It is **discovery-only**: the suite does not accept remote A2A tasks yet, and the card declares that through a `capabilities.extensions` entry. Do not point an agent at it expecting a JSON-RPC endpoint.
+
+**MCP server.** `scripts/mcp-server.mjs` is one aggregated Model Context Protocol server over stdio, with no dependencies and no network access. `.mcp.json` registers it for compatible clients:
+
+```bash
+node scripts/mcp-server.mjs
+```
+
+Tools: `list_apps`, `search_apps`, `recommend_app`, `get_app_guide`, `get_agent_notifications` and `get_suite_manifest`. Resources include the catalogue, a guide index, the notification log and a `suite://apps/{app}/guide` template. Guides come from the bundled upstream `README.md` files when present and fall back to the catalogue in a fresh checkout.
+
+**Agent notifications.** The shell appends a JSON line for each module activation and clipboard update, emits an `agent-notification` event, and keeps the last 500 entries in memory. Agents read the same file through the MCP tool:
+
+| Platform | Log path |
+| :--- | :--- |
+| Windows | `%APPDATA%\com.storytold.artcraft\agent-notifications.jsonl` |
+| macOS | `~/Library/Application Support/com.storytold.artcraft/agent-notifications.jsonl` |
+| Linux | `~/.local/share/com.storytold.artcraft/agent-notifications.jsonl` |
+
+The Rust commands are `notify_agents`, `get_agent_notifications` and `get_agent_notification_log_path` in `crates/craft-studio-shell/src/notifications.rs`. Set `ARTCRAFT_NOTIFICATION_LOG` to point the MCP server at a different file.
+
+**Suite Expert.** The **✦ Suite Expert** button opens an offline chat panel. It answers from the shared catalogue and the bundled app READMEs with tokenised retrieval, cites its sources and suggests follow-up questions. It uses no API key, no model provider and no network request; it is a deterministic retrieval assistant, not a neural model, so it will say when it cannot match a question.
+
 ## 🏗️ Architecture
 
 - **`crates/craft-studio-shell`** — the Tauri 2 application, its commands, `tauri.conf.json`, and the Vite + TypeScript frontend in `ui/`.
+- **`ui/src/suite.json`** — the single source for app metadata, keywords, features and FAQ used by the shell, docs generator, SEO generator, A2A card, MCP server and Suite Expert.
+- **`scripts/generate-docs.mjs`, `scripts/generate-seo.mjs`** — generate documentation pages from the catalogue and inject schema/SEO metadata into the marketing pages.
+- **`scripts/mcp-server.mjs`** — the aggregated MCP server; `scripts/check-mcp.mjs` is its smoke test.
+- **`crates/craft-studio-shell/src/notifications.rs`** — the local agent notification log and its Tauri commands.
+- **`ui/src/expert.ts`** — the offline Suite Expert retrieval and chat panel.
 - **`crates/craft-studio-shell/ui/src/app.ts`** — the tab shell that mounts each upstream web app.
 - **`crates/craft-studio-shell/ui/web-apps.json`** — pinned app versions, release assets and SHA-256 hashes.
 - **`crates/craft-studio-shell/ui/scripts/fetch-web-apps.mjs`** — downloads, verifies and extracts the web builds into `ui/public/apps` before dev/build.
@@ -128,6 +172,8 @@ Signing identifies the publisher, but SmartScreen reputation is separate: a new 
 `.github/workflows/ci.yml` runs on every push and pull request to `main`:
 
 - `npm ci` and `npm run build` (frontend, including the app download and checksum verification)
+- `node scripts/generate-docs.mjs --check` and `node scripts/generate-seo.mjs --check` (docs, schema and discovery artifacts are current)
+- `node scripts/check-mcp.mjs` (MCP handshake, tools, guide retrieval, recommendations and resources)
 - `cargo fmt --all -- --check`
 - `cargo clippy --workspace --all-targets -- -D warnings`
 - `cargo test --workspace` (unit tests for the SVG rasterizer and clipboard state)

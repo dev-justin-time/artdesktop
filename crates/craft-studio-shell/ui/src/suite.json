@@ -1,0 +1,718 @@
+{
+  "site": {
+    "name": "ArtCraft Studio",
+    "url": "https://dev-justin-time.github.io/artdesktop",
+    "pagesPath": "/assets/pages",
+    "repository": "https://github.com/dev-justin-time/artdesktop",
+    "publisher": "ArtCraft Studio",
+    "description": "One desktop workspace for ten Rust creative apps: photo, vector, video, writing, decks, layout, effects, RAW, spreadsheets and PDF.",
+    "keywords": [
+      "ArtCraft Studio",
+      "creative suite",
+      "Rust desktop apps",
+      "Tauri",
+      "photo editor",
+      "vector editor",
+      "video editor",
+      "word processor",
+      "presentation software",
+      "desktop publishing",
+      "motion graphics",
+      "RAW editor",
+      "spreadsheet",
+      "PDF tools",
+      "open source creative software"
+    ],
+    "ogImage": "/assets/marketing/social-card.png",
+    "license": "Apache-2.0",
+    "faq": [
+      {
+        "question": "What is ArtCraft Studio?",
+        "answer": "ArtCraft Studio is a Rust and Tauri desktop shell that runs the official browser builds of ten Storytold creative apps in one window: PhotoCraft, VectorCraft, FilmCraft, WordCraft, DeckCraft, DesignCraft, EffectCraft, LightCraft, GridCraft and PdfCraft."
+      },
+      {
+        "question": "Is ArtCraft Studio free and open source?",
+        "answer": "Yes. The shell is released under the Apache-2.0 licence, and the ten upstream apps are open-source projects maintained by Storytold."
+      },
+      {
+        "question": "Does ArtCraft Studio work offline?",
+        "answer": "Yes. Each app build is downloaded at build time, checksum-verified, and bundled into the installer, so the suite does not need network access at runtime."
+      },
+      {
+        "question": "Which operating systems does ArtCraft Studio support?",
+        "answer": "Windows installers (NSIS and MSI) are built today. The Tauri codebase targets macOS and Linux as well, but those installers are not part of the current release."
+      },
+      {
+        "question": "How do AI agents connect to the suite?",
+        "answer": "The repository publishes an A2A Agent Card for discovery, an aggregated Model Context Protocol server exposing app guides and suite tools, and a local JSONL notification log that agents can read."
+      }
+    ]
+  },
+  "apps": [
+    {
+      "id": "photocraft",
+      "name": "PhotoCraft",
+      "tab": "Photo",
+      "icon": "📷",
+      "category": "Image editing",
+      "applicationCategory": "GraphicsApplication",
+      "tagline": "Layered raster editing with real PSD files.",
+      "description": "PhotoCraft is an open-source image editor with layers, masks, adjustment layers, layer styles, type, vectors and brushes, and it opens and saves real PSD files.",
+      "capabilities": [
+        "Layers, masks and adjustment layers",
+        "Layer styles and editable type",
+        "Vector shapes and brushes",
+        "PSD import and export",
+        "Agent and CLI workflows"
+      ],
+      "keywords": [
+        "photo editor",
+        "image editing",
+        "PSD editor",
+        "layered editing",
+        "raster graphics",
+        "Photoshop alternative",
+        "open source photo editor",
+        "masks and adjustment layers",
+        "brush tools",
+        "digital painting"
+      ],
+      "faq": [
+        {
+          "question": "Does PhotoCraft open PSD files?",
+          "answer": "Yes. PhotoCraft reads and writes real PSD files, including layers, masks, layer styles and editable type."
+        },
+        {
+          "question": "Is PhotoCraft a Photoshop replacement?",
+          "answer": "It is an open-source, clean-room reimplementation of Photoshop's editing model rather than a byte-for-byte clone, so some advanced PSD features may still differ."
+        }
+      ],
+      "features": [
+        {
+          "name": "Layers and masks",
+          "summary": "Stack raster layers, paint on masks and isolate adjustments without flattening the document."
+        },
+        {
+          "name": "Adjustment layers",
+          "summary": "Apply tonal and color corrections as editable, non-destructive layers."
+        },
+        {
+          "name": "Layer styles",
+          "summary": "Add editable shadows, glows and strokes that stay attached to their layer."
+        },
+        {
+          "name": "Type and vector shapes",
+          "summary": "Set editable text and draw vector shapes inside a raster document."
+        },
+        {
+          "name": "Brushes",
+          "summary": "Paint with configurable brushes directly on the canvas."
+        },
+        {
+          "name": "PSD interoperability",
+          "summary": "Open and save PSD files with layers, masks, layer styles and editable type."
+        },
+        {
+          "name": "Agent and CLI access",
+          "summary": "Automate the upstream desktop build through its command-line and MCP interfaces."
+        }
+      ]
+    },
+    {
+      "id": "vectorcraft",
+      "name": "VectorCraft",
+      "tab": "Vector",
+      "icon": "✒️",
+      "category": "Vector graphics",
+      "applicationCategory": "DesignApplication",
+      "tagline": "Precision vector illustration, built in Rust.",
+      "description": "VectorCraft is an open-source vector art application for Bezier illustration, shape building and clean, scalable artwork, with agent and command-line access.",
+      "capabilities": [
+        "Bezier path drawing",
+        "Shape and path editing",
+        "Scalable vector artwork",
+        "Agent and CLI access",
+        "Web and desktop builds"
+      ],
+      "keywords": [
+        "vector graphics editor",
+        "illustration software",
+        "Bezier editor",
+        "vector art",
+        "Illustrator alternative",
+        "open source design tool",
+        "logo design",
+        "path editing",
+        "scalable graphics"
+      ],
+      "faq": [
+        {
+          "question": "What is VectorCraft used for?",
+          "answer": "VectorCraft is for vector illustration: drawing and editing Bezier paths, building shapes, and producing artwork that scales cleanly for logos, icons and print."
+        },
+        {
+          "question": "Can AI agents drive VectorCraft?",
+          "answer": "Yes. The upstream project documents use from Claude Code and other agents, and the suite also exposes VectorCraft guidance through its MCP server."
+        }
+      ],
+      "features": [
+        {
+          "name": "Bezier drawing",
+          "summary": "Draw and refine paths with precise control points and handles."
+        },
+        {
+          "name": "Shape building",
+          "summary": "Combine and arrange shapes into compound vector artwork."
+        },
+        {
+          "name": "Fills and strokes",
+          "summary": "Style paths and shapes with editable fills and strokes."
+        },
+        {
+          "name": "Precision editing",
+          "summary": "Nudge nodes, align objects and keep geometry clean at any zoom level."
+        },
+        {
+          "name": "Scalable output",
+          "summary": "Produce artwork that stays sharp from icon size to poster size."
+        },
+        {
+          "name": "Agent and CLI access",
+          "summary": "Use the upstream agent integrations and CLI to script vector work."
+        }
+      ]
+    },
+    {
+      "id": "filmcraft",
+      "name": "FilmCraft",
+      "tab": "Film",
+      "icon": "🎬",
+      "category": "Video editing",
+      "applicationCategory": "MultimediaApplication",
+      "tagline": "Non-linear video editing, color, audio and titles.",
+      "description": "FilmCraft is an open-source non-linear video editor with multi-track editing, color grading, effects, motion, audio tools, titles, captions and broad codec support.",
+      "capabilities": [
+        "Non-linear timeline editing",
+        "Color grading",
+        "Effects and motion",
+        "Audio tools",
+        "Titles and captions",
+        "Codec and interchange support"
+      ],
+      "keywords": [
+        "video editor",
+        "non-linear editing",
+        "NLE",
+        "color grading",
+        "video production",
+        "open source video editor",
+        "codec support",
+        "audio mixing",
+        "titles and captions",
+        "film editing"
+      ],
+      "faq": [
+        {
+          "question": "Is FilmCraft a full non-linear editor?",
+          "answer": "Yes. FilmCraft provides a multi-track timeline, trimming, color, effects, motion, audio, titles and captions, and export controls in one editor."
+        },
+        {
+          "question": "Does FilmCraft support color grading?",
+          "answer": "Yes. Color is a first-class workspace in FilmCraft alongside editing, effects, audio and titles."
+        }
+      ],
+      "features": [
+        {
+          "name": "Multi-track timeline",
+          "summary": "Arrange clips across tracks and trim edits with frame-accurate control."
+        },
+        {
+          "name": "Color grading",
+          "summary": "Grade footage in a dedicated color workspace alongside the edit."
+        },
+        {
+          "name": "Effects and motion",
+          "summary": "Add visual effects and animate transforms, scale and position."
+        },
+        {
+          "name": "Audio tools",
+          "summary": "Mix and shape audio on the same timeline as the picture."
+        },
+        {
+          "name": "Titles and captions",
+          "summary": "Create on-screen titles and timed captions for the finished cut."
+        },
+        {
+          "name": "Formats and export",
+          "summary": "Work with common codecs and control the export of the final master."
+        },
+        {
+          "name": "Interchange",
+          "summary": "Move projects and media between FilmCraft and other production tools."
+        },
+        {
+          "name": "Agent access",
+          "summary": "Automate editing tasks through the upstream CLI and MCP server."
+        }
+      ]
+    },
+    {
+      "id": "wordcraft",
+      "name": "WordCraft",
+      "tab": "Word",
+      "icon": "📝",
+      "category": "Word processing",
+      "applicationCategory": "BusinessApplication",
+      "tagline": "Writing, typography and document design.",
+      "description": "WordCraft is an open-source word processor for writing, page layout and document design, with command-line and MCP access for automated and agent-driven work.",
+      "capabilities": [
+        "Document writing and editing",
+        "Page layout and typography",
+        "Document design",
+        "CLI and MCP access",
+        "Web and desktop builds"
+      ],
+      "keywords": [
+        "word processor",
+        "document editor",
+        "document design",
+        "writing software",
+        "Word alternative",
+        "open source word processor",
+        "page layout",
+        "typography",
+        "MCP document tools"
+      ],
+      "faq": [
+        {
+          "question": "What makes WordCraft different from a basic text editor?",
+          "answer": "WordCraft combines writing with page layout, typography and document design, so long-form documents can be composed and styled in the same place."
+        },
+        {
+          "question": "Can WordCraft be automated?",
+          "answer": "Yes. The upstream project ships a command-line interface and an MCP server, and the suite's MCP server exposes WordCraft guidance to agents."
+        }
+      ],
+      "features": [
+        {
+          "name": "Writing and editing",
+          "summary": "Draft and revise long-form text with a focused writing surface."
+        },
+        {
+          "name": "Page layout",
+          "summary": "Control pages, margins and flow for print-style documents."
+        },
+        {
+          "name": "Typography",
+          "summary": "Style headings, body text and inline runs with typographic controls."
+        },
+        {
+          "name": "Document design",
+          "summary": "Compose designed documents rather than plain word-processor pages."
+        },
+        {
+          "name": "Agent and CLI access",
+          "summary": "Use the upstream CLI and MCP server to generate and edit documents."
+        },
+        {
+          "name": "Web and desktop builds",
+          "summary": "Run the same document engine in the browser build or the desktop app."
+        }
+      ]
+    },
+    {
+      "id": "deckcraft",
+      "name": "DeckCraft",
+      "tab": "Deck",
+      "icon": "📊",
+      "category": "Presentations",
+      "applicationCategory": "BusinessApplication",
+      "tagline": "Slide decks and presentations, designed in Rust.",
+      "description": "DeckCraft is an open-source presentation designer for building slide decks and slide shows, with CLI and MCP integration for scripted and agent-driven decks.",
+      "capabilities": [
+        "Slide design and layout",
+        "Presentation playback",
+        "CLI and MCP integration",
+        "Agent-driven deck generation",
+        "Web and desktop builds"
+      ],
+      "keywords": [
+        "presentation software",
+        "slide deck maker",
+        "PowerPoint alternative",
+        "open source presentations",
+        "slide design",
+        "pitch deck",
+        "MCP presentations",
+        "CLI slides"
+      ],
+      "faq": [
+        {
+          "question": "Can DeckCraft build decks from the command line?",
+          "answer": "Yes. The upstream DeckCraft CLI includes an MCP server mode for headless and agent-driven deck work, and can connect to a running app."
+        },
+        {
+          "question": "Does DeckCraft present full-screen slide shows?",
+          "answer": "Yes. DeckCraft is a presentation and slide designer with a presentation mode, not only a static document exporter."
+        }
+      ],
+      "features": [
+        {
+          "name": "Slide design",
+          "summary": "Build each slide with text, shapes and layout controls."
+        },
+        {
+          "name": "Deck structure",
+          "summary": "Organize a presentation as an ordered sequence of slides."
+        },
+        {
+          "name": "Presentation playback",
+          "summary": "Present the finished deck full screen from the app."
+        },
+        {
+          "name": "CLI and MCP",
+          "summary": "Drive deck creation from the command line or an agent client."
+        },
+        {
+          "name": "Agent-driven generation",
+          "summary": "Let an agent assemble or revise decks through the MCP server."
+        },
+        {
+          "name": "Web and desktop builds",
+          "summary": "Use the browser build inside ArtCraft Studio or the native app."
+        }
+      ]
+    },
+    {
+      "id": "designcraft",
+      "name": "DesignCraft",
+      "tab": "Design",
+      "icon": "🎨",
+      "category": "Page layout",
+      "applicationCategory": "DesignApplication",
+      "tagline": "Desktop publishing and multi-page layout.",
+      "description": "DesignCraft is an open-source desktop publishing studio for multi-page layout, typography and print-oriented page design, built in pure Rust.",
+      "capabilities": [
+        "Multi-page page layout",
+        "Typography and text frames",
+        "Print-oriented document design",
+        "Magazine-style publication workflow",
+        "Web and desktop builds"
+      ],
+      "keywords": [
+        "desktop publishing",
+        "page layout software",
+        "DTP",
+        "InDesign alternative",
+        "open source publishing",
+        "magazine layout",
+        "print design",
+        "typography",
+        "publication design"
+      ],
+      "faq": [
+        {
+          "question": "Is DesignCraft for print or screen?",
+          "answer": "DesignCraft targets page layout and publishing, including print-oriented documents such as magazines, with typography, frames and multi-page spreads."
+        },
+        {
+          "question": "Does DesignCraft include a sample project?",
+          "answer": "Yes. The upstream repository ships a sample magazine that demonstrates the layout and publishing workflow."
+        }
+      ],
+      "features": [
+        {
+          "name": "Multi-page layout",
+          "summary": "Lay out publications across multiple pages and spreads."
+        },
+        {
+          "name": "Text frames",
+          "summary": "Place and flow text through frames with typographic control."
+        },
+        {
+          "name": "Print-oriented design",
+          "summary": "Prepare page geometry and documents for print-style output."
+        },
+        {
+          "name": "Sample magazine",
+          "summary": "Study the bundled sample magazine as a working layout example."
+        },
+        {
+          "name": "Web and desktop builds",
+          "summary": "Open the same layout engine in the browser or desktop build."
+        }
+      ]
+    },
+    {
+      "id": "effectcraft",
+      "name": "EffectCraft",
+      "tab": "Effect",
+      "icon": "✨",
+      "category": "Motion graphics",
+      "applicationCategory": "MultimediaApplication",
+      "tagline": "Motion graphics, VFX and 3D in one studio.",
+      "description": "EffectCraft is an open-source motion graphics and visual effects studio with animation, effects, 3D and export tools, plus agent and MCP integration.",
+      "capabilities": [
+        "Node-based animation",
+        "Visual effects",
+        "3D compositing",
+        "Motion graphics export",
+        "Agent and MCP integration"
+      ],
+      "keywords": [
+        "motion graphics",
+        "visual effects",
+        "VFX software",
+        "After Effects alternative",
+        "open source VFX",
+        "node-based compositing",
+        "animation software",
+        "3D compositing",
+        "motion design"
+      ],
+      "faq": [
+        {
+          "question": "Does EffectCraft do 3D?",
+          "answer": "Yes. EffectCraft includes a 3D workspace alongside animation, effects and export."
+        },
+        {
+          "question": "Can agents automate EffectCraft?",
+          "answer": "Yes. The upstream project ships an MCP server that exposes its scene tree, keyframes and rendered frames to agent clients."
+        }
+      ],
+      "features": [
+        {
+          "name": "Animation",
+          "summary": "Animate layers, properties and keyframes on a timeline."
+        },
+        {
+          "name": "Effects",
+          "summary": "Apply visual effects and compositing operations to footage and generated layers."
+        },
+        {
+          "name": "3D workspace",
+          "summary": "Work with 3D layers and compositing alongside 2D motion graphics."
+        },
+        {
+          "name": "Export",
+          "summary": "Render the finished composition to a deliverable file."
+        },
+        {
+          "name": "Agent and MCP access",
+          "summary": "Expose the scene tree, keyframes and rendered frames to agent clients."
+        }
+      ]
+    },
+    {
+      "id": "lightcraft",
+      "name": "LightCraft",
+      "tab": "Light",
+      "icon": "💡",
+      "category": "RAW photo editing",
+      "applicationCategory": "GraphicsApplication",
+      "tagline": "Fast, private RAW editing and color grading.",
+      "description": "LightCraft is a fast, private RAW photo editor with light, color, tone curve, masking, presets and black-and-white tools for cinematic color grading.",
+      "capabilities": [
+        "RAW photo editing",
+        "Light and color correction",
+        "Tone curves",
+        "Masking and local adjustments",
+        "Presets and profiles",
+        "Black-and-white conversion"
+      ],
+      "keywords": [
+        "RAW editor",
+        "photo editing",
+        "color grading",
+        "Lightroom alternative",
+        "open source RAW editor",
+        "tone curve",
+        "masking",
+        "photography software",
+        "cinematic color",
+        "photo presets"
+      ],
+      "faq": [
+        {
+          "question": "Does LightCraft run locally?",
+          "answer": "Yes. LightCraft is a native, private editor: photos are processed on your machine, and the suite bundles it for offline use."
+        },
+        {
+          "question": "What editing controls does LightCraft offer?",
+          "answer": "LightCraft covers light, color, effects, tone curves, masking, presets, profiles, the color mixer, crop and geometry, and black-and-white conversion."
+        }
+      ],
+      "features": [
+        {
+          "name": "RAW processing",
+          "summary": "Edit RAW captures on your own machine without uploading originals."
+        },
+        {
+          "name": "Light adjustments",
+          "summary": "Shape exposure, contrast and highlights in the light workspace."
+        },
+        {
+          "name": "Color grading",
+          "summary": "Grade color with cinematic controls and a dedicated color workspace."
+        },
+        {
+          "name": "Tone curve",
+          "summary": "Adjust luminosity and contrast precisely with an editable tone curve."
+        },
+        {
+          "name": "Masking",
+          "summary": "Apply local adjustments through masks that follow the subject."
+        },
+        {
+          "name": "Presets and profiles",
+          "summary": "Reuse looks with presets, profiles and the color mixer."
+        },
+        {
+          "name": "Crop and geometry",
+          "summary": "Crop, straighten and correct perspective and lens geometry."
+        },
+        {
+          "name": "Black and white",
+          "summary": "Convert color photographs to black and white with tonal control."
+        },
+        {
+          "name": "Local and private",
+          "summary": "Process photos natively, with no account and no cloud round-trip."
+        }
+      ]
+    },
+    {
+      "id": "gridcraft",
+      "name": "GridCraft",
+      "tab": "Grid",
+      "icon": "📈",
+      "category": "Spreadsheets",
+      "applicationCategory": "BusinessApplication",
+      "tagline": "High-performance spreadsheets and data.",
+      "description": "GridCraft is an open-source spreadsheet application for data, formulas and high-performance grids, with a CLI, control channel and MCP server for agents.",
+      "capabilities": [
+        "Spreadsheet grids",
+        "Formulas and data work",
+        "High-performance rendering",
+        "CLI and control channel",
+        "MCP server for agents"
+      ],
+      "keywords": [
+        "spreadsheet software",
+        "Excel alternative",
+        "open source spreadsheet",
+        "data analysis",
+        "formulas",
+        "MCP spreadsheet",
+        "data grid",
+        "agent automation",
+        "tabular data"
+      ],
+      "faq": [
+        {
+          "question": "Can agents read and edit GridCraft sheets?",
+          "answer": "Yes. GridCraft ships a CLI, a control channel for driving the running app, and an MCP server for headless agent access."
+        },
+        {
+          "question": "Is GridCraft built for large data sets?",
+          "answer": "GridCraft is designed as a high-performance spreadsheet with a native Rust engine and fast grid rendering."
+        }
+      ],
+      "features": [
+        {
+          "name": "Spreadsheet grid",
+          "summary": "Enter, edit and navigate tabular data in a high-performance grid."
+        },
+        {
+          "name": "Formulas",
+          "summary": "Build calculations across cells and ranges."
+        },
+        {
+          "name": "Fast rendering",
+          "summary": "Keep large sheets responsive with a native Rust engine."
+        },
+        {
+          "name": "CLI and control channel",
+          "summary": "Automate sheets from the CLI or drive a running app over its control channel."
+        },
+        {
+          "name": "MCP server",
+          "summary": "Give agent clients headless access to spreadsheet work."
+        }
+      ]
+    },
+    {
+      "id": "pdfcraft",
+      "name": "PdfCraft",
+      "tab": "PDF",
+      "icon": "📄",
+      "category": "PDF tools",
+      "applicationCategory": "BusinessApplication",
+      "tagline": "Read, organize and edit PDF documents.",
+      "description": "PdfCraft is an open-source PDF workbench for reading, searching, organizing, merging, splitting and annotating documents, including protected files.",
+      "capabilities": [
+        "PDF reading and navigation",
+        "Text search and selection",
+        "Page organization",
+        "Merge and split",
+        "Comments, forms and layers",
+        "Protected PDF handling"
+      ],
+      "keywords": [
+        "PDF editor",
+        "PDF reader",
+        "merge PDF",
+        "split PDF",
+        "open source PDF software",
+        "annotate PDF",
+        "PDF forms",
+        "document management",
+        "PDF tools"
+      ],
+      "faq": [
+        {
+          "question": "Can PdfCraft merge and split PDFs?",
+          "answer": "Yes. PdfCraft can combine and split documents and reorganize pages without re-encoding the whole file."
+        },
+        {
+          "question": "Does PdfCraft open protected PDFs?",
+          "answer": "PdfCraft can open protected documents while respecting their permissions, rather than bypassing them."
+        }
+      ],
+      "features": [
+        {
+          "name": "Reading",
+          "summary": "Open and read PDF documents in a native viewer."
+        },
+        {
+          "name": "Search, select and copy",
+          "summary": "Find text in a document and select or copy it as text."
+        },
+        {
+          "name": "Document navigation",
+          "summary": "Move through long documents with page and outline navigation."
+        },
+        {
+          "name": "Page organization",
+          "summary": "Reorder, rotate and organize pages like cards on a table."
+        },
+        {
+          "name": "Merge and split",
+          "summary": "Combine documents or split them without re-encoding everything."
+        },
+        {
+          "name": "Protected documents",
+          "summary": "Open protected PDFs while respecting their permissions."
+        },
+        {
+          "name": "Comments and forms",
+          "summary": "Work with comments, forms, layers and attachments."
+        },
+        {
+          "name": "Keyboard-first tools",
+          "summary": "Reach common PDF tools through keyboard shortcuts."
+        }
+      ]
+    }
+  ]
+}

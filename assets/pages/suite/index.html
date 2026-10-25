@@ -1,4 +1,598 @@
-<!DOCTYPE html><html class="dark" lang="en" rtrvr-gl-click="1" rtrvr-gl-input="1" rtrvr-gl-keydown="1" rtrvr-mw-ready="1" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<!DOCTYPE html><html class="dark" lang="en" rtrvr-gl-click="1" rtrvr-gl-input="1" rtrvr-gl-keydown="1" rtrvr-mw-ready="1" style=""><head>
+<!-- artcraft-seo:start -->
+<title>ArtCraft Studio — ten Rust creative apps in one workspace</title>
+<meta name="description" content="One desktop workspace for ten Rust creative apps: photo, vector, video, writing, decks, layout, effects, RAW, spreadsheets and PDF.">
+<meta name="keywords" content="ArtCraft Studio, creative suite, Rust desktop apps, Tauri, photo editor, vector editor, video editor, word processor, presentation software, desktop publishing, motion graphics, RAW editor, spreadsheet, PDF tools, open source creative software">
+<link rel="canonical" href="https://dev-justin-time.github.io/artdesktop/assets/pages/suite/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="ArtCraft Studio">
+<meta name="theme-color" content="#0b0d12">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ArtCraft Studio">
+<meta property="og:title" content="ArtCraft Studio — ten Rust creative apps in one workspace">
+<meta property="og:description" content="One desktop workspace for ten Rust creative apps: photo, vector, video, writing, decks, layout, effects, RAW, spreadsheets and PDF.">
+<meta property="og:url" content="https://dev-justin-time.github.io/artdesktop/assets/pages/suite/">
+<meta property="og:image" content="https://dev-justin-time.github.io/artdesktop/assets/marketing/social-card.png">
+<meta property="og:image:alt" content="ArtCraft Studio social card">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ArtCraft Studio — ten Rust creative apps in one workspace">
+<meta name="twitter:description" content="One desktop workspace for ten Rust creative apps: photo, vector, video, writing, decks, layout, effects, RAW, spreadsheets and PDF.">
+<meta name="twitter:image" content="https://dev-justin-time.github.io/artdesktop/assets/marketing/social-card.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://dev-justin-time.github.io/artdesktop/#organization",
+      "name": "ArtCraft Studio",
+      "url": "https://dev-justin-time.github.io/artdesktop",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://dev-justin-time.github.io/artdesktop/assets/marketing/social-card.png"
+      },
+      "sameAs": [
+        "https://github.com/dev-justin-time/artdesktop"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://dev-justin-time.github.io/artdesktop/#website",
+      "url": "https://dev-justin-time.github.io/artdesktop",
+      "name": "ArtCraft Studio",
+      "description": "One desktop workspace for ten Rust creative apps: photo, vector, video, writing, decks, layout, effects, RAW, spreadsheets and PDF.",
+      "publisher": {
+        "@id": "https://dev-justin-time.github.io/artdesktop/#organization"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/suite/#webpage",
+      "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/suite/",
+      "name": "ArtCraft Studio — ten Rust creative apps in one workspace",
+      "description": "One desktop workspace for ten Rust creative apps: photo, vector, video, writing, decks, layout, effects, RAW, spreadsheets and PDF.",
+      "isPartOf": {
+        "@id": "https://dev-justin-time.github.io/artdesktop/#website"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/photocraft/#application",
+      "name": "PhotoCraft",
+      "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/photocraft/",
+      "description": "PhotoCraft is an open-source image editor with layers, masks, adjustment layers, layer styles, type, vectors and brushes, and it opens and saves real PSD files.",
+      "applicationCategory": "GraphicsApplication",
+      "applicationSubCategory": "Image editing",
+      "operatingSystem": "Windows, macOS, Linux",
+      "softwareVersion": "0.15.1",
+      "featureList": [
+        "Layers and masks",
+        "Adjustment layers",
+        "Layer styles",
+        "Type and vector shapes",
+        "Brushes",
+        "PSD interoperability",
+        "Agent and CLI access"
+      ],
+      "keywords": "photo editor, image editing, PSD editor, layered editing, raster graphics, Photoshop alternative, open source photo editor, masks and adjustment layers, brush tools, digital painting",
+      "image": "https://dev-justin-time.github.io/artdesktop/assets/marketing/social-card.png",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Storytold",
+        "url": "https://github.com/storytold"
+      },
+      "publisher": {
+        "@id": "https://dev-justin-time.github.io/artdesktop/#organization"
+      },
+      "subjectOf": {
+        "@type": "TechArticle",
+        "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/photocraft/",
+        "name": "PhotoCraft documentation"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/vectorcraft/#application",
+      "name": "VectorCraft",
+      "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/vectorcraft/",
+      "description": "VectorCraft is an open-source vector art application for Bezier illustration, shape building and clean, scalable artwork, with agent and command-line access.",
+      "applicationCategory": "DesignApplication",
+      "applicationSubCategory": "Vector graphics",
+      "operatingSystem": "Windows, macOS, Linux",
+      "softwareVersion": "0.16.0",
+      "featureList": [
+        "Bezier drawing",
+        "Shape building",
+        "Fills and strokes",
+        "Precision editing",
+        "Scalable output",
+        "Agent and CLI access"
+      ],
+      "keywords": "vector graphics editor, illustration software, Bezier editor, vector art, Illustrator alternative, open source design tool, logo design, path editing, scalable graphics",
+      "image": "https://dev-justin-time.github.io/artdesktop/assets/marketing/social-card.png",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Storytold",
+        "url": "https://github.com/storytold"
+      },
+      "publisher": {
+        "@id": "https://dev-justin-time.github.io/artdesktop/#organization"
+      },
+      "subjectOf": {
+        "@type": "TechArticle",
+        "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/vectorcraft/",
+        "name": "VectorCraft documentation"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/filmcraft/#application",
+      "name": "FilmCraft",
+      "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/filmcraft/",
+      "description": "FilmCraft is an open-source non-linear video editor with multi-track editing, color grading, effects, motion, audio tools, titles, captions and broad codec support.",
+      "applicationCategory": "MultimediaApplication",
+      "applicationSubCategory": "Video editing",
+      "operatingSystem": "Windows, macOS, Linux",
+      "softwareVersion": "0.12.0",
+      "featureList": [
+        "Multi-track timeline",
+        "Color grading",
+        "Effects and motion",
+        "Audio tools",
+        "Titles and captions",
+        "Formats and export",
+        "Interchange",
+        "Agent access"
+      ],
+      "keywords": "video editor, non-linear editing, NLE, color grading, video production, open source video editor, codec support, audio mixing, titles and captions, film editing",
+      "image": "https://dev-justin-time.github.io/artdesktop/assets/marketing/social-card.png",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Storytold",
+        "url": "https://github.com/storytold"
+      },
+      "publisher": {
+        "@id": "https://dev-justin-time.github.io/artdesktop/#organization"
+      },
+      "subjectOf": {
+        "@type": "TechArticle",
+        "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/filmcraft/",
+        "name": "FilmCraft documentation"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/wordcraft/#application",
+      "name": "WordCraft",
+      "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/wordcraft/",
+      "description": "WordCraft is an open-source word processor for writing, page layout and document design, with command-line and MCP access for automated and agent-driven work.",
+      "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "Word processing",
+      "operatingSystem": "Windows, macOS, Linux",
+      "softwareVersion": "0.10.0",
+      "featureList": [
+        "Writing and editing",
+        "Page layout",
+        "Typography",
+        "Document design",
+        "Agent and CLI access",
+        "Web and desktop builds"
+      ],
+      "keywords": "word processor, document editor, document design, writing software, Word alternative, open source word processor, page layout, typography, MCP document tools",
+      "image": "https://dev-justin-time.github.io/artdesktop/assets/marketing/social-card.png",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Storytold",
+        "url": "https://github.com/storytold"
+      },
+      "publisher": {
+        "@id": "https://dev-justin-time.github.io/artdesktop/#organization"
+      },
+      "subjectOf": {
+        "@type": "TechArticle",
+        "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/wordcraft/",
+        "name": "WordCraft documentation"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/deckcraft/#application",
+      "name": "DeckCraft",
+      "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/deckcraft/",
+      "description": "DeckCraft is an open-source presentation designer for building slide decks and slide shows, with CLI and MCP integration for scripted and agent-driven decks.",
+      "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "Presentations",
+      "operatingSystem": "Windows, macOS, Linux",
+      "softwareVersion": "0.10.0",
+      "featureList": [
+        "Slide design",
+        "Deck structure",
+        "Presentation playback",
+        "CLI and MCP",
+        "Agent-driven generation",
+        "Web and desktop builds"
+      ],
+      "keywords": "presentation software, slide deck maker, PowerPoint alternative, open source presentations, slide design, pitch deck, MCP presentations, CLI slides",
+      "image": "https://dev-justin-time.github.io/artdesktop/assets/marketing/social-card.png",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Storytold",
+        "url": "https://github.com/storytold"
+      },
+      "publisher": {
+        "@id": "https://dev-justin-time.github.io/artdesktop/#organization"
+      },
+      "subjectOf": {
+        "@type": "TechArticle",
+        "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/deckcraft/",
+        "name": "DeckCraft documentation"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/designcraft/#application",
+      "name": "DesignCraft",
+      "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/designcraft/",
+      "description": "DesignCraft is an open-source desktop publishing studio for multi-page layout, typography and print-oriented page design, built in pure Rust.",
+      "applicationCategory": "DesignApplication",
+      "applicationSubCategory": "Page layout",
+      "operatingSystem": "Windows, macOS, Linux",
+      "softwareVersion": "0.12.0",
+      "featureList": [
+        "Multi-page layout",
+        "Text frames",
+        "Print-oriented design",
+        "Sample magazine",
+        "Web and desktop builds"
+      ],
+      "keywords": "desktop publishing, page layout software, DTP, InDesign alternative, open source publishing, magazine layout, print design, typography, publication design",
+      "image": "https://dev-justin-time.github.io/artdesktop/assets/marketing/social-card.png",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Storytold",
+        "url": "https://github.com/storytold"
+      },
+      "publisher": {
+        "@id": "https://dev-justin-time.github.io/artdesktop/#organization"
+      },
+      "subjectOf": {
+        "@type": "TechArticle",
+        "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/designcraft/",
+        "name": "DesignCraft documentation"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/effectcraft/#application",
+      "name": "EffectCraft",
+      "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/effectcraft/",
+      "description": "EffectCraft is an open-source motion graphics and visual effects studio with animation, effects, 3D and export tools, plus agent and MCP integration.",
+      "applicationCategory": "MultimediaApplication",
+      "applicationSubCategory": "Motion graphics",
+      "operatingSystem": "Windows, macOS, Linux",
+      "softwareVersion": "0.16.0",
+      "featureList": [
+        "Animation",
+        "Effects",
+        "3D workspace",
+        "Export",
+        "Agent and MCP access"
+      ],
+      "keywords": "motion graphics, visual effects, VFX software, After Effects alternative, open source VFX, node-based compositing, animation software, 3D compositing, motion design",
+      "image": "https://dev-justin-time.github.io/artdesktop/assets/marketing/social-card.png",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Storytold",
+        "url": "https://github.com/storytold"
+      },
+      "publisher": {
+        "@id": "https://dev-justin-time.github.io/artdesktop/#organization"
+      },
+      "subjectOf": {
+        "@type": "TechArticle",
+        "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/effectcraft/",
+        "name": "EffectCraft documentation"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/lightcraft/#application",
+      "name": "LightCraft",
+      "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/lightcraft/",
+      "description": "LightCraft is a fast, private RAW photo editor with light, color, tone curve, masking, presets and black-and-white tools for cinematic color grading.",
+      "applicationCategory": "GraphicsApplication",
+      "applicationSubCategory": "RAW photo editing",
+      "operatingSystem": "Windows, macOS, Linux",
+      "softwareVersion": "0.13.0",
+      "featureList": [
+        "RAW processing",
+        "Light adjustments",
+        "Color grading",
+        "Tone curve",
+        "Masking",
+        "Presets and profiles",
+        "Crop and geometry",
+        "Black and white",
+        "Local and private"
+      ],
+      "keywords": "RAW editor, photo editing, color grading, Lightroom alternative, open source RAW editor, tone curve, masking, photography software, cinematic color, photo presets",
+      "image": "https://dev-justin-time.github.io/artdesktop/assets/marketing/social-card.png",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Storytold",
+        "url": "https://github.com/storytold"
+      },
+      "publisher": {
+        "@id": "https://dev-justin-time.github.io/artdesktop/#organization"
+      },
+      "subjectOf": {
+        "@type": "TechArticle",
+        "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/lightcraft/",
+        "name": "LightCraft documentation"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/gridcraft/#application",
+      "name": "GridCraft",
+      "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/gridcraft/",
+      "description": "GridCraft is an open-source spreadsheet application for data, formulas and high-performance grids, with a CLI, control channel and MCP server for agents.",
+      "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "Spreadsheets",
+      "operatingSystem": "Windows, macOS, Linux",
+      "softwareVersion": "0.11.1",
+      "featureList": [
+        "Spreadsheet grid",
+        "Formulas",
+        "Fast rendering",
+        "CLI and control channel",
+        "MCP server"
+      ],
+      "keywords": "spreadsheet software, Excel alternative, open source spreadsheet, data analysis, formulas, MCP spreadsheet, data grid, agent automation, tabular data",
+      "image": "https://dev-justin-time.github.io/artdesktop/assets/marketing/social-card.png",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Storytold",
+        "url": "https://github.com/storytold"
+      },
+      "publisher": {
+        "@id": "https://dev-justin-time.github.io/artdesktop/#organization"
+      },
+      "subjectOf": {
+        "@type": "TechArticle",
+        "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/gridcraft/",
+        "name": "GridCraft documentation"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/pdfcraft/#application",
+      "name": "PdfCraft",
+      "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/pdfcraft/",
+      "description": "PdfCraft is an open-source PDF workbench for reading, searching, organizing, merging, splitting and annotating documents, including protected files.",
+      "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "PDF tools",
+      "operatingSystem": "Windows, macOS, Linux",
+      "softwareVersion": "0.13.0",
+      "featureList": [
+        "Reading",
+        "Search, select and copy",
+        "Document navigation",
+        "Page organization",
+        "Merge and split",
+        "Protected documents",
+        "Comments and forms",
+        "Keyboard-first tools"
+      ],
+      "keywords": "PDF editor, PDF reader, merge PDF, split PDF, open source PDF software, annotate PDF, PDF forms, document management, PDF tools",
+      "image": "https://dev-justin-time.github.io/artdesktop/assets/marketing/social-card.png",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Storytold",
+        "url": "https://github.com/storytold"
+      },
+      "publisher": {
+        "@id": "https://dev-justin-time.github.io/artdesktop/#organization"
+      },
+      "subjectOf": {
+        "@type": "TechArticle",
+        "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/pdfcraft/",
+        "name": "PdfCraft documentation"
+      }
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/suite/#apps",
+      "name": "ArtCraft Studio apps",
+      "numberOfItems": 10,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "PhotoCraft",
+          "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/photocraft/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "VectorCraft",
+          "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/vectorcraft/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "FilmCraft",
+          "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/filmcraft/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "WordCraft",
+          "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/wordcraft/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "DeckCraft",
+          "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/deckcraft/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "name": "DesignCraft",
+          "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/designcraft/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "name": "EffectCraft",
+          "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/effectcraft/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "name": "LightCraft",
+          "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/lightcraft/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "name": "GridCraft",
+          "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/gridcraft/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 10,
+          "name": "PdfCraft",
+          "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/pdfcraft/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/suite/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is ArtCraft Studio?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ArtCraft Studio is a Rust and Tauri desktop shell that runs the official browser builds of ten Storytold creative apps in one window: PhotoCraft, VectorCraft, FilmCraft, WordCraft, DeckCraft, DesignCraft, EffectCraft, LightCraft, GridCraft and PdfCraft."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is ArtCraft Studio free and open source?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The shell is released under the Apache-2.0 licence, and the ten upstream apps are open-source projects maintained by Storytold."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does ArtCraft Studio work offline?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Each app build is downloaded at build time, checksum-verified, and bundled into the installer, so the suite does not need network access at runtime."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which operating systems does ArtCraft Studio support?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Windows installers (NSIS and MSI) are built today. The Tauri codebase targets macOS and Linux as well, but those installers are not part of the current release."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do AI agents connect to the suite?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The repository publishes an A2A Agent Card for discovery, an aggregated Model Context Protocol server exposing app guides and suite tools, and a local JSONL notification log that agents can read."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/suite/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "ArtCraft Studio",
+          "item": "https://dev-justin-time.github.io/artdesktop/assets/pages/suite/"
+        }
+      ]
+    }
+  ]
+}
+</script>
+<!-- artcraft-seo:end --><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
     darkMode: "class",

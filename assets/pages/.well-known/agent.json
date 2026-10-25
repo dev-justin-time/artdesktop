@@ -1,0 +1,294 @@
+{
+  "protocolVersion": "0.3.0",
+  "name": "ArtCraft Studio",
+  "description": "One desktop workspace for ten Rust creative apps: photo, vector, video, writing, decks, layout, effects, RAW, spreadsheets and PDF. This Agent Card is published for discovery only: the suite does not accept remote A2A tasks yet. Local agent integration is available through the bundled MCP server and the on-disk notification log.",
+  "url": "https://dev-justin-time.github.io/artdesktop/assets/pages/suite/",
+  "preferredTransport": "JSONRPC",
+  "version": "0.1.0",
+  "provider": {
+    "organization": "ArtCraft Studio",
+    "url": "https://dev-justin-time.github.io/artdesktop"
+  },
+  "iconUrl": "https://dev-justin-time.github.io/artdesktop/assets/marketing/social-card.png",
+  "documentationUrl": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": false,
+    "extensions": [
+      {
+        "uri": "https://dev-justin-time.github.io/artdesktop/#a2a-discovery-only",
+        "description": "Discovery-only Agent Card: the suite does not accept remote A2A tasks yet. Local agent integration is available through the bundled MCP server and notification log.",
+        "required": false
+      }
+    ]
+  },
+  "defaultInputModes": [
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "photocraft",
+      "name": "PhotoCraft image editing",
+      "description": "PhotoCraft is an open-source image editor with layers, masks, adjustment layers, layer styles, type, vectors and brushes, and it opens and saves real PSD files.",
+      "tags": [
+        "Image editing",
+        "GraphicsApplication",
+        "photo editor",
+        "image editing",
+        "PSD editor",
+        "layered editing",
+        "raster graphics",
+        "Photoshop alternative"
+      ],
+      "examples": [
+        "What can PhotoCraft do?",
+        "Which PhotoCraft feature should I use for image editing?"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain"
+      ],
+      "documentationUrl": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/photocraft/"
+    },
+    {
+      "id": "vectorcraft",
+      "name": "VectorCraft vector graphics",
+      "description": "VectorCraft is an open-source vector art application for Bezier illustration, shape building and clean, scalable artwork, with agent and command-line access.",
+      "tags": [
+        "Vector graphics",
+        "DesignApplication",
+        "vector graphics editor",
+        "illustration software",
+        "Bezier editor",
+        "vector art",
+        "Illustrator alternative",
+        "open source design tool"
+      ],
+      "examples": [
+        "What can VectorCraft do?",
+        "Which VectorCraft feature should I use for vector graphics?"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain"
+      ],
+      "documentationUrl": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/vectorcraft/"
+    },
+    {
+      "id": "filmcraft",
+      "name": "FilmCraft video editing",
+      "description": "FilmCraft is an open-source non-linear video editor with multi-track editing, color grading, effects, motion, audio tools, titles, captions and broad codec support.",
+      "tags": [
+        "Video editing",
+        "MultimediaApplication",
+        "video editor",
+        "non-linear editing",
+        "NLE",
+        "color grading",
+        "video production",
+        "open source video editor"
+      ],
+      "examples": [
+        "What can FilmCraft do?",
+        "Which FilmCraft feature should I use for video editing?"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain"
+      ],
+      "documentationUrl": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/filmcraft/"
+    },
+    {
+      "id": "wordcraft",
+      "name": "WordCraft word processing",
+      "description": "WordCraft is an open-source word processor for writing, page layout and document design, with command-line and MCP access for automated and agent-driven work.",
+      "tags": [
+        "Word processing",
+        "BusinessApplication",
+        "word processor",
+        "document editor",
+        "document design",
+        "writing software",
+        "Word alternative",
+        "open source word processor"
+      ],
+      "examples": [
+        "What can WordCraft do?",
+        "Which WordCraft feature should I use for word processing?"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain"
+      ],
+      "documentationUrl": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/wordcraft/"
+    },
+    {
+      "id": "deckcraft",
+      "name": "DeckCraft presentations",
+      "description": "DeckCraft is an open-source presentation designer for building slide decks and slide shows, with CLI and MCP integration for scripted and agent-driven decks.",
+      "tags": [
+        "Presentations",
+        "BusinessApplication",
+        "presentation software",
+        "slide deck maker",
+        "PowerPoint alternative",
+        "open source presentations",
+        "slide design",
+        "pitch deck"
+      ],
+      "examples": [
+        "What can DeckCraft do?",
+        "Which DeckCraft feature should I use for presentations?"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain"
+      ],
+      "documentationUrl": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/deckcraft/"
+    },
+    {
+      "id": "designcraft",
+      "name": "DesignCraft page layout",
+      "description": "DesignCraft is an open-source desktop publishing studio for multi-page layout, typography and print-oriented page design, built in pure Rust.",
+      "tags": [
+        "Page layout",
+        "DesignApplication",
+        "desktop publishing",
+        "page layout software",
+        "DTP",
+        "InDesign alternative",
+        "open source publishing",
+        "magazine layout"
+      ],
+      "examples": [
+        "What can DesignCraft do?",
+        "Which DesignCraft feature should I use for page layout?"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain"
+      ],
+      "documentationUrl": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/designcraft/"
+    },
+    {
+      "id": "effectcraft",
+      "name": "EffectCraft motion graphics",
+      "description": "EffectCraft is an open-source motion graphics and visual effects studio with animation, effects, 3D and export tools, plus agent and MCP integration.",
+      "tags": [
+        "Motion graphics",
+        "MultimediaApplication",
+        "motion graphics",
+        "visual effects",
+        "VFX software",
+        "After Effects alternative",
+        "open source VFX",
+        "node-based compositing"
+      ],
+      "examples": [
+        "What can EffectCraft do?",
+        "Which EffectCraft feature should I use for motion graphics?"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain"
+      ],
+      "documentationUrl": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/effectcraft/"
+    },
+    {
+      "id": "lightcraft",
+      "name": "LightCraft raw photo editing",
+      "description": "LightCraft is a fast, private RAW photo editor with light, color, tone curve, masking, presets and black-and-white tools for cinematic color grading.",
+      "tags": [
+        "RAW photo editing",
+        "GraphicsApplication",
+        "RAW editor",
+        "photo editing",
+        "color grading",
+        "Lightroom alternative",
+        "open source RAW editor",
+        "tone curve"
+      ],
+      "examples": [
+        "What can LightCraft do?",
+        "Which LightCraft feature should I use for raw photo editing?"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain"
+      ],
+      "documentationUrl": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/lightcraft/"
+    },
+    {
+      "id": "gridcraft",
+      "name": "GridCraft spreadsheets",
+      "description": "GridCraft is an open-source spreadsheet application for data, formulas and high-performance grids, with a CLI, control channel and MCP server for agents.",
+      "tags": [
+        "Spreadsheets",
+        "BusinessApplication",
+        "spreadsheet software",
+        "Excel alternative",
+        "open source spreadsheet",
+        "data analysis",
+        "formulas",
+        "MCP spreadsheet"
+      ],
+      "examples": [
+        "What can GridCraft do?",
+        "Which GridCraft feature should I use for spreadsheets?"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain"
+      ],
+      "documentationUrl": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/gridcraft/"
+    },
+    {
+      "id": "pdfcraft",
+      "name": "PdfCraft pdf tools",
+      "description": "PdfCraft is an open-source PDF workbench for reading, searching, organizing, merging, splitting and annotating documents, including protected files.",
+      "tags": [
+        "PDF tools",
+        "BusinessApplication",
+        "PDF editor",
+        "PDF reader",
+        "merge PDF",
+        "split PDF",
+        "open source PDF software",
+        "annotate PDF"
+      ],
+      "examples": [
+        "What can PdfCraft do?",
+        "Which PdfCraft feature should I use for pdf tools?"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain"
+      ],
+      "documentationUrl": "https://dev-justin-time.github.io/artdesktop/assets/pages/docs/pdfcraft/"
+    }
+  ]
+}
