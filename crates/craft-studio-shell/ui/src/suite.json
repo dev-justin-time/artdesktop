@@ -28,7 +28,7 @@
     "faq": [
       {
         "question": "What is ArtCraft Studio?",
-        "answer": "ArtCraft Studio is a Rust and Tauri desktop shell that runs the official browser builds of ten Storytold creative apps in one window: PhotoCraft, VectorCraft, FilmCraft, WordCraft, DeckCraft, DesignCraft, EffectCraft, LightCraft, GridCraft and PdfCraft."
+        "answer": "ArtCraft Studio is a Rust and Tauri desktop shell that runs the official browser builds of ten Storytold creative apps in one window: PhotoCraft, VectorCraft, FilmCraft, WordCraft, DeckCraft, DesignCraft, EffectCraft, LightCraft, GridCraft and PDFCraft."
       },
       {
         "question": "Is ArtCraft Studio free and open source?",
@@ -643,13 +643,13 @@
     },
     {
       "id": "pdfcraft",
-      "name": "PdfCraft",
+      "name": "PDFCraft",
       "tab": "PDF",
       "icon": "📄",
       "category": "PDF tools",
       "applicationCategory": "BusinessApplication",
       "tagline": "Read, organize and edit PDF documents.",
-      "description": "PdfCraft is an open-source PDF workbench for reading, searching, organizing, merging, splitting and annotating documents, including protected files.",
+      "description": "PDFCraft is an open-source PDF workbench for reading, searching, organizing, merging, splitting and annotating documents, including protected files.",
       "capabilities": [
         "PDF reading and navigation",
         "Text search and selection",
@@ -671,12 +671,12 @@
       ],
       "faq": [
         {
-          "question": "Can PdfCraft merge and split PDFs?",
-          "answer": "Yes. PdfCraft can combine and split documents and reorganize pages without re-encoding the whole file."
+          "question": "Can PDFCraft merge and split PDFs?",
+          "answer": "Yes. PDFCraft can combine and split documents and reorganize pages without re-encoding the whole file."
         },
         {
-          "question": "Does PdfCraft open protected PDFs?",
-          "answer": "PdfCraft can open protected documents while respecting their permissions, rather than bypassing them."
+          "question": "Does PDFCraft open protected PDFs?",
+          "answer": "PDFCraft can open protected documents while respecting their permissions, rather than bypassing them."
         }
       ],
       "features": [

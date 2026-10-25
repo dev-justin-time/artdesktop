@@ -1,319 +1,198 @@
 # ArtCraft Studio — Repository Audit
 
 **Date:** 2026-10-24
-**Repository:** `dev-justin-time/artdesktop` (branch `main`, HEAD `40e9b80 "poc"`)
-**Scope:** all tracked files plus the untracked `txt.txt` — Rust workspace, Tauri shell, frontend, CI, tooling, docs.
-**Verdict (revised after fixes):** The repository **builds and every CI step passes when run locally**. `cargo metadata`, `cargo build --workspace`, `cargo build --release --workspace`, `cargo test --workspace`, `cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets -- -D warnings`, `npm ci` and `npm run build` all exit 0. The original blockers — workspace path, corrupted build script, PhotoCraft API mismatch, duplicate UI manifest — plus the CI location, ordering, formatting and lockfile problems are fixed and verified (see §0). Remaining work: frontend error handling. The workflow still has to be committed and pushed before GitHub executes it.
-**Revision:** A fix pass was applied after the initial audit; §0 records exactly what changed and the new verification evidence.
+**Repository:** `dev-justin-time/artdesktop` (branch `main`, HEAD `e0c1641 "added a2a,mcp,docs"`, working tree clean, up to date with `origin/main`)
+**Scope:** 185 tracked files — Rust workspace (14 `.rs`), Tauri shell, Vite/TypeScript frontend, 40 HTML pages, docs/SEO/discovery generators, MCP server, CI, packaging scripts.
+**Verdict:** the build is healthy and every Linux CI step passes locally (the installer job was not re-run). This revision records the security, pruning and landing-page pass: the iframe and clipboard holes are closed or bounded, the suite page is a real landing page built on local assets, the Rust module layer is wired into the clipboard panel, and the retired mockups, file-tree dump, generated schemas, one-off harnesses and `tokio` are gone. What remains is **runtime robustness** (switching tabs destroys in-flight work, the notification log is unbounded and unvalidated), **module contracts** (eight modules still answer unknown actions with a success object), **packaging** (release console window, no capabilities file), and **tests** for the surface added since the last audit.
 
 ---
 
-## 0. Fix log (post-audit revision)
+## 1. What changed since the previous audit
 
-The following were fixed in this pass, in severity order. Every verification command was run after the changes.
+The previous revision described 43 tracked files at `40e9b80`. The repository now contains 185 tracked files, and the following are new or materially different:
 
-| Fixed | Change | Verification |
-|---|---|---|
-| Workspace member | Moved the shell crate from `crates/craft-libs/craft-studio-shell` to `crates/craft-studio-shell` (`git mv`), matching `Cargo.toml:5`, the shell's `../../apps/*` path deps, `Justfile`, CI paths and README. | `cargo metadata --no-deps` → exit 0 |
-| Corrupted build script | Restored `build.rs` to `fn main() { tauri_build::build(); }`; deleted dead `src/build.rs`. | included in `cargo check` |
-| PhotoCraft rasterizer | `tree.size()` instead of the private field; `resvg::render(&tree, Transform::default(), &mut pixmap.as_mut())` for the pinned 0.42 API; dropped the invalid `.ok_or(...)`. Deleted the dead root `src/lib.rs` duplicate. | `cargo check --workspace` → exit 0 |
-| Duplicate UI manifest | Deleted `crates/craft-studio-shell/ui/Cargo.toml`. | Cargo commands now work from `ui/` |
-| Missing app icons | Added `crates/craft-studio-shell/icons/` (`icon.ico`, `icon.png`, `32x32.png`, `128x128.png`, `128x128@2x.png`). This was **not visible in the static audit**: the first `cargo check` failed because `tauri-build` requires `icons/icon.ico` on Windows. Placeholder artwork only — replace before release. | `cargo check` → exit 0 |
-| CI workflow | Moved `.github/ci.yml` → `.github/workflows/ci.yml`; its `working-directory` and cache paths are now valid after the crate move. | workflow is discoverable by Actions |
-| npm lockfile | Generated `package-lock.json` (90 packages) in `ui/`. | `npm ci` → exit 0 |
-| Tauri dev/build hooks | `beforeDevCommand`/`beforeBuildCommand` now use `npm --prefix ui run …`, which works from the crate directory. | config reviewed; `npm run build` passes |
-| Clippy blockers | Removed the unused `Manager` import; added `impl Default for ModuleRegistry` for `clippy::new_without_default`. | `cargo clippy --workspace --all-targets -- -D warnings` → exit 0 |
-| Frontend build | No code changes; installed deps and built to confirm the pipeline step. | `npm ci && npm run build` → exit 0 |
-| CI formatting | Ran `cargo fmt --all` across the workspace. | `cargo fmt --all -- --check` → exit 0 |
-| CI step order | Moved the frontend build ahead of all Rust compile steps in `.github/workflows/ci.yml` (and mirrored it in the `Justfile`) so `ui/dist` exists for clippy, tests and the release build. | workflow reviewed |
-| Release build | No code changes; exercised the final CI step. | `cargo build --release --workspace` → exit 0 (10m28s) |
-| Documentation | Rewrote `README.md` to match the proof-of-concept state, corrected the clone URL to `dev-justin-time/artdesktop`, removed the zero-copy/production-grade/updater claims, and replaced the truncated ending. Added the Apache-2.0 `LICENSE` the README already claimed. | README reviewed; link check |
-| Placeholder images | Added 14 generated PNGs under `assets/` covering every image the README references; each is labelled "PLACEHOLDER - NOT A SCREENSHOT". | 14/14 refs resolve; images inspected |
-| Clipboard refresh | Clipboard writes now go through `SharedState::set_clipboard`, which stores the item, drops the lock and emits `clipboard-updated`. Both the `set_clipboard` command and VectorCraft's `export_svg` use it, so the sidebar refreshes. | `cargo build`/check/clippy/test/fmt pass; event path code-reviewed |
-| Test coverage | Added 4 rasterizer tests (PNG signature/dimensions, Base64 path, invalid Base64, invalid SVG) and 4 clipboard tests (empty default, store+notify, notification error propagation, frontend JSON shape). | `cargo test --workspace` → 8 passed, 0 failed |
-| Offline mockups | Localized all remote assets: Google Fonts CSS/woff2 mirrored to `ui/public/vendor/fonts`, ten Google-hosted images hashed into `ui/public/vendor/images`, and the Tailwind CDN build vendored as `ui/public/vendor/tailwind.js`. Every `<link>`/`<img>`/`<script>` now points at a local path. | Headless Chrome on every embedded page in use at the time (later extended to all ten): 0 external resources, 0 failed resources, 0 broken images; `document.fonts.status === "loaded"` and both Inter and Material Symbols available |
-| Completed mockups | Added full interactive mockup pages for WordCraft, DeckCraft, DesignCraft, EffectCraft and GridCraft under `assets/pages/`, sharing `_studio.css`. The ten module tabs now all resolve to completed pages (PhotoCraft and VectorCraft were added in the later pass below). | `npm run build` → exit 0; every tab in `COMPLETED_PAGES` resolves |
-| Embedded module nav | `assets/pages/_studio.js` injects a fixed 30 px module bar into every embedded page with `a[data-path]` links; `wireModuleNavigation` already maps those paths to `activateModule`, so clicks switch the studio's active tab or return to the dashboard. | Headless Chrome with a mocked Tauri IPC: clicking DeckCraft inside the WordCraft iframe switched the canvas to `pages/deckcraft/index.html`; clicking Dashboard restored the "Select a Module to Begin" state |
-| All ten module pages | Added PhotoCraft to `COMPLETED_PAGES` and replaced VectorCraft's custom canvas with a new SVG-editor page (the old `assets/pages/vectercraft` extraction actually contained a FilmCraft timeline). Localized PhotoCraft's fonts, Tailwind runtime and three Google-hosted images. `HIDE_PAGE_CHROME` now hides duplicate chrome only on the three extracted pages. | `npm run build` → exit 0; all ten tabs resolve; headless Chrome offline check on PhotoCraft and VectorCraft: 0 external resources, 0 failed resources, 0 broken images, both web fonts loaded |
-| Page action bridge | `wirePageActions` attaches to `[data-studio-action]` controls inside the iframe. VectorCraft's **Export SVG** serializes `#vector-artboard` and calls `export_svg`; PhotoCraft's new **Rasterize SVG** reads the shared clipboard and calls `rasterize_svg`, showing the returned PNG in an overlay; PhotoCraft's Neural Bake calls `apply_filter`. Errors and success are surfaced by an in-page toast. | Headless Chrome with mocked IPC: PhotoCraft invoked `rasterize_svg` with the clipboard SVG and rendered the returned PNG; VectorCraft invoked `export_svg` with the edited artboard (fill change preserved); both toasts appeared |
+- **The Rust module layer is no longer what the app runs.** `ui/src/app.ts` mounts each upstream web build in an `<iframe src="apps/<id>/index.html?webgl">`. The `CraftModule` implementations in `apps/*` and six of the seven Tauri commands are not called by the UI.
+- **A single catalogue** (`crates/craft-studio-shell/ui/src/suite.json`, 718 lines) drives the tabs, the docs generator, the SEO/JSON-LD generator, the A2A card, the MCP server and the Suite Expert: 10 apps, 65 features, 20 app FAQs, 5 suite FAQs.
+- **Generated documentation**: 11 pages under `assets/pages/docs/` (hub + one per app), 195-line shared stylesheet, no JavaScript, no external requests.
+- **Generated discovery artifacts**: `sitemap.xml` (22 URLs), `robots.txt`, `llms.txt`, root `index.html`, `.well-known/agent-card.json` + `agent.json` (A2A 0.3.0, 10 skills), and injected meta/JSON-LD on 11 marketing pages.
+- **One aggregated MCP server** (`scripts/mcp-server.mjs`, 433 lines, zero dependencies) with 6 tools, 3 resources and 1 resource template, plus `scripts/check-mcp.mjs` as a protocol smoke test.
+- **Local agent notifications** (`crates/craft-studio-shell/src/notifications.rs`): in-memory ring buffer (500) + append-only JSONL, `agent-notification` event, three commands.
+- **Suite Expert** (`ui/src/expert.ts`, 422 lines): offline retrieval chat panel over the catalogue and bundled READMEs.
+- **Pinned upstream builds** (`ui/web-apps.json` + `ui/scripts/fetch-web-apps.mjs`): 10 releases, SHA-256 + exact size verified, path-traversal guard, version cache.
+- **Packaging**: Tauri bundle config, icons, code-signing script, Windows NSIS CI job, `package-lock.json` and `Cargo.lock` committed.
+- **Publishing**: `.github/workflows/pages.yml` assembles the site into `_site`, adds `.nojekyll`, refreshes `assets/pages/vendor` from `ui/public/vendor`, and deploys to GitHub Pages.
 
-`Cargo.lock` and the new `icons/` are included in the follow-up commit `aec3764 "update build"`; `ui/package-lock.json` is staged but still uncommitted. `node_modules/` and `dist/` are already ignored.
+The defects the previous revision listed as blockers (workspace path, `build.rs`, the `resvg`/`usvg` API, duplicate `ui/Cargo.toml`, misplaced CI workflow, missing lockfile, clipboard event, README claims, `LICENSE`, broken image links, dead root `src/lib.rs`, absent tests) are fixed and were re-checked in this pass. They are not repeated below.
 
-**CI status:** no CI step fails locally, and `cargo test --workspace` now runs 8 real tests. Remaining: `crates/craft-studio-shell/gen/schemas/*` are generated artifacts tracked in git, frontend error handling is still missing, and the workflow has not run on GitHub yet because the changes are not pushed.
+### Resolved in this pass (security, pruning, landing page)
+
+- **Finding 1 — iframe and clipboard boundary.** App frames now carry `sandbox="allow-scripts allow-same-origin allow-forms allow-downloads allow-popups allow-pointer-lock"` and `referrerpolicy="no-referrer"`; `tauri.conf.json` ships a real CSP (`default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' data:; connect-src 'self' ipc: ipc://localhost http://ipc.localhost http://localhost:1420 ws://localhost:1420; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`); the clipboard preview renders the SVG through a `Blob` URL into an `<img>` instead of `innerHTML`; Base64 is decoded with `TextDecoder`. Frames still share the shell origin on purpose so their storage works, so this is a mitigation, not full origin isolation.
+- **Finding 2 — suite landing page.** `assets/pages/suite/index.html` is now a landing page: local font CSS, `../vendor/tailwind.js`, local images, navigation to the docs hub, every app guide, the sitemap, `robots.txt`, `llms.txt`, the Agent Card, the repository and the audit, plus an explicit "UI concept" notice. The fictional status ("Synced P2P", "GPU: Metal V2 Active", "IPC Ring Buffer", fake versions, fake recent projects) is gone.
+- **Findings 4, 8, 20, 21, 22, 26 — shipped surface.** `ui/public/pages`, the three `_check_*.html` harnesses, `tree.md`, `gen/schemas` and `tokio` are removed (the schema directory is now gitignored and regenerated by `tauri-build`). The clipboard panel calls `get_module_capabilities` and `invoke_module_action` again: VectorCraft's `export_svg` fills the shared clipboard and PhotoCraft's `rasterize_svg` returns a PNG that the panel displays.
+- **Findings 3, 9, 10, 14 — copy and metadata.** The seven duplicate captured `<title>` elements are removed, the catalogue says `PDFCraft`, the docs hub lists all six MCP tools, `operatingSystem` is `Windows`, `package.json` pins `node >=20.19`, and the README's status, app list, architecture and concept-image notes match the build.
+
+Re-verified after the changes: `cargo check --workspace --all-targets` and `cargo test --workspace` (9 tests) pass; `tsc --noEmit` and `vite build` produce a 43 kB stylesheet and 34 kB bundle; `generate-docs --check`, `generate-seo --check`, `check-mcp` and `check-glib-advisory` pass; the rewritten suite page renders in headless Chrome with 20 local subresources, no external subresources and no missing files, and all 36 links resolve (only in-page anchors remain).
 
 ---
 
-## 1. Severity summary
+## 2. Verification performed
 
-| # | Severity | Finding | Location | Status |
-|---|---|---|---|---|
-| 1 | **Blocker** | Workspace member path did not exist; `cargo` failed before compiling anything | `Cargo.toml:5` | ✅ Fixed (crate moved) |
-| 2 | **Blocker** | `build.rs` was not valid Rust (Markdown fence + pasted `tauri.conf.json`) | `crates/craft-studio-shell/build.rs:4` | ✅ Fixed |
-| 3 | **Blocker** | PhotoCraft used a `resvg`/`usvg` API from a different era than the pinned 0.42 | `apps/photocraft/src/lib.rs:24-26` | ✅ Fixed |
-| 4 | **High** | Front-end folder contained a duplicate, invalid Cargo manifest | `crates/craft-studio-shell/ui/Cargo.toml` | ✅ Deleted |
-| 5 | **High** | CI workflow was in `.github/ci.yml`; Actions only reads `.github/workflows/*.yml` | `.github/workflows/ci.yml` | ✅ Moved |
-| 6 | **High** | `npm ci` / setup-node cache required a `package-lock.json` that did not exist | `crates/craft-studio-shell/ui/` | ✅ Lockfile generated, `npm ci` passes |
-| 7 | **High** | "Export SVG" never emits `clipboard-updated`, so the Shared Clipboard sidebar never updates | `apps/vectorcraft/src/lib.rs:17-28` | ✅ Fixed via `SharedState::set_clipboard` |
-| 8 | **High** | `just dev` / `just ci` / README Quick Start used a directory that did not exist | `Justfile:7,18`, `README.md:34-42` | ✅ Fixed by crate move |
-| 9 | **High** | No `LICENSE` file despite the README licensing the project as Apache-2.0 | repo root | ✅ Apache-2.0 added |
-| 10 | **Medium** | Clippy `-D warnings` failed on an unused `Manager` import | `crates/craft-studio-shell/src/main.rs:3` | ✅ Fixed, clippy passes |
-| 11 | **Medium** | Module activation and event setup still lack error handling; page actions now catch and toast errors, but a failed `get_module_capabilities` or `listen` remains unhandled | `ui/src/app.ts` | ❌ Open (partially fixed) |
-| 12 | **Medium** | README claims (zero-copy, lazy loading, updater, tests, CI) are not implemented | `README.md` | ✅ Rewritten accurately |
-| 13 | **Medium** | All 18 images in the README are broken links (no `assets/` directory) | `README.md` | ✅ 14 placeholder PNGs added |
-| 14 | **Medium** | Dead, uncompilable duplicate of PhotoCraft at the repo root | `src/lib.rs` | ✅ Deleted |
-| 15 | **Medium** | No tests exist anywhere, though CI advertises "Unit Tests" | workspace | ✅ 8 unit tests added |
-| 16 | **Low** | Repo hygiene: 177-line scratch file `txt.txt`, unused `tokio` dependency, dead files, CRLF/no-newline inconsistencies | multiple | ◐ Partial (dead files removed) |
+All commands were run from the repository root on the committed HEAD unless a directory is given.
 
----
-
-## 2. Build, tooling and CI findings (fixed)
-
-> **Status:** every finding in this section is fixed and verified — see §0. The text below records the original diagnosis; paths refer to the pre-fix layout unless stated otherwise.
-
-### 2.1 Workspace member pointed at a path that did not exist
-
-`Cargo.toml:5` listed:
-
-```toml
-members = [
-    "crates/craft-libs",
-    "crates/craft-studio-shell",   # actual path was crates/craft-libs/craft-studio-shell
-```
-
-Verified before the fix:
-
-```
-$ cargo metadata --no-deps --format-version 1
-error: failed to load manifest for workspace member `.../crates/craft-studio-shell`
-Caused by: failed to read `.../crates/craft-studio-shell/Cargo.toml`
-Caused by: The system cannot find the path specified. (os error 3)
-```
-
-Consequence: every Cargo command — `cargo build`, `cargo test`, `cargo fmt`, `cargo clippy` — failed at manifest resolution. The same stale path appeared in:
-
-- `Justfile:7` — `cd crates/craft-studio-shell && cargo tauri dev`
-- `Justfile:18` — `cd crates/craft-studio-shell/ui && npm ci && npm run build`
-- `.github/ci.yml` — `working-directory: crates/craft-studio-shell/ui` and the `cache-dependency-path`
-- `README.md:34-42` — `cd crates/craft-studio-shell/ui`
-
-**Resolution:** the shell crate was moved to `crates/craft-studio-shell` (`git mv`), the layout the workspace, Justfile, CI, README and the shell's own `../../apps/*` dependencies already assumed. All references now resolve, and `cargo metadata --no-deps` exits 0.
-
-### 2.2 `build.rs` was not Rust
-
-`crates/craft-libs/craft-studio-shell/build.rs` contained:
-
-```rust
-fn main() {
-    tauri_build::build();
-}
-```
-
-followed by a closing Markdown code fence and a full copy of `tauri.conf.json` inside a json fence. Verified by parsing it:
-
-```
-$ rustc --edition 2021 --emit=metadata build.rs
-error: unknown start of token: `
- --> build.rs:4:1
-  | 4 | ```
-```
-
-Even after fixing the workspace path, the build script failed to parse, so the shell could not compile. (The correct script existed, duplicated, at `src/build.rs`, which Cargo never ran because only the crate-root `build.rs` is used as a build script.)
-
-**Resolution:** `build.rs` was restored to the 3-line `fn main() { tauri_build::build(); }`, and `src/build.rs` was deleted. `tauri.conf.json` itself was always valid JSON (verified with `node -e 'JSON.parse(...)'`); it had simply been pasted into the wrong file during generation.
-
-### 2.3 PhotoCraft's rasterizer did not compile against `resvg`/`usvg` 0.42
-
-`apps/photocraft/Cargo.toml` pinned `resvg = "0.42"`, `usvg = "0.42"`, `tiny-skia = "0.11"`, but the code was written for a much older API:
-
-```rust
-let size = tree.size.to_int_size();                                    // line 24
-resvg::render(&tree, usvg::FitTo::Original, pixmap.as_mut())           // line 26
-    .ok_or("Render failed")?;
-```
-
-Checked against docs.rs:
-
-- In `usvg 0.42`, `Tree::size` is a **method** `pub fn size(&self) -> Size`; the struct's fields are private. `tree.size` is `E0616`.
-- `usvg::FitTo` does not exist in 0.42 (`docs.rs/usvg/0.42.0/usvg/struct.FitTo.html` → 404).
-- `resvg 0.42` signature is `pub fn render(tree: &Tree, transform: Transform, pixmap: &mut PixmapMut<'_>)` and returns `()`, so both the argument list and `.ok_or(...)` are wrong. The same signature holds in 0.43, 0.44 and 0.45 — `FitTo` was removed long before.
-
-Net result: 4 compile errors in the only non-stub feature in the suite. **Resolution:** the code now targets the pinned version:
-
-```rust
-let size = tree.size().to_int_size();
-let mut pixmap = tiny_skia::Pixmap::new(size.width(), size.height())
-    .ok_or("Pixmap alloc failed")?;
-resvg::render(
-    &tree,
-    tiny_skia::Transform::default(),
-    &mut pixmap.as_mut(),
-);
-let png_bytes = pixmap.encode_png().map_err(|e| e.to_string())?;
-```
-
-(the alternative — bumping `resvg`/`usvg` — would require adjusting the imports too). The identical broken duplicate at the old root `src/lib.rs` was deleted. `cargo check --workspace` now exits 0.
-
-### 2.4 Duplicate invalid Cargo manifest inside the frontend (deleted)
-
-`crates/craft-libs/craft-studio-shell/ui/Cargo.toml` was a copy of the shell manifest (including `photocraft = { path = "../../apps/photocraft" }`, which resolved to the wrong directory from `ui/`). It had no target, so any Cargo command run from `ui/` died:
-
-```
-$ cd .../craft-studio-shell/ui && cargo metadata
-error: failed to parse manifest at .../ui/Cargo.toml
-Caused by: no targets specified in the manifest
-```
-
-It was not a workspace member, so it never affected the root build, but it was a trap for anyone running `cargo` from the UI folder. **Resolution:** deleted.
-
-### 2.5 CI could never run (mostly fixed)
-
-- The workflow lived at `.github/ci.yml`. GitHub Actions only loads `.github/workflows/*.yml|yaml`; the `.github/workflows/` directory existed but was **empty**, so the "strict pipeline on every PR" advertised in `README.md` never executed. **Fixed:** moved to `.github/workflows/ci.yml`.
-- The job would have failed early: `setup-node` pointed at `crates/craft-studio-shell/ui/package-lock.json`, which did not exist, and `npm ci` requires a lockfile. **Fixed:** `package-lock.json` was generated and `npm ci` now exits 0.
-- **Fixed:** `cargo fmt --all` was run, so `cargo fmt --check` now passes. `cargo clippy -D warnings` also passes (the unused import and `new_without_default` were fixed), and the workspace resolves.
-
-**CI status:** all five workflow commands — frontend build, `cargo fmt --check`, clippy, tests and release build — pass locally. The workflow still has to be committed and pushed before GitHub can execute it.
-
----
-
-## 3. Functional defects
-
-### 3.1 The signature workflow was broken in the UI (fixed)
-
-`apps/vectorcraft/src/lib.rs` used to write the clipboard directly:
-
-```rust
-let state = app.state::<SharedState>();
-let mut clip = state.global_clipboard.write()...;
-*clip = Some(ClipboardItem { ... });
-```
-
-Only the Tauri command `set_clipboard` (`src/main.rs:26-31`) emitted `clipboard-updated`, and the frontend never called that command. Clicking **Export SVG** therefore changed backend state while the left "Shared Clipboard" panel stayed on "Empty". The drag-drop rasterize path still worked because it calls `get_clipboard`, but the advertised "Vector → Photo" demo looked broken.
-
-**Resolution:** writes are centralized in `SharedState::set_clipboard`, which stores the item, releases the lock and emits `clipboard-updated`. `VectorCraftModule::export_svg` and the `set_clipboard` command both call it, so no module can forget the notification.
-
-### 3.2 Frontend error handling (partially fixed)
-
-The old PhotoCraft drop handler (no `try/catch`, no `else` branch, could hang on "Rasterizing...") was removed when PhotoCraft switched to its page. Its replacement, `wirePageActions`, catches IPC failures, restores the button and shows an in-page error toast.
-
-Still open: `activateModule` calls `invoke("get_module_capabilities")` without a `try/catch`, and `void activateModule(target)` in `wireModuleNavigation` discards the promise, so a failed activation leaves the previous module on screen with an unhandled rejection. `setupClipboardListener` also awaits `listen` without handling failure.
-
-### 3.3 Untrusted SVG injected via `innerHTML`
-
-`ui/src/app.ts:109-110` decodes a base64 payload with `atob()` and interpolates the raw SVG string into `innerHTML`. `tauri.conf.json` sets `"csp": null` (CSP disabled). Any future module that writes a clipboard item controls executable markup in the shell context. Use an `<img src="data:image/svg+xml;base64,...">` preview (no script execution) or sanitize, and set a real CSP.
-
-Also note `atob()` only handles Latin-1: non-ASCII SVG text will corrupt. Use a UTF-8 decode (`TextDecoder`) or `Blob`/`URL.createObjectURL`.
-
-### 3.4 Desktop run path (hooks fixed; CLI still undeclared)
-
-- **Fixed:** `tauri.conf.json` now uses `npm --prefix ui run dev` / `npm --prefix ui run build`. Tauri runs these hooks in the crate directory, which has no `package.json`, so the previous bare `npm run` would have failed.
-- **Fixed by the crate move:** `Justfile:7` `cd crates/craft-studio-shell` now resolves, as do the `ui/` paths in the README and CI.
-- **Open:** `cargo tauri` requires the Tauri CLI, which is neither declared in the README prerequisites nor pinned in the repo. Add it to the docs (`cargo install tauri-cli --version "^2"`) or a `cargo-binstall`/npm devDependency.
-
-### 3.5 Silent-success stubs
-
-Eight of the ten modules return `Ok(json!({"status":"success","action": action}))` for every action (`filmcraft`, `wordcraft`, `deckcraft`, `designcraft`, `effectcraft`, `lightcraft`, `gridcraft`, `pdfcraft`), and `vectorcraft`/`photocraft` do the same for any action they do not recognise. The frontend shows no difference between "rendered a video" and "did nothing". At minimum, unknown actions should return `Err(format!("Unsupported action: {action}"))` so the UI can surface a real error instead of a fake success.
-
-### 3.6 Metadata/config gaps for packaging
-
-- No `bundle`/`icons` configuration and no `icons/` directory; `tauri build` installer generation will fail or fall back to a default, and Windows will use a generic icon.
-- No `capabilities/` directory. App commands work today, but any plugin added later will be denied by default, and there is no audited permission surface.
-- `main.rs` lacks the usual `#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]`, so release binaries on Windows open a console window.
-
----
-
-## 4. Documentation and repository drift
-
-> **Status:** the documentation findings below are fixed — the README was rewritten, `LICENSE` added and placeholder images generated (see §0). The table records the original claims for reference.
-
-`README.md` was the most misleading file in the repo. Specific claims vs. reality:
-
-| README claim | Reality |
+| Check | Result |
 |---|---|
-| "zero-latency shared memory", "zero-copy asset transfer" (`README.md:5,53`) | `ClipboardItem.payload` is a Base64 `String` copied through a `std::sync::RwLock` and serialized over IPC. It is neither shared memory nor zero-copy. Base64 adds ~33% and forces decode/re-encode at each hop. |
-| "dynamic GUI generation" | `ui/src/app.ts` hardcodes ten `if/else` HTML template strings; the only dynamic part is the toolbar from `capabilities()`. |
-| "module lazy-loading", "modular updates / updater" | No lazy loading, no updater plugin, no versioning, no signature verification. Modules are statically linked and registered at startup. |
-| "cargo test (Unit Tests)" | Zero tests in the workspace; `cargo test` would report `running 0 tests`. |
-| "strict GitHub Actions pipeline on every PR" | Workflow is not in `.github/workflows/` (see 2.5). |
-| "starts with `git clone https://github.com/storytold/artcraft-studio.git`" (`README.md:26`) | The actual remote is `https://github.com/dev-justin-time/artdesktop.git` (confirmed with `git remote -v`). |
-| "production-grade", "10-App Workspace Compilation" | No app is implemented beyond placeholder responses; the one real pipeline does not compile. |
-| Images: hero banner + 17 screenshots (`README.md:47-74`) | `assets/` does not exist at all. Every image on the GitHub page is a broken link. |
-| "10 specialized creative applications" vs. "A Suite, Not Eight Apps" / "Eight modules, one process" / screenshot tables covering only eight (`README.md:5,44,53-73`) | GridCraft and PDFCraft are missing from the screenshot section; the copy contradicts itself repeatedly. |
-| "Apache-2.0" (`README.md:79`) | No `LICENSE` file exists (see §1 #9). |
-| Final section ends mid-sentence: "…switching to PhotoCraft, and dropping " (`README.md:86`) | Document is truncated. |
+| `cargo fmt --all -- --check` | exit 0 |
+| `cargo clippy --workspace --all-targets -- -D warnings` | exit 0 |
+| `cargo test --workspace` | exit 0 — **9 tests** pass (4 `craft-libs`, 4 `photocraft`, 1 `notifications`); 20 other test binaries report `running 0 tests` |
+| `npm run build` (`crates/craft-studio-shell/ui`) | exit 0 — 10 app archives verified/cached, 10 modules transformed, `dist` = **460 MB** |
+| `npm audit --audit-level=high` (`ui/`) | exit 0 — 0 vulnerabilities (Vite 7.3.7, Tailwind 4.3.3) |
+| `node scripts/generate-docs.mjs --check` | exit 0 — 11 pages current |
+| `node scripts/generate-seo.mjs --check` | exit 0 — artefacts current |
+| `node scripts/check-mcp.mjs` | exit 0 — initialize, 6 tools, guide, recommendation, catalog resource, template |
+| `node scripts/check-glib-advisory.mjs` | exit 0 — glib 0.18.5 present, RUSTSEC-2024-0429 exception still required |
+| `npx @tauri-apps/cli@^2 build --no-bundle` | `beforeBuildCommand` ran correctly in `ui/`, `fetch-web-apps` and `tsc && vite build` succeeded (I stopped it before the Rust link) |
+| Custom HTML audit (24 pages) | 23 pages carry JSON-LD; 0 broken relative links in generated docs; all TOC/anchors resolve; canonicals and `og:url` agree; sitemap's 22 URLs map to real files; `llms.txt` lists all 10 guides |
+| Headless Chrome, 10 app pages served from the repo root | 0 failed network requests, 0 broken images, Inter + Material Symbols loaded, `window.tailwind` active on the 4 pages that include it, no horizontal overflow |
+| SEO head placement (12 marketing pages) | `<meta charset>` at byte 40–138 on every page; no `FAQPage` node outside the docs hub; JSON-LD parses everywhere |
+| Site assembly simulated locally (`_site`, 102 files, 9.2 MB) | `.nojekyll`, docs hub, Agent Card, sitemap/robots/llms, vendor fonts/images and the marketing social card all present; 0 root-absolute references in 24 pages |
+| Headless Chrome against the assembled tree | PhotoCraft page and two docs pages load with 0 failed subresources; the only 404 is the browser's `/favicon.ico` probe |
 
-`txt.txt` (177 lines, untracked) is not project content: it is a paste of a previous AI review plus 36 Midjourney/DALL·E prompt drafts, including instructions to change the clone URL and stray artifacts ("Copy", "A"). It duplicates and contradicts the README and should not be committed; delete it or move the image-prompt brief to `docs/design/prompts.md` and the actionable feedback into issues.
+The custom audit also found 25 `FAQPage` Q&A pairs that were not on the page and `<meta charset>` beyond the first 1024 bytes; both were fixed during this pass. Every marketing page now declares charset at byte 40–138 and emits no `FAQPage`, while the docs hub keeps its node and renders the same FAQ. Seven pages still carry two `<title>` elements.
 
-Version/format inconsistencies: `README.md` still says "10 tabs" in its final checklist but shows eight-module art; the table of apps is correct (10). CRLF line endings are mixed across `.toml`/`.rs` files, and `apps/lightcraft/Cargo.toml`, `apps/photocraft/Cargo.toml`, `apps/vectorcraft/Cargo.toml` lack trailing newlines.
-
----
-
-## 5. Hygiene and low-severity items
-
-- **Root `src/lib.rs` (fixed).** The dead duplicate of `apps/photocraft/src/lib.rs` has been deleted.
-- **`src/build.rs` (fixed).** The dead duplicate build script has been deleted.
-- **Unused `Manager` import (fixed).** Removed from `src/main.rs:3`, so `cargo clippy -- -D warnings` now passes.
-- **Unused `tokio` dependency (open).** Declared in `[workspace.dependencies]` and `crates/craft-libs/Cargo.toml` with `features = ["full"]`. Nothing in the workspace references `tokio`; removing it will noticeably shrink build time.
-- **Lockfiles (partially fixed).** `Cargo.lock` and `ui/package-lock.json` now exist but are untracked; commit both for reproducible builds.
-- **`.github/workflows` (fixed).** Now contains `ci.yml`.
-- **`ui/Cargo.toml` duplicate (fixed).** Deleted.
-- **Placeholder icons (new).** `crates/craft-studio-shell/icons/` currently holds generated placeholder artwork; replace it before a release build.
-- **Generated Tauri schemas are tracked.** `crates/craft-studio-shell/gen/schemas/*.json` (four files, ~4.6k lines) were produced by `tauri-build` and committed. Add `gen/schemas` to `.gitignore` and remove them from the index.
-- **Tauri config has no `$schema`** and no `bundle` section; harmless for `cargo build`, but it disables editor validation and leaves packaging unconfigured.
-- **Blocking `std::sync::RwLock` inside an `async` Tauri command** (`set_clipboard`). Fine at current scale, but it will block the async runtime under contention; consider `parking_lot` or an actor/channel.
-- **`get_clipboard` returns `Option<ClipboardItem>`** while `app.ts:80` types the result as `ClipboardItem` (non-null). Works only because of the defensive `if (clip && ...)`; type it `ClipboardItem | null`.
-- **No `CONTRIBUTING.md`**, no module-authoring documentation despite the extensibility being the project's main selling point.
-- **`.freebuff/project-id`** is local tool metadata and is untracked; ensure it stays out of the repo.
+**Not verified in this pass:** the new Pages workflow executing on GitHub (no `gh` CLI; it runs on the next push to `main` or through `workflow_dispatch`), a fresh installer build, and visual rendering in the Tauri webview.
 
 ---
 
-## 6. What is genuinely good
+## 3. Findings by severity
 
-- The `CraftModule` trait + `ModuleRegistry` + `SharedState` split (`crates/craft-libs/src/lib.rs`) is a clean, idiomatic seam: object-safe, `Send + Sync`, no per-module coupling.
-- The Tauri command surface (`invoke_module_action`, `get_module_capabilities`, clipboard get/set) is small and consistent with the frontend's usage.
-- The frontend is compact and readable for a PoC; Tailwind + Vite + strict `tsconfig` is a sane baseline, and the capability-driven toolbar is the right idea.
-- Workspace dependency inheritance (`[workspace.dependencies]`) is set up correctly, and per-app manifests are minimal.
-- The `Justfile` mirrors the CI steps (including the frontend-before-Rust ordering), and every step now passes.
-
----
-
-## 7. Verification performed / not performed
-
-**Original audit (before fixes):**
-
-- `git ls-files`, `git status`, `git log`, `git remote -v` — 43 tracked files, one commit `40e9b80`.
-- Read all Rust sources, manifests, build files, Tauri config, frontend sources/configs, CI, Justfile, README, `txt.txt`.
-- `cargo metadata --no-deps` → exit 101, missing workspace member (2.1).
-- `cargo metadata --no-deps` from `ui/` → exit 101, no targets (2.4).
-- `rustc --emit=metadata build.rs` → parse errors (2.2).
-- Cross-checked `resvg` 0.42/0.43/0.44/0.45 and `usvg` 0.42 API on docs.rs for the rasterizer claims (2.3).
-
-**After the fix pass (all commands run in the repo):**
-
-- `cargo metadata --no-deps` → exit 0, all 12 packages resolved.
-- `cargo build --workspace` → exit 0 (6m47s), producing `target/debug/craft-studio-shell.exe` (19.8 MB) with zero warnings.
-- `cargo check --workspace` → exit 0. (The first attempt failed in `tauri-build`: `icons/icon.ico` not found; adding the icon set fixed it.)
-- `cargo clippy --workspace --all-targets -- -D warnings` → exit 0.
-- `npm ci` in `crates/craft-studio-shell/ui` → exit 0 (90 packages).
-- `npm run build` (`tsc && vite build`) → exit 0, 8 modules transformed.
-- `cargo fmt --all -- --check` → exit 0 after running `cargo fmt --all`.
-- `cargo clippy --workspace --all-targets -- -D warnings` → exit 0 (re-run after formatting).
-- `cargo test --workspace` → exit 0, 8 tests passed (4 rasterizer, 4 clipboard).
-- After the clipboard fix: `cargo build --workspace`, `cargo check`, `cargo clippy -D warnings`, `cargo test` and `cargo fmt --check` all exit 0.
-- `cargo build --release --workspace` → exit 0 (10m28s), producing a stripped 11.7 MB `craft-studio-shell.exe`.
-- Documentation: all 14 `assets/*.png` references resolve to generated files; `LICENSE` is the 11,357-byte Apache-2.0 text; no `storytold` clone URL or production/zero-copy claims remain in the README.
-- Mockup localization: all ten embedded pages load with zero external resources, zero failed subresources and zero broken images; Inter and Material Symbols report as loaded. PhotoCraft's previously missing image was downloaded into `ui/public/vendor/images/465e40d5b3a4.jpg`.
-- Module navigation: with mocked Tauri IPC in headless Chrome, an in-page nav click changed the studio canvas to the requested module, and the Dashboard link returned to the empty selection state.
-- Page actions: PhotoCraft's **Rasterize SVG** sent the clipboard's Base64 SVG to `rasterize_svg` and displayed the returned PNG; VectorCraft's **Export SVG** sent the serialized, edited artboard to `export_svg`, with the edited fill and artboard id present in the decoded payload. Both success toasts rendered.
-
-**Not performed:** `tauri build` bundling/installers, and execution of the workflow on GitHub — the changes have not been committed or pushed. The iframe UI, module switching and page actions were exercised in headless Chrome against the built `ui/dist`, not inside a running Tauri webview.
+| # | Severity | Finding | Location |
+|---|---|---|---|
+| 1 | **High — mitigated** | Ten third-party web builds run in **same-origin** iframes. The frames now carry a `sandbox` policy and `referrerpolicy`, `tauri.conf.json` sets a real CSP, and the clipboard preview renders through a `Blob`/`<img>` with `TextDecoder`. `allow-same-origin` is still required for app storage, so a compromised build still shares the shell's storage and command surface. | `ui/src/app.ts`, `tauri.conf.json` `security.csp` |
+| 2 | **Medium — resolved** | The suite landing page — the canonical `/assets/pages/suite/` entry point — is a captured app mockup showing fictional status ("Synced P2P", "GPU: Metal V2 Active", "Cybernetic_Genesis_v4.art") and pulls 8 subresources from `cdn.tailwindcss.com`, `fonts.googleapis.com` and `lh3.googleusercontent.com`. It also has no link to the docs, sitemap or repository, so the new docs are orphaned from the site's front door. | `assets/pages/suite/index.html` |
+| 3 | **Medium — resolved** | Seven marketing pages carry two `<title>` elements: the generated title plus the mockup's captured one, which is invalid and lets the metadata block compete with the page it is injected into. | `assets/pages/*/index.html`, `scripts/lib/site.mjs` |
+| 4 | **Medium — mostly resolved** | The clipboard panel now calls `get_clipboard`, `get_module_capabilities` and `invoke_module_action` (VectorCraft `export_svg`, PhotoCraft `rasterize_svg`), but `set_clipboard` and `get_agent_notifications` remain unused by the UI, and 8 modules still answer every action with `{"status":"success"}` instead of rejecting unknown actions. | `ui/src/app.ts`, `apps/*/src/lib.rs` |
+| 5 | **Medium** | The agent notification log is an unauthenticated, free-form, append-only channel served verbatim to LLM clients over MCP. Any same-origin frame can inject arbitrary `message`/`payload` text, and the on-disk file grows without bound (the 500-entry cap is memory only). | `src/notifications.rs`, `scripts/mcp-server.mjs` |
+| 6 | **Medium** | No unsaved-work guard when switching tabs: `activateModule` replaces the canvas and destroys the previous `<iframe>` on every click, with no `beforeunload`/lifecycle handshake and no confirmation. Nothing indicates that in-app state may be lost. | `ui/src/app.ts:33-55` |
+| 7 | **Medium — resolved** | Page-level accessibility/SEO defects on the pages the sitemap promotes: 7 pages had no `<h1>`, `deckcraft` had two, and `suite`, `filmcraft`, `lightcraft`, `pdfcraft`, `photocraft` had no `lang`. Every page now has `lang` and exactly one `<h1>`. | `assets/pages/*/index.html` |
+| 8 | **Medium — resolved** | The UI is built with 2.8 MB of retired mockups (`ui/public/pages`, `ui/public/vendor`) and 3 `_check_*.html` diagnostics that the shell never loads but Vite copies into the 460 MB `dist`. | `ui/public/` |
+| 9 | **Medium — resolved** | Brand name is inconsistent: `PdfCraft` in `suite.json`, docs `<h1>`, JSON-LD `name` and the MCP test; `PDFCraft` in the Rust module, README table and tab label `PDF`. Structured data therefore disagrees with the project's own copy. | `suite.json`, `apps/pdfcraft`, `README.md` |
+| 10 | **Low — resolved** | Docs state the MCP server exposes 5 tools; the server exposes 6 (`get_suite_manifest` missing from the hub copy). | `scripts/generate-docs.mjs` `hubBody` |
+| 11 | **Low** | Release binaries open a console window: `main.rs` has no `#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]`, and startup failure only panics via `.expect(...)`. | `crates/craft-studio-shell/src/main.rs:1,71-73` |
+| 12 | **Low** | Test coverage has not grown with the new surface: no test for `notify_agents`, the 500-entry trim, `since_id` filtering or the log path; the one notification test re-implements the ID expression instead of calling it; the Expert and both generators have no tests beyond `--check`. | `src/notifications.rs:136-149` |
+| 13 | **Low** | `check-mcp.mjs` asserts that the PhotoCraft guide mentions "PSD", which also passes from the catalogue fallback — so the bundled-guide path is not actually exercised when `public/apps` is absent. | `scripts/check-mcp.mjs:76-79` |
+| 14 | **Low — resolved** | README numbers are slightly off and unpinned: 205 MB of archives vs 214.9 MB in `web-apps.json`; "Node.js 20+" while Vite 7 needs 20.19+/22.12+ and `package.json` has no `engines`. | `README.md:78,109` |
+| 15 | **Low** | `.cargo/audit.toml` documents a RUSTSEC exception, but `cargo audit` never runs in CI; only the bespoke glib checker does, so other advisories are unmonitored. `npm audit --audit-level=high` also makes CI fail on unrelated new advisories. | `.cargo/audit.toml`, `ci.yml:48-50` |
+| 16 | **Low** | `.mcp.json` launches `scripts/mcp-server.mjs` by relative path; clients that do not set the project root as cwd cannot start the server. | `.mcp.json` |
+| 17 | **Low** | `notify_agents` persists the entry and writes the log before emitting; if `emit` fails the command returns `Err` although the event was stored and logged. IDs are `timestamp_ms * 1000 + n % 1000`, colliding above 1000 events in one millisecond. | `src/notifications.rs:75-105` |
+| 18 | **Low** | `SoftwareApplication.operatingSystem` is `"Windows, macOS, Linux"` while the project only produces Windows installers (its own FAQ says so). | `scripts/lib/site.mjs` `softwareApplicationNode` |
+| 19 | **Low** | SwiftShader is forced for every app (`--use-angle=swiftshader --enable-unsafe-swiftshader`), so all ten run on software WebGL; it is required for EffectCraft but caps performance elsewhere. | `tauri.conf.json` `additionalBrowserArgs` |
+| 20 | **Low — resolved** | `tree.md` (1.1 MB, 23k+ lines) is a committed dump that includes `.git/`, `target/`, `node_modules` and the 457 MB app tree. It goes stale on every commit. | `tree.md` |
+| 21 | **Low — resolved** | Generated Tauri schemas (4 files, ~4.6k lines) remain tracked; `gen/schemas` is regenerated by `tauri-build`. | `crates/craft-studio-shell/gen/schemas/` |
+| 22 | **Low — resolved** | Retired mockups are duplicated: `assets/pages/*` (marketing, SEO-injected) and `ui/public/pages/*` (runtime copy). The old `vectercraft` typo was fixed only in `assets/`, so `ui/public/pages/vectercraft` still disagrees with the renamed `vectorcraft`. | `assets/pages/`, `ui/public/pages/` |
+| 23 | **Low** | `assets/pages/readme header/index.html`: a path containing a space, no description/canonical/JSON-LD, orphaned from navigation, and it loads CDN Tailwind plus Google Fonts. | `assets/pages/readme header/` |
+| 24 | **Low** | `assets/pages/index.html` is the only generated page without Open Graph/Twitter metadata, and its canonical points at the page it redirects to while the page itself is `noindex`. | `assets/pages/index.html` |
+| 25 | **Low** | `tailwind.config.js` is dead: Tailwind 4 is configured CSS-first through `@source` in `style.css`, and nothing references the JS config. | `ui/tailwind.config.js` |
+| 26 | **Low — resolved** | `tokio` is declared in `[workspace.dependencies]` and `craft-libs` with `features = ["full"]` and is referenced by no crate. | `Cargo.toml:21`, `crates/craft-libs/Cargo.toml:10` |
+| 27 | **Low** | Line endings are inconsistent: the new files (`expert.ts`, `suite.json`, `notifications.rs`, `mcp-server.mjs`) are LF while sibling Rust/TS/TOML files are CRLF. The captured pages also retain 20 `rtrvr-*` instrumentation attributes. | multiple |
 
 ---
 
-## 8. Recommended fix order
+## 4. Detail
 
-Items 1–5 of the original list are done. Remaining, in order:
+### 4.1 Deployment and site integrity (findings 2, 7, 23, 24)
 
-1. Add error handling to module activation and event setup (§3.2) so a failed capability fetch cannot leave a stale canvas with an unhandled rejection.
-2. Commit `ui/package-lock.json` and push the branch so GitHub Actions runs for the first time; remove `crates/craft-studio-shell/gen/schemas` from the index and ignore it.
-3. Remove `txt.txt` and the unused `tokio` dependency.
-4. Replace the placeholder image and icon artwork with real captures/icons before a release build.
+The site now has a delivery path. `.github/workflows/pages.yml` runs on every push to `main` and on demand: it re-runs the docs/SEO `--check` guards, assembles `_site` from `assets/`, replaces `_site/assets/pages/vendor` with a fresh copy of `crates/craft-studio-shell/ui/public/vendor`, writes `.nojekyll`, verifies the required files and the absence of root-absolute asset references, then uploads and deploys to GitHub Pages. The artifact is laid out so the deployed root matches the `site.url` + `site.pagesPath` pair in `suite.json` (`…/artdesktop/assets/pages/`), which is what every canonical, sitemap entry and card URL already assumes. Two operational notes: the repository's Pages source must be set to "GitHub Actions" once, and `assets/pages/vendor/` is generated and gitignored rather than committed, so serving `assets/` directly needs that one copy step.
+
+The app pages were written for the web root of `ui/public/`, where `/vendor/` and `/pages/` exist. Their 62 root-absolute references (61 attributes plus one inline `background-image`) are now relative (`../vendor/fonts/…`, `../vendor/tailwind.js`, `../vendor/images/…`, `../_studio.css`, `../_studio.js`, and `url('../vendor/images/…')`), and the deployed tree carries a self-contained copy of the 13 font files, 11 images, 2 font stylesheets and the Tailwind runtime (2.4 MB) at `assets/pages/vendor`. Headless Chrome against a repo-root server confirms all ten pages load with 0 failed requests, 0 broken images, Inter and Material Symbols available, `window.tailwind` active on the four pages that include it, and no horizontal overflow. The workflow materialises that directory from `crates/craft-studio-shell/ui/public/vendor` on every deploy, so `assets/pages/vendor/` is gitignored and has one source.
+
+The suite page is no longer a scraped design capture. It is a hand-built landing page on the same design tokens: a fixed header with links to the overview, the documentation hub, the ten apps, the shell description and the repository; a hero using the catalogue description; ten app cards that carry the real pinned tag and link to `../docs/<id>/` and the upstream release; a "what the shell does today" section; and an explore block linking the docs hub, `sitemap.xml`, `robots.txt`, `llms.txt`, the Agent Card and `audit.md`. All assets are local (`../vendor/fonts/…`, `../vendor/tailwind.js`, `../vendor/images/…`), there are no `rtrvr-*` attributes, no external subresources, and the fictional telemetry and recent-project panels are gone. An explicit banner states that the page previews the intended interface rather than screenshotting the build. Verified in headless Chrome: the page renders with Tailwind applied, 20 local subresources resolve, the only request outside the page tree is the browser's own `/favicon.ico` probe, and every relative link resolves.
+
+### 4.2 Structured data and head metadata (findings 3, 10, 18, 24)
+
+The marketing pages no longer carry `FAQPage` data. `appGraph()` and `suiteGraph()` used to attach a FAQ node to every app page and to the suite page, neither of which renders a FAQ — 20 app Q&A pairs plus the 5 suite pairs, invisible to readers while the policy requires them on the page. `faqNode` now serves only the docs hub, which renders the suite FAQ under `#faq`; all 5 entries were re-checked against the visible markup. The ten app docs pages render their two FAQs but emit no `FAQPage` node; adding it there would be valid if FAQ rich results are wanted.
+
+`injectHead` now strips any previous block, restores the newline after `<head>`, and inserts the managed metadata immediately after `<meta charset>` instead of at the start of `<head>`. Charset therefore lands at byte 40–138 on every marketing page, inside the required first 1024 bytes, and a second generator run reproduces the same bytes. The seven pages that carried two `<title>` elements (deckcraft, designcraft, effectcraft, gridcraft, lightcraft, vectorcraft, wordcraft) now keep only the generated one; the captured `<title>` was removed from each page and `generate-seo --check` still passes. The other schema/site drifts are fixed too: the hub's MCP paragraph lists all six tools including `get_suite_manifest`, and `operatingSystem` is `Windows`, matching the README and FAQ.
+
+### 4.3 Security and trust boundaries (findings 1, 5)
+
+The shell mounts each upstream build as a sandboxed iframe:
+
+```html
+<iframe id="app-frame" src="apps/${moduleId}/index.html?webgl"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-downloads allow-popups allow-pointer-lock"
+        referrerpolicy="no-referrer" allow="clipboard-read; clipboard-write; fullscreen; autoplay">
+```
+
+`tauri.conf.json` now carries a real policy (`default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' data:; connect-src 'self' ipc: ipc://localhost http://ipc.localhost http://localhost:1420 ws://localhost:1420; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`), the clipboard preview builds a `Blob` from the decoded payload and points an `<img>` at the object URL, and decoding goes through `TextDecoder` so non-ASCII SVG text survives. `innerHTML` no longer receives the payload.
+
+What remains is that frames keep `allow-same-origin` on purpose so each app's `localStorage`, IndexedDB and OPFS keep working, and the builds are still served from the shell's own origin. A compromised build therefore still shares storage with the shell and can call the registered commands. Separating each app onto its own origin (custom protocol with a distinct host per module, or one window per app) is the remaining structural fix; until then the CSP and sandbox keep script from escaping its frame but do not isolate storage.
+
+The notification log is the new boundary. `notify_agents(kind, module, message, payload)` accepts arbitrary strings, appends them to `%APPDATA%\com.storytold.artcraft\agent-notifications.jsonl`, and the MCP tool returns the trailing lines as text to whatever LLM client is connected. That is a prompt-injection path from any frame in the webview into an agent's context. Treat the log as untrusted data (label it as such in the tool result, keep it out of system prompts), cap the file (rotate at ~1 MB or on N entries), and consider validating `kind` against a fixed enum.
+
+### 4.4 Desktop runtime (findings 4, 6, 8, 11, 19)
+
+The Rust layer is partly connected again. `app.ts` calls `get_clipboard` on startup, listens for `clipboard-updated`, labels the panel buttons from `get_module_capabilities`, and drives `invoke_module_action` for VectorCraft's `export_svg` and PhotoCraft's `rasterize_svg`; `notify_agents` still reports module activation and clipboard changes. Still open: eight modules answer every action with a success object (`filmcraft`, `wordcraft`, `deckcraft`, `designcraft`, `effectcraft`, `lightcraft`, `gridcraft`, `pdfcraft`, and the two wired modules for unknown action names), so the commands should reject unknown actions with `Err("Unsupported action: {action}")`; `set_clipboard` and `get_agent_notifications` remain callable but unused by the UI; and the upstream builds never call the shell clipboard themselves, so the cross-app clipboard is still a demonstration rather than a feature.
+
+Tab switching destroys the active iframe with no guard. For apps that keep work in memory (PhotoCraft documents, decks, grids) that is silent data loss. At minimum, ask the frame before replacing it, or keep one iframe per module alive and toggle visibility.
+
+Packaging: the release binary has no `windows_subsystem` attribute, so a console window sits behind the app; startup failure is a panic with no dialog. There is no `capabilities/` directory, so the command surface exists only implicitly and will be denied for the first plugin added. The retired mockups and harnesses are gone, but `ui/public/vendor` (13 fonts, 11 images, two font stylesheets and the Tailwind runtime, 2.4 MB) is still copied into `dist` and therefore into the installer, where the shell never reads it; it is the single source the Pages workflow copies from, so moving it out of `ui/public/` would remove that weight.
+
+### 4.5 Agent layer (findings 12, 13, 16)
+
+The MCP server is well behaved: version negotiation against three protocol revisions, tool schemas with `additionalProperties: false` and enums, structured resources, `-32601`/`-32602`/`-32002` errors, and lazy guide caching. Two caveats: `.mcp.json` uses a relative script path (clients that do not set cwd to the repository cannot start it — an absolute path or a `node ${workspaceFolder}` form is safer), and guide quality depends on `ui/public/apps/<id>/README.md`, which is gitignored. In a fresh clone the server and the Expert both fall back to catalogue text; that is documented, but it means the MCP test's "PSD" assertion passes without touching the bundled-guide code path.
+
+The Expert is deterministic and honest about being retrieval rather than a model. Its weaknesses are retrieval-scale rather than correctness: `scoreApp` adds points for substring hits with weights that are easy to overwhelm ("photo" contributes 2 to every app whose haystack mentions "photograph"), `stem()` strips a trailing `es`, so `features` becomes `featur` while `feature` stays `feature` — a match the retrieval is clearly meant to make, and comparisons only fire when two app names appear by name. It has no tests, which makes regressions in the ranking silent. A handful of table-driven tests over `answer()` — one query per app, one comparison, one fallback — would cover it cheaply, and the function is pure enough to test if the DOM wiring stays in `initExpert()`.
+
+The A2A card is schema-shaped correctly for 0.3.0 (array-valued `capabilities.extensions`, required fields present, 10 skills). The honest problem is that `preferredTransport: "JSONRPC"` and `url: .../suite/` advertise an endpoint that returns HTML. The README says so; a machine reader will not. Either drop `preferredTransport` and the `url`'s endpoint connotation from a discovery-only card (or add `additionalInterfaces: []` and document it in `description`), or ship the small JSON-RPC endpoint the card promises. `agent.json` is byte-identical duplication kept only for clients guessing that name — harmless, but it doubles the maintenance.
+
+### 4.6 Build, CI and packaging (findings 14, 15, 18, 26)
+
+`cargo fmt`, clippy with `-D warnings`, the 9 tests, the frontend build, the npm audit, the docs/SEO `--check` guards, the MCP smoke test and the glib exception check all pass locally; `cargo build --release` was verified in the previous pass and was not re-run here. The Tauri hooks are correct: `beforeBuildCommand: "npm run build"` is executed with `ui/` as the working directory, verified by driving the CLI and watching `prebuild` → `fetch-web-apps` → `tsc && vite build` run. That resolves the doubt the previous revision left around this config.
+
+Remaining CI weaknesses: no Rust cache for `target/` (the release build dominates the job), no `permissions:` block (default token scope), no `concurrency` group (superseded pushes still run to completion), no `cargo audit` although `.cargo/audit.toml` was added (so only glib is tracked), and `npm audit --audit-level=high` is a network-dependent gate that can turn an unrelated advisory into a red build. The Windows job builds only NSIS; the README's MSI path is exercised locally, not in CI.
+
+`tokio` is removed from the workspace and `craft-libs`. `web-apps.json` sums to 214,925,763 bytes — 205 MiB — and the README now states both units; the extracted tree is 457 MiB. `package.json` declares `"engines": { "node": ">=20.19" }`, matching Vite 7.
+
+### 4.7 Content and catalogue consistency (findings 9, 10, 18)
+
+One catalogue is the right architecture, and spot checks confirm the docs are grounded: the PhotoCraft guide's PSD claims match its bundled README (18 mentions), PDFCraft's merge/split features appear in its README, LightCraft's RAW claims are supported. The problems are editorial:
+
+- **PdfCraft vs PDFCraft.** Resolved: the catalogue, docs heading, `SoftwareApplication.name`, A2A skill and MCP test all say `PDFCraft`, matching the Rust module and the README.
+- **Operating-system claim** is now `Windows`, matching what is shipped.
+- **Hub tool list** lists all six tools, including `get_suite_manifest`.
+- **Marketing pages** still carry a `featureList` for content that lives only in the docs. `FAQPage` is gone from every page except the docs hub, which renders the questions, so that half is closed; promoting the feature list onto the page or narrowing the type to `WebPage` remains open.
+
+### 4.8 Repository hygiene (findings 20–27)
+
+- `tree.md` is deleted; if a tree snapshot is ever useful, generate it in CI as an artifact rather than committing it.
+- `crates/craft-studio-shell/gen/schemas/` is now gitignored and untracked; `tauri-build` regenerates it. The files still exist locally after a build, which is expected.
+- The three `_check_*.html` viewport harnesses are deleted, so the `dist` copy is gone with them.
+- `assets/pages/readme header/` has a space in its directory name, no metadata and no inbound links.
+- The duplicated mockups are gone: `ui/public/pages` is deleted and `assets/pages` is the only copy. `ui/public/vendor` remains as the single source of the vendored fonts, images and Tailwind runtime that the Pages workflow copies into `assets/pages/vendor`.
+- `tailwind.config.js` is ignored by Tailwind 4; `style.css` has the `@source` globs.
+- `assets/pages/index.html` lacks Open Graph tags that every other generated page has.
+- Line endings split between CRLF (original Rust/TS) and LF (all new files); a `.gitattributes` with `* text=auto` would end the churn.
+- `assets/pages/suite/index.html` no longer has `rtrvr-*` attributes, duplicate font links, CDN script tags or remote images.
+
+---
+
+## 5. What is genuinely good
+
+- **The catalogue is a real single source of truth.** `suite.json` → tabs, docs, JSON-LD, sitemap, `llms.txt`, A2A card, MCP and Expert, with `--check` guards in CI so the artefacts cannot drift silently. That is the right shape for this project and it is rare to see it wired this consistently.
+- **The MCP server is proportionate.** No dependencies, no network, protocol negotiation, typed schemas, lazy guide loading and a genuine smoke test — a better agent integration than most projects twice its size.
+- **The docs are readable and self-contained.** Skip link, sticky header, breadcrumbs, `aria-current`, on-page TOC, FAQ `<details>`, previous/next, `prefers-reduced-motion`, responsive breakpoints at 960/620 px, one stylesheet, zero external requests. The feature content traces back to the upstream READMEs.
+- **The download pipeline is careful.** Exact byte length, SHA-256, zip path traversal rejection, single-root detection, `.version` cache, atomic-ish rename, `.build-info.json`.
+- **The notification design separates concerns well.** Memory ring buffer under a short lock, file append outside it, event emitted for UI, path exposed for agents, one test, and the MCP reader tolerates a missing file.
+- **Engineering hygiene where it counts:** both lockfiles committed, `cargo fmt` clean, clippy at `-D warnings` clean, 0 npm advisories, the glib exception is documented and has a dedicated watchdog, and the README now describes the proof-of-concept honestly, including the shared-origin storage caveat.
+
+---
+
+## 6. Recommended fix order
+
+Done in this pass: the iframe/CSP hardening (1), the suite landing page (2), the prune (8, 20, 21, 22, 26), the clipboard wiring (4), the copy fixes (3, 7, 9, 10, 14, 18) and the duplicate titles (3). Remaining, in order:
+
+1. **Make the module contracts explicit.** Return `Err("Unsupported action: {action}")` for unknown actions in all ten modules, and decide whether `set_clipboard`/`get_agent_notifications` are part of the public surface or should go. (4)
+2. **Guard tab switching.** Ask the frame before replacing the canvas, or keep one iframe per module and toggle visibility, so documents are not destroyed silently. (6)
+3. **Treat the notification log as untrusted input.** Rotate or cap the file, validate `kind`, label the MCP tool output as untrusted data, and note the prompt-injection risk in the tool description. (5, 17)
+4. **Add the guard rails the newer code lacks**: tests for `notify_agents`/trim/`since_id` and the Expert's `answer()`, `cargo audit` in CI, and `windows_subsystem` on release builds. (11, 12, 15)
+5. **Smaller cleanups**: the MCP test's "PSD" assertion, `.mcp.json`'s relative path, SwiftShader targeting, `assets/pages/readme header/`, Open Graph on the root redirect, the dead `tailwind.config.js`, line endings, and moving `ui/public/vendor` out of the bundle so it stops shipping in the installer. (13, 16, 19, 23, 24, 25, 27)

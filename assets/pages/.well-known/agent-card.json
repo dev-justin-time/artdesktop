@@ -266,8 +266,8 @@
     },
     {
       "id": "pdfcraft",
-      "name": "PdfCraft pdf tools",
-      "description": "PdfCraft is an open-source PDF workbench for reading, searching, organizing, merging, splitting and annotating documents, including protected files.",
+      "name": "PDFCraft pdf tools",
+      "description": "PDFCraft is an open-source PDF workbench for reading, searching, organizing, merging, splitting and annotating documents, including protected files.",
       "tags": [
         "PDF tools",
         "BusinessApplication",
@@ -279,8 +279,8 @@
         "annotate PDF"
       ],
       "examples": [
-        "What can PdfCraft do?",
-        "Which PdfCraft feature should I use for pdf tools?"
+        "What can PDFCraft do?",
+        "Which PDFCraft feature should I use for pdf tools?"
       ],
       "inputModes": [
         "text/plain"

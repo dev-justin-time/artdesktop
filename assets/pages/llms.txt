@@ -14,7 +14,7 @@ ArtCraft Studio is a Rust and Tauri desktop shell that runs the official browser
 - [EffectCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/effectcraft/): EffectCraft is an open-source motion graphics and visual effects studio with animation, effects, 3D and export tools, plus agent and MCP integration. (v0.16.0)
 - [LightCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/lightcraft/): LightCraft is a fast, private RAW photo editor with light, color, tone curve, masking, presets and black-and-white tools for cinematic color grading. (v0.13.0)
 - [GridCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/gridcraft/): GridCraft is an open-source spreadsheet application for data, formulas and high-performance grids, with a CLI, control channel and MCP server for agents. (v0.11.1)
-- [PdfCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/pdfcraft/): PdfCraft is an open-source PDF workbench for reading, searching, organizing, merging, splitting and annotating documents, including protected files. (v0.13.0)
+- [PDFCraft](https://dev-justin-time.github.io/artdesktop/assets/pages/pdfcraft/): PDFCraft is an open-source PDF workbench for reading, searching, organizing, merging, splitting and annotating documents, including protected files. (v0.13.0)
 
 ## Documentation
 - [Documentation index](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/): feature-by-feature guides for all ten apps.
@@ -27,7 +27,7 @@ ArtCraft Studio is a Rust and Tauri desktop shell that runs the official browser
 - [EffectCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/effectcraft/): 5 documented features, FAQ and agent access.
 - [LightCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/lightcraft/): 9 documented features, FAQ and agent access.
 - [GridCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/gridcraft/): 5 documented features, FAQ and agent access.
-- [PdfCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/pdfcraft/): 8 documented features, FAQ and agent access.
+- [PDFCraft guide](https://dev-justin-time.github.io/artdesktop/assets/pages/docs/pdfcraft/): 8 documented features, FAQ and agent access.
 
 ## Agent integration
 - [A2A Agent Card](https://dev-justin-time.github.io/artdesktop/assets/pages/.well-known/agent-card.json): discovery document listing every app as a skill. Discovery only; the suite does not accept remote A2A tasks yet.

@@ -309,7 +309,7 @@ ${cards}
   <p class="section-intro">Machines can read the same catalogue the docs are built from.</p>
   <div class="features">
     <article class="feature"><span class="index">A2A</span><h3>A2A Agent Card</h3><p>A discovery document lists every app as a skill with tags and example prompts. It is published for discovery only; the suite does not accept remote A2A tasks.</p><p><a href="${agentCard(toRoot)}">Open the Agent Card</a></p></article>
-    <article class="feature"><span class="index">MCP</span><h3>Model Context Protocol</h3><p>One aggregated stdio server exposes <code>list_apps</code>, <code>search_apps</code>, <code>get_app_guide</code>, <code>recommend_app</code> and <code>get_agent_notifications</code>.</p><p><a href="${repoUrl}/blob/main/scripts/mcp-server.mjs" rel="noopener">Read the server source</a></p></article>
+    <article class="feature"><span class="index">MCP</span><h3>Model Context Protocol</h3><p>One aggregated stdio server exposes <code>list_apps</code>, <code>search_apps</code>, <code>get_app_guide</code>, <code>recommend_app</code>, <code>get_agent_notifications</code> and <code>get_suite_manifest</code>.</p><p><a href="${repoUrl}/blob/main/scripts/mcp-server.mjs" rel="noopener">Read the server source</a></p></article>
     <article class="feature"><span class="index">LOG</span><h3>Local notifications</h3><p>The shell appends module and clipboard events to a local JSONL log, so an agent can follow what the user is doing without a remote service.</p><p><a href="${llms(toRoot)}">See llms.txt</a></p></article>
   </div>
 </section>

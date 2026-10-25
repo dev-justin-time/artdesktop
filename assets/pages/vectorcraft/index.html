@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="utf-8">
 <!-- artcraft-seo:start -->
 <title>VectorCraft — Vector graphics | ArtCraft Studio</title>
 <meta name="description" content="VectorCraft is an open-source vector art application for Bezier illustration, shape building and clean, scalable artwork, with agent and command-line access.">
@@ -75,7 +76,7 @@
       "description": "VectorCraft is an open-source vector art application for Bezier illustration, shape building and clean, scalable artwork, with agent and command-line access.",
       "applicationCategory": "DesignApplication",
       "applicationSubCategory": "Vector graphics",
-      "operatingSystem": "Windows, macOS, Linux",
+      "operatingSystem": "Windows",
       "softwareVersion": "0.16.0",
       "featureList": [
         "Bezier drawing",
@@ -108,28 +109,6 @@
       }
     },
     {
-      "@type": "FAQPage",
-      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/vectorcraft/#faq",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What is VectorCraft used for?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "VectorCraft is for vector illustration: drawing and editing Bezier paths, building shapes, and producing artwork that scales cleanly for logos, icons and print."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can AI agents drive VectorCraft?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. The upstream project documents use from Claude Code and other agents, and the suite also exposes VectorCraft guidance through its MCP server."
-          }
-        }
-      ]
-    },
-    {
       "@type": "BreadcrumbList",
       "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/vectorcraft/#breadcrumb",
       "itemListElement": [
@@ -151,12 +130,11 @@
 }
 </script>
 <!-- artcraft-seo:end -->
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ArtCraft Studio - VectorCraft</title>
-<link rel="stylesheet" href="/vendor/fonts/font-4eed1cc85dbe.css">
-<link rel="stylesheet" href="/vendor/fonts/font-de9b7b5eb580.css">
-<link rel="stylesheet" href="/pages/_studio.css">
+
+<link rel="stylesheet" href="../vendor/fonts/font-4eed1cc85dbe.css">
+<link rel="stylesheet" href="../vendor/fonts/font-de9b7b5eb580.css">
+<link rel="stylesheet" href="../_studio.css">
 <style>
   .stage { padding: 22px; }
   .artboard-wrap {
@@ -241,6 +219,7 @@
 </style>
 </head>
 <body>
+<h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0">VectorCraft — Vector graphics</h1>
 <div class="shell">
   <nav class="rail" aria-label="VectorCraft tools">
     <div class="brand" title="ArtCraft Studio"></div>
@@ -480,6 +459,6 @@
     artboard.addEventListener("load", drawSelection);
   })();
 </script>
-<script src="/pages/_studio.js" defer></script>
+<script src="../_studio.js" defer></script>
 </body>
 </html>

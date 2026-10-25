@@ -1,0 +1,102 @@
+name: Deploy site
+
+# Publishes https://<owner>.github.io/<repo>/assets/pages/ — the URLs that
+# suite.json, the sitemap, the A2A card and every canonical point at.
+#
+# One-time setup: Settings -> Pages -> Build and deployment -> Source:
+# "GitHub Actions". Without that, the deploy job stops with a permissions error.
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Assemble site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Verify Generated Pages Are Current
+        run: |
+          node scripts/generate-docs.mjs --check
+          node scripts/generate-seo.mjs --check
+
+      - name: Assemble Site
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site
+          cp -R assets _site/assets
+          # Keep one copy of the vendored fonts, images and Tailwind runtime:
+          # it is generated from ui/public/vendor rather than committed twice.
+          rm -rf _site/assets/pages/vendor
+          cp -R crates/craft-studio-shell/ui/public/vendor _site/assets/pages/vendor
+          # Serve the tree as-is; no Jekyll processing.
+          touch _site/.nojekyll
+
+      - name: Verify Published Tree
+        run: |
+          set -euo pipefail
+          required=(
+            _site/.nojekyll
+            _site/assets/pages/index.html
+            _site/assets/pages/suite/index.html
+            _site/assets/pages/docs/index.html
+            _site/assets/pages/docs/photocraft/index.html
+            _site/assets/pages/.well-known/agent-card.json
+            _site/assets/pages/sitemap.xml
+            _site/assets/pages/robots.txt
+            _site/assets/pages/llms.txt
+            _site/assets/pages/vendor/tailwind.js
+            _site/assets/pages/vendor/fonts/font-de9b7b5eb580.css
+            _site/assets/marketing/social-card.png
+          )
+          for file in "${required[@]}"; do
+            test -f "$file" || { echo "missing $file" >&2; exit 1; }
+          done
+          test -n "$(ls _site/assets/pages/vendor/fonts/files/*.woff2 2>/dev/null)" \
+            || { echo "no vendored font files" >&2; exit 1; }
+          test -n "$(ls _site/assets/pages/vendor/images/* 2>/dev/null)" \
+            || { echo "no vendored images" >&2; exit 1; }
+          # Every page must resolve its own assets relatively.
+          if grep -rInE '(src|href)="/[^/]' _site/assets/pages --include='*.html'; then
+            echo "root-absolute asset reference found" >&2
+            exit 1
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

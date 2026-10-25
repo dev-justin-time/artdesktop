@@ -2,13 +2,15 @@
 
 **A unified desktop shell for the ten Storytold Craft apps**
 
-ArtCraft Studio is a Rust + Tauri 2.0 shell that runs the official browser builds of PhotoCraft, VectorCraft, FilmCraft, WordCraft, DeckCraft, DesignCraft, EffectCraft, LightCraft, GridCraft and PdfCraft from [github.com/storytold](https://github.com/storytold) inside one window. Each app is downloaded from its GitHub release at build time, checksum-verified, and embedded as a pinned web build.
+ArtCraft Studio is a Rust + Tauri 2.0 shell that runs the official browser builds of PhotoCraft, VectorCraft, FilmCraft, WordCraft, DeckCraft, DesignCraft, EffectCraft, LightCraft, GridCraft and PDFCraft from [github.com/storytold](https://github.com/storytold) inside one window. Each app is downloaded from its GitHub release at build time, checksum-verified, and embedded as a pinned web build.
 
-> **Status:** proof of concept. All ten tabs load the real upstream apps offline from bundled assets, with WebGL2 forced for WebView2 compatibility. The apps run independently: the shell's earlier mockup pages, Rust action stubs and shared-clipboard panel are not connected to the upstream apps. See [audit.md](audit.md) for the remaining issues.
+> **Status:** proof of concept. All ten tabs load the real upstream apps offline from bundled assets, with WebGL2 forced for WebView2 compatibility. The shell's shared clipboard is wired to the Rust module layer: VectorCraft exports an SVG into it and PhotoCraft rasterizes it, and the app frames are sandboxed under a content security policy. The upstream apps themselves do not call the shell clipboard yet. See [audit.md](audit.md) for the remaining issues.
 
 <p align="center">
   <img src="assets/marketing/display-banner.png" alt="ArtCraft Studio — one workspace, ten creative modules" width="100%" />
 </p>
+
+<p align="center"><sub><strong>Future UI concept</strong>, not a screenshot of the current build. The shipping app embeds the upstream web builds in tabs; see the <a href="#-concept-gallery">concept gallery</a>.</sub></p>
 
 ## 🎬 Intro film
 
@@ -17,7 +19,7 @@ ArtCraft Studio is a Rust + Tauri 2.0 shell that runs the official browser build
   Your browser does not support the video tag. <a href="assets/video/intro.mp4">Open the MP4</a>.
 </video>
 
-[▶ Watch the 5-second intro film](assets/video/intro.mp4) · *Concept film, not a screen recording.*
+[▶ Watch the 5-second intro film](assets/video/intro.mp4) · *Future-UI concept film, not a screen recording.*
 
 ## 🌟 The ten apps
 
@@ -42,21 +44,23 @@ ArtCraft Studio is a Rust + Tauri 2.0 shell that runs the official browser build
 - **WebGL2 first.** Iframes load with `?webgl` so the apps use the WebGL2 backend instead of waiting on an unavailable WebGPU adapter in WebView2 or headless browsers. WebView2 is configured to use SwiftShader for WebGL; EffectCraft needs this software path, and the other apps accept it too.
 - **Fast rebuilds.** Extracted apps are cached by version; `npm run build` only downloads an app when its pinned version is not present (or when run with `--force`).
 - **Shell chrome.** The ten tabs, per-app status line and clipboard sidebar remain around the embedded apps.
+- **Wired module actions.** The clipboard panel calls the Rust registry through `invoke_module_action`: **Export SVG** asks VectorCraft to put a sample SVG on the shared clipboard, and **Rasterize SVG** hands the clipboard SVG to PhotoCraft's rasterizer and shows the PNG it returns. Capability labels come from `get_module_capabilities`.
+- **Hardened frames.** App iframes carry an explicit `sandbox` policy and `referrerpolicy="no-referrer"`, SVG previews are rendered from a Blob into an `<img>` rather than inline markup, and `tauri.conf.json` sets a content security policy.
 
-The old local mockups remain under `ui/public/pages` and the Rust `CraftModule` implementations remain in `apps/*`, but neither is wired into the new app tabs. The shared clipboard is therefore not yet shared with the upstream apps.
+The retired local mockups are gone; the two wired actions above are the only bridge between the shell and the upstream apps, and the upstream builds do not push to the clipboard themselves.
 
 All ten apps share the shell's browser origin, so their `localStorage`, IndexedDB and OPFS data live under one origin. Each upstream app is designed to keep its own data, but there is no isolation between apps yet; do not store irreplaceable work only in the embedded builds.
 
 ## 🚀 Quick start
 
-Requires **Rust stable**, **Node.js 20+**, network access for the first build, and the **Tauri 2 CLI**. `just` is optional. The first frontend build downloads about 205 MB of app archives (about 457 MB after extraction); later builds reuse them.
+Requires **Rust stable**, **Node.js 20.19+**, network access for the first build, and the **Tauri 2 CLI**. `just` is optional. The first frontend build downloads about 205 MiB (215 MB) of app archives, about 457 MiB after extraction; later builds reuse them.
 
 ```bash
 # 1. Clone the repository
 git clone https://github.com/dev-justin-time/artdesktop.git
 cd artdesktop
 
-# 2. Install frontend dependencies (Node.js 20+)
+# 2. Install frontend dependencies (Node.js 20.19+)
 cd crates/craft-studio-shell/ui && npm ci && cd ../../..
 
 # 3. Install the Tauri CLI once
@@ -85,7 +89,7 @@ Both installers are written under `target/release/bundle/`:
 - `nsis/ArtCraft Studio_0.1.0_x64-setup.exe` — per-user NSIS installer, no administrator prompt required.
 - `msi/ArtCraft Studio_0.1.0_x64_en-US.msi` — per-machine WiX MSI, prompts for elevation.
 
-The frontend build runs `node scripts/fetch-web-apps.mjs` first. The ten app archives total about 205 MB (about 457 MB extracted), so the installers are substantially larger than the bare shell. Use `node scripts/fetch-web-apps.mjs --force` to re-download the pinned versions.
+The frontend build runs `node scripts/fetch-web-apps.mjs` first. The ten app archives total about 205 MiB (215 MB; about 457 MiB extracted), so the installers are substantially larger than the bare shell. Use `node scripts/fetch-web-apps.mjs --force` to re-download the pinned versions.
 
 ### Code signing
 
@@ -127,9 +131,9 @@ Both scripts accept `--check`, and CI runs them, so changing the catalogue witho
 
 **App documentation.** `assets/pages/docs/` contains a documentation hub and a feature-by-feature page for every app, with a shared header, sidebar, footer, breadcrumb trail, table of contents, FAQ and previous/next navigation. The pages are static HTML with one shared stylesheet, relative links, no JavaScript and no external font or CDN requests.
 
-**Google-format rich data.** Each marketing page and documentation page carries JSON-LD using schema.org types Google supports: `Organization`, `WebSite`, `SoftwareApplication` (category, free offer, feature list, pinned version), `BreadcrumbList`, `FAQPage`, and `TechArticle` or `CollectionPage`. The same pages get canonical URLs, descriptions, Open Graph and Twitter metadata. The generator also writes `sitemap.xml` (22 URLs), `robots.txt` and `llms.txt`.
+**Google-format rich data.** Each marketing page and documentation page carries JSON-LD using schema.org types Google supports: `Organization`, `WebSite`, `SoftwareApplication` (category, free offer, feature list, pinned version), `BreadcrumbList`, `FAQPage` (only on the documentation hub, which shows the questions), and `TechArticle` or `CollectionPage`. The same pages get canonical URLs, descriptions, Open Graph and Twitter metadata. The generator also writes `sitemap.xml` (22 URLs), `robots.txt` and `llms.txt`.
 
-> **Before publishing:** set `site.url` (and `site.pagesPath` if the pages are served from the domain root) in `suite.json`. Canonicals, the sitemap, Open Graph URLs and the A2A card all derive from those two fields. The current default points at GitHub Pages for this repository.
+**Publishing.** `site.url` and `site.pagesPath` in `suite.json` point at `https://dev-justin-time.github.io/artdesktop/assets/pages/`; canonicals, the sitemap, Open Graph URLs and the A2A card all derive from them. `.github/workflows/pages.yml` deploys that tree on every push to `main` (or via `workflow_dispatch`): it re-runs the `--check` guards, assembles `_site` from `assets/`, replaces `_site/assets/pages/vendor` with a fresh copy of `crates/craft-studio-shell/ui/public/vendor`, writes `.nojekyll`, verifies the required files are present, and uploads the result to GitHub Pages. `assets/pages/vendor/` is generated, not committed, so a plain static server pointed at `assets/` needs that copy step first. Set Settings → Pages → Source to **GitHub Actions** once before the first deploy.
 
 **A2A discovery.** `assets/pages/.well-known/agent-card.json` (with an `agent.json` alias) publishes an A2A 0.3.0 Agent Card listing all ten apps as skills, with tags, examples and documentation links. It is **discovery-only**: the suite does not accept remote A2A tasks yet, and the card declares that through a `capabilities.extensions` entry. Do not point an agent at it expecting a JSON-RPC endpoint.
 
@@ -161,11 +165,11 @@ The Rust commands are `notify_agents`, `get_agent_notifications` and `get_agent_
 - **`scripts/mcp-server.mjs`** — the aggregated MCP server; `scripts/check-mcp.mjs` is its smoke test.
 - **`crates/craft-studio-shell/src/notifications.rs`** — the local agent notification log and its Tauri commands.
 - **`ui/src/expert.ts`** — the offline Suite Expert retrieval and chat panel.
-- **`crates/craft-studio-shell/ui/src/app.ts`** — the tab shell that mounts each upstream web app.
+- **`crates/craft-studio-shell/ui/src/app.ts`** — the tab shell that mounts each upstream web app and drives the shared clipboard panel.
 - **`crates/craft-studio-shell/ui/web-apps.json`** — pinned app versions, release assets and SHA-256 hashes.
 - **`crates/craft-studio-shell/ui/scripts/fetch-web-apps.mjs`** — downloads, verifies and extracts the web builds into `ui/public/apps` before dev/build.
-- **`crates/craft-libs`** and **`apps/*`** — the original `CraftModule` trait, registry, clipboard and module crates, retained for future native integration.
-- **`crates/craft-studio-shell/ui/public/pages`** — the retired local mockups, kept for reference.
+- **`crates/craft-libs`** and **`apps/*`** — the `CraftModule` trait, registry and shared clipboard used by the shell's commands, plus one crate per app with the actions the UI can call.
+- **`assets/pages/suite/index.html`** — the suite landing page: real navigation to the docs, sitemap and repository, local vendor assets, and no fictional runtime telemetry.
 
 ## 🛡️ CI
 
@@ -184,7 +188,7 @@ The Linux checks are available locally through `just ci`.
 
 ## 🖼️ Concept gallery
 
-> **Design exploration, not current screenshots.** These renders were produced during the visual exploration of the suite. They show intended UI directions; the build currently embeds simplified interactive pages, and most module actions are stubs. See [audit.md](audit.md) for what actually works.
+> **Future UI concepts, not current screenshots.** These renders are design exploration for a planned interface and are kept as the intended visual direction. The build today embeds the upstream web apps in tabs, not these screens. See [audit.md](audit.md) for what actually works.
 
 <p align="center">
   <img src="assets/concepts/dashboard.jpg" alt="ArtCraft Studio dashboard concept" width="100%" />
@@ -226,7 +230,7 @@ Build-aligned launch assets with accurate copy: ten creative modules, Rust + Tau
 
 ## 🤝 Contributing
 
-The module boundary is the `CraftModule` trait in `crates/craft-libs/src/lib.rs`: implement `id`, `name`, `capabilities` and `handle_action`, then register the module in `crates/craft-studio-shell/src/main.rs`. See [audit.md](audit.md) for the open work items.
+The module boundary is the `CraftModule` trait in `crates/craft-libs/src/lib.rs`: implement `id`, `name`, `capabilities` and `handle_action`, then register the module in `crates/craft-studio-shell/src/main.rs`. Registered actions are callable from the UI through the `invoke_module_action` command; the clipboard panel currently labels the VectorCraft and PhotoCraft demo actions. See [audit.md](audit.md) for the open work items.
 
 ## 📜 License
 

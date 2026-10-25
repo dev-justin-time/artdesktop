@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="utf-8">
 <!-- artcraft-seo:start -->
 <title>DeckCraft — Presentations | ArtCraft Studio</title>
 <meta name="description" content="DeckCraft is an open-source presentation designer for building slide decks and slide shows, with CLI and MCP integration for scripted and agent-driven decks.">
@@ -75,7 +76,7 @@
       "description": "DeckCraft is an open-source presentation designer for building slide decks and slide shows, with CLI and MCP integration for scripted and agent-driven decks.",
       "applicationCategory": "BusinessApplication",
       "applicationSubCategory": "Presentations",
-      "operatingSystem": "Windows, macOS, Linux",
+      "operatingSystem": "Windows",
       "softwareVersion": "0.10.0",
       "featureList": [
         "Slide design",
@@ -108,28 +109,6 @@
       }
     },
     {
-      "@type": "FAQPage",
-      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/deckcraft/#faq",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Can DeckCraft build decks from the command line?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. The upstream DeckCraft CLI includes an MCP server mode for headless and agent-driven deck work, and can connect to a running app."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Does DeckCraft present full-screen slide shows?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. DeckCraft is a presentation and slide designer with a presentation mode, not only a static document exporter."
-          }
-        }
-      ]
-    },
-    {
       "@type": "BreadcrumbList",
       "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/deckcraft/#breadcrumb",
       "itemListElement": [
@@ -151,12 +130,11 @@
 }
 </script>
 <!-- artcraft-seo:end -->
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ArtCraft Studio - DeckCraft</title>
-<link rel="stylesheet" href="/vendor/fonts/font-de9b7b5eb580.css">
-<link rel="stylesheet" href="/vendor/fonts/font-4eed1cc85dbe.css">
-<link rel="stylesheet" href="/pages/_studio.css">
+
+<link rel="stylesheet" href="../vendor/fonts/font-de9b7b5eb580.css">
+<link rel="stylesheet" href="../vendor/fonts/font-4eed1cc85dbe.css">
+<link rel="stylesheet" href="../_studio.css">
 <style>
   .deck-side { width: 236px; flex-basis: 236px; }
   .slide-thumb {
@@ -205,6 +183,7 @@
   .slide .ring.b { width: 230px; height: 230px; right: -50px; top: -66px; border-color: rgba(34, 211, 238, .35); }
   .slide .kicker { font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--accent, #22d3ee); margin-bottom: 14px; }
   .slide h1 { font-size: clamp(34px, 5.4vw, 62px); line-height: .98; letter-spacing: -.035em; margin: 0 0 14px; max-width: 78%; font-weight: 680; }
+h2#slide-title, h2#present-title { font-size: clamp(34px, 5.4vw, 62px); line-height: .98; letter-spacing: -.035em; margin: 0 0 14px; max-width: 78%; font-weight: 680; }
   .slide .sub { color: #a8b6c8; font-size: 14px; max-width: 56%; line-height: 1.5; }
   .slide .foot { margin-top: 30px; display: flex; gap: 8px; }
   .slide .foot span { font-size: 10px; padding: 4px 8px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .14); color: #cbd5e1; }
@@ -219,6 +198,7 @@
 </style>
 </head>
 <body>
+<h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0">DeckCraft — Presentations</h1>
 <div class="shell">
   <nav class="rail" aria-label="DeckCraft tools">
     <div class="brand" title="ArtCraft Studio"></div>
@@ -262,7 +242,7 @@
         <div class="slide" id="slide" style="--accent:#22d3ee">
           <div class="ring a"></div><div class="ring b"></div>
           <div class="kicker" id="slide-kicker">ArtCraft / Keynote</div>
-          <h1 id="slide-title">Cybernetic Genesis</h1>
+          <h2 id="slide-title">Cybernetic Genesis</h2>
           <div class="sub" id="slide-sub">A studio for generative form, built in Rust.</div>
           <div class="foot"><span>ArtCraft Studio</span><span>2026</span></div>
           <div class="page-num" id="slide-num">01 / 06</div>
@@ -310,7 +290,7 @@
   <div class="slide" style="--accent:#22d3ee">
     <div class="ring a"></div><div class="ring b"></div>
     <div class="kicker" id="present-kicker">ArtCraft / Keynote</div>
-    <h1 id="present-title">Cybernetic Genesis</h1>
+    <h2 id="present-title">Cybernetic Genesis</h2>
     <div class="sub" id="present-sub">A studio for generative form, built in Rust.</div>
     <div class="foot"><span>ArtCraft Studio</span><span>2026</span></div>
   </div>
@@ -362,6 +342,6 @@
   present.addEventListener("click", () => present.classList.remove("open"));
   window.addEventListener("keydown", (event) => { if (event.key === "Escape") present.classList.remove("open"); });
 </script>
-<script src="/pages/_studio.js" defer></script>
+<script src="../_studio.js" defer></script>
 </body>
 </html>

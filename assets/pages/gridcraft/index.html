@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="utf-8">
 <!-- artcraft-seo:start -->
 <title>GridCraft — Spreadsheets | ArtCraft Studio</title>
 <meta name="description" content="GridCraft is an open-source spreadsheet application for data, formulas and high-performance grids, with a CLI, control channel and MCP server for agents.">
@@ -75,7 +76,7 @@
       "description": "GridCraft is an open-source spreadsheet application for data, formulas and high-performance grids, with a CLI, control channel and MCP server for agents.",
       "applicationCategory": "BusinessApplication",
       "applicationSubCategory": "Spreadsheets",
-      "operatingSystem": "Windows, macOS, Linux",
+      "operatingSystem": "Windows",
       "softwareVersion": "0.11.1",
       "featureList": [
         "Spreadsheet grid",
@@ -107,28 +108,6 @@
       }
     },
     {
-      "@type": "FAQPage",
-      "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/gridcraft/#faq",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Can agents read and edit GridCraft sheets?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. GridCraft ships a CLI, a control channel for driving the running app, and an MCP server for headless agent access."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is GridCraft built for large data sets?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "GridCraft is designed as a high-performance spreadsheet with a native Rust engine and fast grid rendering."
-          }
-        }
-      ]
-    },
-    {
       "@type": "BreadcrumbList",
       "@id": "https://dev-justin-time.github.io/artdesktop/assets/pages/gridcraft/#breadcrumb",
       "itemListElement": [
@@ -150,12 +129,11 @@
 }
 </script>
 <!-- artcraft-seo:end -->
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ArtCraft Studio - GridCraft</title>
-<link rel="stylesheet" href="/vendor/fonts/font-de9b7b5eb580.css">
-<link rel="stylesheet" href="/vendor/fonts/font-4eed1cc85dbe.css">
-<link rel="stylesheet" href="/pages/_studio.css">
+
+<link rel="stylesheet" href="../vendor/fonts/font-de9b7b5eb580.css">
+<link rel="stylesheet" href="../vendor/fonts/font-4eed1cc85dbe.css">
+<link rel="stylesheet" href="../_studio.css">
 <style>
   .sheet-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
   .cell-ref { width: 56px; height: 28px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 6px; background: #0f1218; font-family: var(--mono); font-size: 11px; color: var(--cyan); }
@@ -183,6 +161,7 @@
 </style>
 </head>
 <body>
+<h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0">GridCraft — Spreadsheets</h1>
 <div class="shell">
   <nav class="rail" aria-label="GridCraft tools">
     <div class="brand" title="ArtCraft Studio"></div>
@@ -338,6 +317,6 @@
   selectCell(selected);
   document.querySelectorAll("[data-toggle]").forEach((row) => row.addEventListener("click", () => row.classList.toggle("on")));
 </script>
-<script src="/pages/_studio.js" defer></script>
+<script src="../_studio.js" defer></script>
 </body>
 </html>

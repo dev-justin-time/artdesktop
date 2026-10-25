@@ -68,7 +68,7 @@ try {
 
   const list = await request("tools/call", { name: "list_apps", arguments: {} });
   const listText = list.content[0].text;
-  for (const app of ["PhotoCraft", "VectorCraft", "FilmCraft", "WordCraft", "DeckCraft", "DesignCraft", "EffectCraft", "LightCraft", "GridCraft", "PdfCraft"]) {
+  for (const app of ["PhotoCraft", "VectorCraft", "FilmCraft", "WordCraft", "DeckCraft", "DesignCraft", "EffectCraft", "LightCraft", "GridCraft", "PDFCraft"]) {
     assert(listText.includes(app), `list_apps missing ${app}`);
   }
 

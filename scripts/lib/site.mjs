@@ -71,16 +71,30 @@ export const START = "<!-- artcraft-seo:start -->";
 export const END = "<!-- artcraft-seo:end -->";
 
 export function injectHead(html, block) {
+  // Drop any previous block so its position is always recomputed.
+  let body = html;
   const index = html.indexOf(START);
   if (index !== -1) {
     const end = html.indexOf(END, index);
     if (end === -1) throw new Error("found SEO start marker without an end marker");
-    return html.slice(0, index) + block + html.slice(end + END.length);
+    body = html.replace(/\r?\n?<!-- artcraft-seo:start -->[\s\S]*?<!-- artcraft-seo:end -->\r?\n?/, "");
   }
-  const head = html.match(/<head[^>]*>/i);
-  if (!head) throw new Error("page has no <head> element");
-  const at = head.index + head[0].length;
-  return `${html.slice(0, at)}\n${block}${html.slice(at)}`;
+
+  // Keep <meta charset> inside the first 1024 bytes: the block goes after it.
+  // Restore the newline that the removed block used to separate <head> from its first child.
+  body = body.replace(/(<head[^>]*>)(?=[^\r\n])/i, "$1\n");
+  const insert = (before, after) =>
+    `${before}\n${block}${after.startsWith("\n") || after.startsWith("\r") ? "" : "\n"}${after}`;
+
+  const charset = body.match(/<meta[^>]+charset[^>]*>/i);
+  if (charset) {
+    const at = charset.index + charset[0].length;
+    return insert(body.slice(0, at), body.slice(at));
+  }
+
+  const headEnd = body.search(/<\/head>/i);
+  if (headEnd === -1) throw new Error("page has no </head> element");
+  return insert(body.slice(0, headEnd), body.slice(headEnd));
 }
 
 export function organizationNode() {
@@ -141,7 +155,7 @@ export function softwareApplicationNode(app, url) {
     description: app.description,
     applicationCategory: app.applicationCategory,
     applicationSubCategory: app.category,
-    operatingSystem: "Windows, macOS, Linux",
+    operatingSystem: "Windows",
     softwareVersion: release?.tag?.replace(/^v/, ""),
     featureList: app.features.map((feature) => feature.name),
     keywords: app.keywords.join(", "),
@@ -175,7 +189,6 @@ export function appGraph(app) {
       inLanguage: "en",
     },
     softwareApplicationNode(app, url),
-    faqNode(app.faq, `${url}#faq`),
     breadcrumbNode([
       { name: site.name, url: suiteUrl },
       { name: app.name, url },
@@ -209,7 +222,6 @@ export function suiteGraph() {
         url: appUrl(app.id),
       })),
     },
-    faqNode(site.faq, `${suiteUrl}#faq`),
     breadcrumbNode([{ name: site.name, url: suiteUrl }]),
   ];
 }

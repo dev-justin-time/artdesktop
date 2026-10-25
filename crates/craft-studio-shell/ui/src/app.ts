@@ -5,14 +5,27 @@ import suite from "./suite.json";
 
 interface ClipboardItem { source_module: string; data_type: string; payload: string; }
 interface Module { id: string; name: string; icon: string; }
+interface ModuleAction { id: string; label: string; icon: string; category: string; }
 
 const MODULES: Module[] = suite.apps.map((app) => ({ id: app.id, name: app.tab, icon: app.icon }));
+
+const SAMPLE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140" viewBox="0 0 240 140">
+  <rect width="240" height="140" rx="14" fill="#0b0d12"/>
+  <circle cx="82" cy="70" r="36" fill="#22d3ee"/>
+  <path d="M118 30 206 70 118 110Z" fill="#c4b5fd"/>
+</svg>`;
+
+let clipboard: ClipboardItem | null = null;
+let previewUrl: string | null = null;
 
 export async function initApp() {
   renderTabs();
   setupClipboardListener();
   initExpert();
   (window as any).activateModule = activateModule;
+  bindClipboardActions();
+  void loadClipboard();
+  void labelClipboardActions();
 }
 
 async function notifyAgents(kind: string, module: string, message: string, payload: Record<string, unknown> = {}) {
@@ -46,6 +59,8 @@ async function activateModule(moduleId: string) {
       <iframe
         id="app-frame"
         class="absolute inset-0 w-full h-full border-0 bg-[#0b0d12]"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-downloads allow-popups allow-pointer-lock"
+        referrerpolicy="no-referrer"
         src="apps/${moduleId}/index.html?webgl"
         title="${label}"
         allow="clipboard-read; clipboard-write; fullscreen; autoplay"
@@ -68,17 +83,162 @@ async function activateModule(moduleId: string) {
 
 function setupClipboardListener() {
   listen<ClipboardItem>("clipboard-updated", (event) => {
-    const item = event.payload;
-    const preview = document.getElementById("clipboard-preview")!;
-    void notifyAgents("clipboard.updated", item.source_module, `Clipboard updated by ${item.source_module}`, { dataType: item.data_type });
-
-    if (item.data_type === "image/svg+xml") {
-      const svgString = atob(item.payload);
-      preview.innerHTML = `<div class="text-xs text-gray-400 mb-2">From: ${item.source_module}</div><div class="bg-black p-2 rounded w-full flex items-center justify-center">${svgString}</div>`;
-    } else {
-      preview.innerHTML = `<div class="text-xs text-gray-400 mb-2">From: ${item.source_module}</div><div class="text-gray-300 text-sm">${item.data_type}</div>`;
-    }
+    renderClipboard(event.payload);
+    void notifyAgents("clipboard.updated", event.payload.source_module, `Clipboard updated by ${event.payload.source_module}`, { dataType: event.payload.data_type });
   }).catch((error) => {
     console.debug("clipboard events are only available in the desktop shell", error);
   });
+}
+
+function bindClipboardActions() {
+  document.getElementById("clipboard-export")?.addEventListener("click", () => { void exportSampleSvg(); });
+  document.getElementById("clipboard-rasterize")?.addEventListener("click", () => { void rasterizeClipboard(); });
+}
+
+async function labelClipboardActions() {
+  try {
+    const [vector, photo] = await Promise.all([
+      invoke<ModuleAction[]>("get_module_capabilities", { moduleId: "vectorcraft" }),
+      invoke<ModuleAction[]>("get_module_capabilities", { moduleId: "photocraft" }),
+    ]);
+    const exportAction = vector.find((action) => action.id === "export_svg");
+    const rasterAction = photo.find((action) => action.id === "rasterize_svg");
+    const exportButton = document.getElementById("clipboard-export");
+    const rasterButton = document.getElementById("clipboard-rasterize");
+    if (exportAction && exportButton) exportButton.textContent = `${exportAction.icon} ${exportAction.label}`;
+    if (rasterAction && rasterButton) rasterButton.textContent = `${rasterAction.icon} ${rasterAction.label}`;
+  } catch (error) {
+    console.debug("module commands are only available in the desktop shell", error);
+  }
+}
+
+async function loadClipboard() {
+  try {
+    renderClipboard(await invoke<ClipboardItem | null>("get_clipboard"));
+  } catch (error) {
+    console.debug("clipboard commands are only available in the desktop shell", error);
+  }
+}
+
+function decodeBase64Utf8(payload: string): string {
+  const bytes = Uint8Array.from(atob(payload), (character) => character.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
+function setStatus(message: string, isError = false) {
+  const status = document.getElementById("clipboard-status");
+  if (!status) return;
+  status.textContent = message;
+  status.className = isError ? "text-[11px] text-rose-400" : "text-[11px] text-gray-500";
+}
+
+function renderClipboard(item: ClipboardItem | null) {
+  clipboard = item;
+  if (previewUrl) {
+    URL.revokeObjectURL(previewUrl);
+    previewUrl = null;
+  }
+
+  const preview = document.getElementById("clipboard-preview")!;
+  preview.replaceChildren();
+  const rasterButton = document.getElementById("clipboard-rasterize") as HTMLButtonElement | null;
+
+  if (!item) {
+    const empty = document.createElement("span");
+    empty.className = "text-gray-600 text-sm italic";
+    empty.textContent = "Empty";
+    preview.append(empty);
+    if (rasterButton) rasterButton.disabled = true;
+    return;
+  }
+
+  const source = document.createElement("div");
+  source.className = "text-xs text-gray-400 mb-2";
+  source.textContent = `From: ${item.source_module}`;
+  preview.append(source);
+
+  if (item.data_type === "image/svg+xml") {
+    try {
+      const blob = new Blob([decodeBase64Utf8(item.payload)], { type: "image/svg+xml" });
+      previewUrl = URL.createObjectURL(blob);
+      const image = document.createElement("img");
+      image.src = previewUrl;
+      image.alt = `SVG clipboard item from ${item.source_module}`;
+      image.className = "w-full rounded bg-black";
+      preview.append(image);
+      if (rasterButton) rasterButton.disabled = false;
+      setStatus("SVG ready to rasterize.");
+    } catch (error) {
+      const failed = document.createElement("div");
+      failed.className = "text-xs text-rose-400";
+      failed.textContent = "Could not decode the SVG payload.";
+      preview.append(failed);
+      if (rasterButton) rasterButton.disabled = true;
+      setStatus(String(error), true);
+    }
+    return;
+  }
+
+  const type = document.createElement("div");
+  type.className = "text-gray-300 text-sm";
+  type.textContent = item.data_type;
+  preview.append(type);
+  if (rasterButton) rasterButton.disabled = true;
+  setStatus("Clipboard item is not an SVG.");
+}
+
+async function exportSampleSvg() {
+  setStatus("Exporting sample SVG…");
+  try {
+    await invoke("invoke_module_action", {
+      moduleId: "vectorcraft",
+      action: "export_svg",
+      payload: { svg_data: SAMPLE_SVG },
+    });
+    await loadClipboard();
+    setStatus("Sample SVG sent to the shared clipboard.");
+  } catch (error) {
+    setStatus(error instanceof Error ? error.message : String(error), true);
+  }
+}
+
+async function rasterizeClipboard() {
+  if (!clipboard || clipboard.data_type !== "image/svg+xml") {
+    setStatus("Copy an SVG first.", true);
+    return;
+  }
+
+  const rasterButton = document.getElementById("clipboard-rasterize") as HTMLButtonElement | null;
+  if (rasterButton) rasterButton.disabled = true;
+  setStatus("Rasterizing…");
+  try {
+    const result = await invoke<{ status?: string; payload?: string }>("invoke_module_action", {
+      moduleId: "photocraft",
+      action: "rasterize_svg",
+      payload: { svg_data: clipboard.payload },
+    });
+    if (!result?.payload) throw new Error("PhotoCraft returned no PNG payload.");
+    showRasterizedPng(result.payload);
+    setStatus("Rasterized with PhotoCraft.");
+  } catch (error) {
+    setStatus(error instanceof Error ? error.message : String(error), true);
+  } finally {
+    if (rasterButton) rasterButton.disabled = false;
+  }
+}
+
+function showRasterizedPng(base64: string) {
+  const result = document.getElementById("clipboard-result");
+  if (!result) return;
+  result.replaceChildren();
+  result.classList.remove("hidden");
+
+  const label = document.createElement("div");
+  label.className = "text-[11px] uppercase tracking-wide text-gray-500 mb-2";
+  label.textContent = "Rasterized PNG";
+  const image = document.createElement("img");
+  image.src = `data:image/png;base64,${base64}`;
+  image.alt = "Rasterized PNG from PhotoCraft";
+  image.className = "w-full rounded border border-gray-800 bg-black";
+  result.append(label, image);
 }
