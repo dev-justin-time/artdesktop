@@ -45,6 +45,10 @@ jobs:
       run: npm ci
       working-directory: crates/craft-studio-shell/ui
 
+    - name: Audit Frontend Dependencies
+      run: npm audit --audit-level=high
+      working-directory: crates/craft-studio-shell/ui
+
     - name: Build Frontend (Vite)
       run: npm run build
       working-directory: crates/craft-studio-shell/ui
