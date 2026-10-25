@@ -23,6 +23,7 @@ export async function initApp() {
   setupClipboardListener();
   initExpert();
   bindClipboardActions();
+  void loadFrameUrls();
   void loadClipboard();
   void labelClipboardActions();
 }
@@ -45,6 +46,26 @@ interface FrameHandle {
 // and "Reload" is the explicit way to discard one.
 const frames = new Map<string, FrameHandle>();
 let activeModuleId: string | null = null;
+
+// Each app build is served from its own origin (`photocraft://localhost/…`, or
+// `http://photocraft.localhost/…` on Windows), so the frame URL comes from the
+// backend rather than being built here. A plain browser has no such command and
+// falls back to the relative path Vite serves.
+let frameUrls: Record<string, string> | null = null;
+let frameUrlsRequest: Promise<Record<string, string>> | null = null;
+
+function loadFrameUrls(): Promise<Record<string, string>> {
+  frameUrlsRequest ??= invoke<Record<string, string>>("get_module_frame_urls")
+    .then((urls) => {
+      frameUrls = urls;
+      return urls;
+    })
+    .catch((error) => {
+      console.debug("module frame URLs are only available in the desktop shell", error);
+      return {};
+    });
+  return frameUrlsRequest;
+}
 
 function renderTabs() {
   // Build the tabs with listeners rather than inline handlers: the content
@@ -70,7 +91,7 @@ function renderTabs() {
   }
 }
 
-function createFrame(module: Module): FrameHandle {
+function createFrame(module: Module, src: string): FrameHandle {
   const label = `${module.name}Craft`;
   const wrapper = document.createElement("div");
   wrapper.className = "absolute inset-0 hidden";
@@ -90,9 +111,13 @@ function createFrame(module: Module): FrameHandle {
   frame.className = "absolute inset-0 w-full h-full border-0 bg-[#0b0d12]";
   frame.title = label;
   frame.referrerPolicy = "no-referrer";
+  // `allow-same-origin` is what lets the app keep its own localStorage, IndexedDB
+  // and OPFS. It is safe here because the frame's origin is that app alone: the
+  // shell's storage lives on a different origin, and a foreign origin gets no IPC
+  // bridge, so the frame cannot reach the shell's state or commands.
   frame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms allow-downloads allow-popups allow-pointer-lock");
   frame.setAttribute("allow", "clipboard-read; clipboard-write; fullscreen; autoplay");
-  frame.src = `apps/${module.id}/index.html?webgl`;
+  frame.src = src;
   frame.addEventListener("load", () => {
     loading.remove();
     // The expert panel stays usable even when an app fails to boot.
@@ -136,9 +161,10 @@ async function activateModule(moduleId: string) {
 
   let handle = frames.get(moduleId);
   if (!handle) {
+    const urls = frameUrls ?? (await loadFrameUrls());
     const canvas = document.getElementById("canvas-workspace")!;
     canvas.querySelector("h2")?.remove();
-    handle = createFrame(module);
+    handle = createFrame(module, urls[moduleId] ?? `apps/${moduleId}/index.html?webgl`);
     frames.set(moduleId, handle);
     canvas.append(handle.wrapper);
   }

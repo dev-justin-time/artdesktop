@@ -106,6 +106,14 @@ impl ModuleRegistry {
     pub fn get(&self, id: &str) -> Option<&dyn CraftModule> {
         self.modules.get(id).map(|m| m.as_ref())
     }
+
+    /// Registered module ids, sorted so callers that build a surface from them
+    /// (the per-module protocol schemes) get a stable order.
+    pub fn ids(&self) -> Vec<String> {
+        let mut ids: Vec<String> = self.modules.keys().cloned().collect();
+        ids.sort();
+        ids
+    }
 }
 
 impl Default for ModuleRegistry {

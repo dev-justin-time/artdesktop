@@ -15,12 +15,11 @@
         "width": 1400,
         "height": 900,
         "resizable": true,
-        "fullscreen": false,
-        "additionalBrowserArgs": "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --use-angle=swiftshader --enable-unsafe-swiftshader"
+        "fullscreen": false
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' data:; connect-src 'self' ipc: ipc://localhost http://ipc.localhost http://localhost:1420 ws://localhost:1420; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' data:; connect-src 'self' ipc: ipc://localhost http://ipc.localhost http://localhost:1420 ws://localhost:1420; frame-src 'self' http://photocraft.localhost photocraft://localhost photocraft: http://vectorcraft.localhost vectorcraft://localhost vectorcraft: http://filmcraft.localhost filmcraft://localhost filmcraft: http://wordcraft.localhost wordcraft://localhost wordcraft: http://deckcraft.localhost deckcraft://localhost deckcraft: http://designcraft.localhost designcraft://localhost designcraft: http://effectcraft.localhost effectcraft://localhost effectcraft: http://lightcraft.localhost lightcraft://localhost lightcraft: http://gridcraft.localhost gridcraft://localhost gridcraft: http://pdfcraft.localhost pdfcraft://localhost pdfcraft:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
     }
   },
   "bundle": {

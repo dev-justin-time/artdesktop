@@ -1,0 +1,19 @@
+# One line ending everywhere: LF in the repository and in the working tree, so a
+# Windows checkout of a Rust/TypeScript file is byte-identical to a Linux one and
+# diffs stop churning on the files some editors rewrote as CRLF.
+* text=auto eol=lf
+
+# Assets that must never be newline-converted (or diffed as text).
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.avif binary
+*.mp4 binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.zip binary

@@ -255,7 +255,8 @@ function appStructuredData(app) {
       articleSection: "Documentation",
       keywords: app.keywords.join(", "),
     },
-    softwareApplicationNode(app, appUrl(app.id)),
+    // This page renders the full feature list, so the node may claim it.
+    softwareApplicationNode(app, appUrl(app.id), { featureList: true }),
     breadcrumbNode([
       { name: site.name, url: suiteUrl },
       { name: "Documentation", url: docsUrl },

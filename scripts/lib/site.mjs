@@ -145,7 +145,10 @@ export function faqNode(faq, id) {
   };
 }
 
-export function softwareApplicationNode(app, url) {
+/// `featureList` is opt-in: structured data has to match what the page shows, so the
+/// app marketing pages and the suite page carry the node without it, while the
+/// documentation page — which renders every feature — includes it.
+export function softwareApplicationNode(app, url, { featureList = false } = {}) {
   const release = releases[app.id];
   return {
     "@type": "SoftwareApplication",
@@ -157,7 +160,7 @@ export function softwareApplicationNode(app, url) {
     applicationSubCategory: app.category,
     operatingSystem: "Windows",
     softwareVersion: release?.tag?.replace(/^v/, ""),
-    featureList: app.features.map((feature) => feature.name),
+    ...(featureList ? { featureList: app.features.map((feature) => feature.name) } : {}),
     keywords: app.keywords.join(", "),
     image: ogImageUrl,
     isAccessibleForFree: true,
