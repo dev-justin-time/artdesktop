@@ -33,13 +33,15 @@ const QUERY: &str = "?webgl";
 ///   shell's own `frame-src` is what decides who may embed the shell. Inheriting
 ///   the shell's `frame-ancestors 'none'` here would block the frame outright,
 ///   because the shell is a different origin now.
-/// * `script-src` allows inline script, because the upstream builds ship inline
-///   bootstrap scripts. They are third-party code running inside their own origin
-///   with no IPC bridge, so allowing their inline script cannot reach the shell.
+/// * `script-src` allows inline script and WebAssembly compilation, because the
+///   upstream builds ship inline bootstrap scripts and several are WASM apps
+///   (LightCraft compiles its own module). They are third-party code running inside
+///   their own origin with no IPC bridge, so this cannot reach the shell.
 ///
 /// `ipc:` is deliberately absent: an app document has no business talking to the
 /// shell's IPC endpoint.
-pub const APP_CSP: &str = "default-src 'self'; script-src 'self' 'unsafe-inline'; \
+pub const APP_CSP: &str =
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; \
 style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' data:; \
 connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'";
 
