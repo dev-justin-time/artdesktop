@@ -22,7 +22,6 @@ export async function initApp() {
   renderTabs();
   setupClipboardListener();
   initExpert();
-  (window as any).activateModule = activateModule;
   bindClipboardActions();
   void loadClipboard();
   void labelClipboardActions();
@@ -48,11 +47,27 @@ const frames = new Map<string, FrameHandle>();
 let activeModuleId: string | null = null;
 
 function renderTabs() {
-  document.getElementById("module-tabs")!.innerHTML = MODULES.map(m => `
-    <button id="tab-${m.id}" type="button" aria-pressed="false" onclick="window.activateModule('${m.id}')" class="px-3 py-1.5 rounded hover:bg-gray-800 text-sm font-medium flex items-center gap-2">
-      <span aria-hidden="true">${m.icon}</span> ${m.name}
-    </button>
-  `).join("");
+  // Build the tabs with listeners rather than inline handlers: the content
+  // security policy forbids inline script, so `onclick` attributes are blocked.
+  const container = document.getElementById("module-tabs")!;
+  container.replaceChildren();
+  for (const module of MODULES) {
+    const button = document.createElement("button");
+    button.id = `tab-${module.id}`;
+    button.type = "button";
+    button.className = "px-3 py-1.5 rounded hover:bg-gray-800 text-sm font-medium flex items-center gap-2";
+    button.setAttribute("aria-pressed", "false");
+
+    const icon = document.createElement("span");
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = module.icon;
+    button.append(icon, document.createTextNode(` ${module.name}`));
+
+    button.addEventListener("click", () => {
+      void activateModule(module.id);
+    });
+    container.append(button);
+  }
 }
 
 function createFrame(module: Module): FrameHandle {

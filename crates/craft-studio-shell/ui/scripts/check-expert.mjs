@@ -5,7 +5,7 @@
 // in Node. The guide fetch is unavailable outside the webview, so loadGuide falls
 // back to the catalogue — which is exactly the path this test pins down.
 import { build } from "esbuild";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -29,9 +29,7 @@ try {
   });
 
   const { answer, stem } = await import(pathToFileURL(outfile).href);
-  const catalog = JSON.parse(
-    await (await import("node:fs/promises")).readFile(path.join(ui, "src", "suite.json"), "utf8"),
-  );
+  const catalog = JSON.parse(await readFile(path.join(ui, "src", "suite.json"), "utf8"));
   const apps = catalog.apps;
 
   // The stemmer must fold "features" and "feature" together; it used to strip "es"

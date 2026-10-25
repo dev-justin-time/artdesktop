@@ -45,7 +45,7 @@ ArtCraft Studio is a Rust + Tauri 2.0 shell that runs the official browser build
 - **Fast rebuilds.** Extracted apps are cached by version; `npm run build` only downloads an app when its pinned version is not present (or when run with `--force`).
 - **Tabs keep their work.** Switching tabs hides the previous frame instead of destroying it, so in-memory documents survive a detour into another app; the toolbar's **⟳ Reload** button is the explicit way to discard one frame.
 - **Wired module actions.** The clipboard panel calls the Rust registry through `invoke_module_action`: **Export SVG** asks VectorCraft to put a sample SVG on the shared clipboard, and **Rasterize SVG** hands the clipboard SVG to PhotoCraft's rasterizer and shows the PNG it returns. Capability labels come from `get_module_capabilities`. The other eight modules declare their actions but answer them with an explicit error until they are implemented, and unknown action ids are rejected instead of reporting success.
-- **Hardened frames.** App iframes carry an explicit `sandbox` policy and `referrerpolicy="no-referrer"`, SVG previews are rendered from a Blob into an `<img>` rather than inline markup, and `tauri.conf.json` sets a content security policy.
+- **Hardened frames.** App iframes carry an explicit `sandbox` policy and `referrerpolicy="no-referrer"`, SVG previews are rendered from a Blob into an `<img>` rather than inline markup, and `tauri.conf.json` sets a content security policy. The policy allows only same-origin framing (`frame-ancestors 'self'`), because the app builds share the shell's origin, and the shell itself uses listeners rather than inline `onclick` attributes so `script-src 'self'` leaves it working. `capabilities/default.json` grants the window the core APIs it uses (events, app, window, path).
 
 The retired local mockups are gone; the two wired actions above are the only bridge between the shell and the upstream apps, and the upstream builds do not push to the clipboard themselves.
 
@@ -164,10 +164,12 @@ The Rust commands are `notify_agents`, `get_agent_notifications` and `get_agent_
 - **`scripts/generate-docs.mjs`, `scripts/generate-seo.mjs`** — generate documentation pages from the catalogue and inject schema/SEO metadata into the marketing pages.
 - **`scripts/mcp-server.mjs`** — the aggregated MCP server; `scripts/check-mcp.mjs` is its smoke test.
 - **`crates/craft-studio-shell/src/notifications.rs`** — the local agent notification log and its Tauri commands.
+- **`crates/craft-studio-shell/capabilities/default.json`** — the Tauri 2 capability that grants the `main` window `core:default`; without it the ACL is empty and the event API is denied.
 - **`ui/src/expert.ts`** — the offline Suite Expert retrieval and chat panel.
 - **`crates/craft-studio-shell/ui/src/app.ts`** — the tab shell that mounts each upstream web app and drives the shared clipboard panel.
 - **`crates/craft-studio-shell/ui/web-apps.json`** — pinned app versions, release assets and SHA-256 hashes.
 - **`crates/craft-studio-shell/ui/scripts/fetch-web-apps.mjs`** — downloads, verifies and extracts the web builds into `ui/public/apps` before dev/build.
+- **`vendor/`** — the vendored fonts, images and Tailwind runtime the published pages use. It lives outside `ui/public/` so the desktop bundle does not ship it, and `pages.yml` copies it into the site build.
 - **`crates/craft-libs`** and **`apps/*`** — the `CraftModule` trait, registry and shared clipboard used by the shell's commands, plus one crate per app with the actions the UI can call.
 - **`assets/pages/suite/index.html`** — the suite landing page: real navigation to the docs, sitemap and repository, local vendor assets, and no fictional runtime telemetry.
 
@@ -177,14 +179,18 @@ The Rust commands are `notify_agents`, `get_agent_notifications` and `get_agent_
 
 - `npm ci` and `npm run build` (frontend, including the app download and checksum verification)
 - `node scripts/generate-docs.mjs --check` and `node scripts/generate-seo.mjs --check` (docs, schema and discovery artifacts are current)
-- `node scripts/check-mcp.mjs` (MCP handshake, tools, guide retrieval, recommendations and resources)
+- `node scripts/check-mcp.mjs` (MCP handshake, tools, bundled guide and catalogue fallback, recommendations, resources, untrusted-notification warning)
+- `npm run test:expert` (Suite Expert ranking: one question per app, comparison, task, list, fallback, stemmer)
 - `cargo fmt --all -- --check`
 - `cargo clippy --workspace --all-targets -- -D warnings`
-- `cargo test --workspace` (unit tests for the SVG rasterizer and clipboard state)
+- `cargo audit` (Rust advisories; the documented glib exception in `.cargo/audit.toml` is honoured)
+- `cargo test --workspace` (unit tests for the SVG rasterizer, clipboard state, module contracts and the notification log)
 - `cargo build --release --workspace`
 - a Windows job builds the NSIS installer and uploads it as the `artcraft-studio-nsis` workflow artifact (unsigned unless code signing is configured)
 
 The Linux checks are available locally through `just ci`.
+
+For an end-to-end check of the desktop window itself (tabs, embedded builds, clipboard, notification log, console errors), build the binary with `npx @tauri-apps/cli@^2 build --no-bundle`, start it with `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS="--remote-debugging-port=9333"`, then run `node scripts/check-tauri-window.mjs`. It drives the running window over the WebView2 DevTools protocol and exits non-zero on any failure; it is manual because GitHub runners have no WebView2.
 
 ## 🖼️ Concept gallery
 
@@ -230,7 +236,7 @@ Build-aligned launch assets with accurate copy: ten creative modules, Rust + Tau
 
 ## 🤝 Contributing
 
-The module boundary is the `CraftModule` trait in `crates/craft-libs/src/lib.rs`: implement `id`, `name`, `capabilities` and `handle_action`, then register the module in `crates/craft-studio-shell/src/main.rs`. Registered actions are callable from the UI through the `invoke_module_action` command; the clipboard panel currently labels the VectorCraft and PhotoCraft demo actions. See [audit.md](audit.md) for the open work items.
+The module boundary is the `CraftModule` trait in `crates/craft-libs/src/lib.rs`: implement `id`, `name`, `capabilities` and `handle_action`, then register the module in `crates/craft-studio-shell/src/main.rs`. Registered actions are callable from the UI through the `invoke_module_action` command; the clipboard panel currently labels the VectorCraft and PhotoCraft demo actions. `handle_action` must reject anything it cannot do: return `craft_libs::dispatch_delegated` for a declared action the embedded web build performs, and `craft_libs::unsupported_action` for an unknown one, rather than answering with a success object. See [audit.md](audit.md) for the open work items.
 
 ## 📜 License
 
